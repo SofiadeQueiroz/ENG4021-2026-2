@@ -1,0 +1,18 @@
+
+
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.superior-direito{
+    display: flex;
+    justify-content: end;
+    text-align: right;
+}
+
+
+.centralizacao{
+    display: flex;
+    justify-content: center;
+}
+
