@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #faf7f2;
+    padding: 20px;
+}
+
+.logo {
+    display: flex;
+    justify-content: end;
+}
+
+h1 {
+    color: chocolate;
+}
+
+form {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    max-width: 400px;
+}
+
+input {
+    padding: 8px;
+    width: 90%;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #b84e29;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+}
+
+.rodape {
+    margin-top: 40px;
+    color: chocolate;
+    font-weight: bold;
+}

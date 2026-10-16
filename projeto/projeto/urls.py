@@ -25,4 +25,10 @@ urlpatterns = [
     path('cadastro/', cadastro),
     path('busca/', busca),
     path('favoritos/', favoritos),
+    path('adicionarProduto/', adicionarProduto),
+    path('inicioCliente/', inicioCliente),
+    path('novaCategoria/', novaCategoria),
+    path('qrcode/', qrcode),
+    path('cardapioDono/', tela1),
+    path('editarProduto/', tela2)
 ] 

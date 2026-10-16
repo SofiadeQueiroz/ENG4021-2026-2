@@ -1,0 +1,13 @@
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.superior-direito{
+    display: flex;
+    justify-content: end;
+}
+
+.rodape-fixo{
+    position: fixed;
+    bottom: 0;
+}

@@ -1,0 +1,107 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+}
+.buscar {
+    display: flex;
+    gap: 10px;
+}
+
+.buscar input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 20px;
+    border: 1px solid brown;
+}
+
+.buscar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: brown;
+    color: white;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    
+}
+nav{
+    margin-left: auto;
+    
+}
+nav ul{
+    display:inline-block;
+    list-style-type: none;
+
+}
+nav ul li{
+    display: inline-block;
+    margin-right: 20px;
+    
+}
+a{
+    text-decoration: none;
+    color:black
+}
+.btn{
+    display: inline-block;
+    background: brown;
+    color: white;
+    padding: 8px 30px;
+    margin: 30px 0;
+    border-radius: 30px;
+    baseline-source: auto;
+
+}
+body{
+    background-color: antiquewhite;
+    padding: 20px;
+}
+
+h1{
+    margin-bottom: 20px;
+}
+.Produtos{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.informacoes{
+    margin-left: 20px;
+    flex: 1;
+}
+.nome{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.editApaga{
+    display:flex;
+    gap: 10px;
+}
+
+.editApaga button{
+    padding: 8px 30px;
+    margin: 30px 0;
+    border: none;
+    background-color: brown;
+    color:antiquewhite;
+    baseline-source: auto;
+    border-radius: 20px;
+}
+.preco{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: medium;
+}
