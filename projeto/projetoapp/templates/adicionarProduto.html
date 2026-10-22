@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Adicionar produto</title>
+    <link rel="stylesheet" href="../static/css/adicionarProduto.css">
+</head>
+
+<body>
+    <div class="logo">
+        <img src="../Juliana Bassan/novalogo.jpg" alt="FoodLink" width="100">
+    </div>
+
+    <h1>Adicionar produto</h1>
+    <p>Preencha as informações do produto.</p>
+
+    <form>
+        <div class="campo">
+            <label for="nome">Nome do produto</label><br>
+            <input type="text" id="nome" name="nome">
+        </div>
+
+        <div class="campo">
+            <label for="descricao">Descrição</label><br>
+            <textarea id="descricao" name="descricao" rows="3"></textarea>
+        </div>
+
+        <div class="campo">
+            <label for="preco">Preço (R$)</label><br>
+            <input type="text" id="preco" name="preco" placeholder="0,00">
+        </div>
+
+        <div class="campo">
+            <label for="categoria">Categoria</label><br>
+            <select id="categoria" name="categoria">
+                <option>Entradas</option>
+                <option>Pratos principais</option>
+                <option>Bebidas</option>
+                <option>Sobremesas</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="foto">Link da foto</label><br>
+            <input type="url" id="foto" name="foto">
+        </div>
+
+        <div class="campo">
+            <input type="checkbox" id="disponivel" name="disponivel" checked>
+            <label for="disponivel">Disponível no cardápio</label>
+        </div>
+
+        <button type="button">Salvar produto</button>
+    </form>
+
+    <p><a href="novaCategoria.html">Cadastrar uma categoria</a></p>
+
+    <p class="rodape">FoodLink</p>
+</body>
+</html>
