@@ -27,8 +27,12 @@ urlpatterns = [
     path('favoritos/', favoritos),
     path('adicionarProduto/', adicionarProduto),
     path('inicioCliente/', inicioCliente),
-    path('novaCategoria/', novaCategoria),
+    path('novaCategoria/', novaCategoria, name='novaCategoria'),
     path('qrcode/', qrcode),
-    path('cardapioDono/', tela1),
-    path('editarProduto/', tela2)
+    path('cardapioDono/', tela1, name='cardapioDono'),
+    path('editarProduto/', tela2),
+    path('aparencia/', aparencia, name='aparencia'),
+    path('meuRestaurante/', meuRestaurante, name='meuRestaurante'),
+    path('cardapioPublico/', cardapioPublico, name='cardapioPublico'),
+    path('detalhesProduto/', detalhesProduto, name='detalhesProduto')
 ] 

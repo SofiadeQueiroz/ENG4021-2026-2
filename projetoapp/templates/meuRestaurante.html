@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meu restaurante - FoodLink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/meuRestaurante.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <header class="topo">
+        <span class="logo-texto">FoodLink</span>
+        <div class="acoes-topo">
+            <a class="ver-cardapio" href="{% url 'cardapioPublico' %}">
+                <svg class="icone" viewBox="0 0 24 24"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg>
+                Ver cardápio
+            </a>
+
+        </div>
+    </header>
+
+    <main class="conteudo">
+        <p class="restaurante">SUA IDENTIDADE</p>
+        <h1>Meu restaurante</h1>
+        <p class="descricao">Estas informações aparecem no seu cardápio.</p>
+
+        <form class="formulario">
+            <label for="nome">Nome do restaurante</label>
+            <input id="nome" name="nome" type="text" value="Casa di Pasta" maxlength="60" required>
+
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" rows="4" maxlength="250" required>Massas artesanais, receitas de família e uma mesa sempre pronta para receber você.</textarea>
+
+            <div class="linha-campos">
+                <div class="campo">
+                    <label for="cozinha">Tipo de cozinha</label>
+                    <input id="cozinha" name="cozinha" type="text" value="Italiana" maxlength="40" required>
+                </div>
+                <div class="campo">
+                    <label for="horario">Funcionamento</label>
+                    <input id="horario" name="horario" type="text" value="12h às 23h" maxlength="80" required>
+                </div>
+            </div>
+
+            <label for="endereco">Endereço</label>
+            <input id="endereco" name="endereco" type="text" placeholder="Rua, número e bairro" maxlength="100">
+
+            <label for="imagem">Imagem do restaurante</label>
+            <input id="imagem" name="imagem" type="url" placeholder="Cole o link da imagem">
+
+            <p class="aviso">O link do cardápio continua o mesmo quando você muda o nome.</p>
+
+            <!-- O salvamento será ligado ao sistema na próxima etapa. -->
+            <button class="botao-salvar" type="button">Salvar alterações</button>
+            <a class="botao-cancelar" href="{% url 'cardapioDono' %}">Voltar ao cardápio</a>
+        </form>
+    </main>
+
+    <nav class="menu-inferior">
+        <a class="item-menu" href="{% url 'cardapioDono' %}">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            Cardápio
+        </a>
+        <a class="item-menu" href="{% url 'novaCategoria' %}" aria-label="Categorias">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg>
+            Categorias
+        </a>
+        <a class="item-menu" href="{% url 'aparencia' %}">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.55C21.97 6.01 17.46 2 12 2z"/></svg>
+            Aparência
+        </a>
+        <a class="item-menu ativo" href="{% url 'meuRestaurante' %}" aria-current="page">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg>
+            Meu restaurante
+        </a>
+        <a class="item-menu" href="#" aria-label="QR Code">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+            QR Code
+        </a>
+    </nav>
+</body>
+</html>

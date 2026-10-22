@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fbf7f0;
+    color: #1a1a1a;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span,
+a,
+.preco {
+    color: #b84e29;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+.categorias {
+    margin-top: 25px;
+}
+
+.categorias a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background-color: #edbaa5;
+    color: #1a1a1a;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.produto {
+    display: flex;
+    gap: 15px;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd5ca;
+}
+
+.produto img {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.produto h3 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.produto p {
+    margin: 8px 0;
+}
+
+.preco {
+    font-weight: bold;
+}
+
+.indisponivel,
+.rodape {
+    color: #5c5750;
+    font-size: 12px;
+}
+
+.rodape {
+    margin-top: 35px;
+    text-align: center;
+}
