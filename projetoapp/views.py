@@ -1,7 +1,15 @@
 from django.shortcuts import render
+import requests
+from .models import Produto
 
 def home(request):
-    return render(request,'boasVindas.html')
+    response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
+    results_json = response.json()
+    movies = results_json['Search']
+    context = {
+        "movies": movies
+    }
+    return render(request,'boasVindas.html', context)
 
 def cadastro(request):
     return render (request,'cadastro.html')
@@ -25,7 +33,11 @@ def qrcode(request):
     return render(request, 'qrcode.html')
 
 def tela1(request):
-    return render(request, 'tela1.html')
+    produtos = Produto.objects.all()
+    context = {
+        'produtos': produtos
+    }
+    return render(request, 'tela1.html', context)
 
 def tela2(request):
     return render(request, 'tela2.html')

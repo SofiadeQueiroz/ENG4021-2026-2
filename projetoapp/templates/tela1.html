@@ -43,76 +43,31 @@
         <button>Buscar</button>
     </div>
     
-    <div class="Produtos">
-         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TjG5YQF3SbEimTCVqRJKYgYSsLiPyFNnnxFL8CXJrDL7D54YX9ewp5g4Yicu5t80vxBsOSX5wP2-1h9DObt8GVS4kV3BYaf3ztKTNIo&s=10" width="200">
+    {% for produto in produtos %}
+        <div class="Produtos">
+         {% if produto.imagem %}
+                <img src="{{ produto.imagem }}" width="200" alt="{{ produto.nome }}">
+         {% endif %}
 
-         <div class="informacoes">
-            <div class="nome">
-                <h2> Bruschetta da casa</h2>
+            <div class="informacoes">
+                <div class="nome">
+                 <h2>{{ produto.nome }}</h2>
 
-                <div class="editApaga">
-                    <button>Editar</button>
-                    <button>Apagar</button>
+                    <div class="editApaga">
+                        <button>Editar</button>
+                        <button>Apagar</button>
+                    </div>
                 </div>
+
+                <p>{{ produto.descricao }}</p>
+                <p class="preco">R$ {{ produto.preco }}</p>
             </div>
-
-            <p class="preco"> R$ 24,00 </p>
-         </div>
-    </div> 
-
-    <div class="Produtos">
-         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScSyCUYL8WS2N6YSh4ZXm8Fa0fniotLmZ3HkfhGS8R6eKKhQkFdZYlb2I&s=10" width="200"" width="200">
-
-         <div class="informacoes">
-            <div class="nome">
-                <h2> Arancini de queijo</h2>
-
-                <div class="editApaga">
-                    <button>Editar</button>
-                    <button>Apagar</button>
-                </div>
-            </div>
-
-            <p class="preco"> R$ 29,90 </p>
-         </div>  
-    </div>
-    
-     <div class="Produtos">
-         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAuKyaP1UXE30X4QsYoZvhN2IUIxvTiHSZOZdwlUonTw&s=10" width="200"" width="200">
-
-         <div class="informacoes">
-            <div class="nome">
-                <h2> Spaguetti alla carbonara</h2>
-
-                <div class="editApaga">
-                    <button>Editar</button>
-                    <button>Apagar</button>
-                </div>
-            </div>
-
-            <p class="preco"> R$ 49,90 </p>
-         </div>  
-    </div>
-
-     <div class="Produtos">
-         <img src="https://cdn.lacuisinedebernard.com/wp-content/uploads/2025/05/11201247/lasagnes-bolognaises.jpeg?width=1024" width="200"" width="200">
-
-         <div class="informacoes">
-            <div class="nome">
-                <h2> Lasanha a bolonhesa </h2>
-
-                <div class="editApaga">
-                    <button>Editar</button>
-                    <button>Apagar</button>
-                </div>
-            </div>
-
-            <p class="preco"> R$ 45,90 </p>
-         </div>  
-    </div>
+        </div>
+    {% empty %}
+        <p>Nenhum produto cadastrado ainda.</p>
+    {% endfor %}
     
     
-
 </div>
 </body>
 </html>
