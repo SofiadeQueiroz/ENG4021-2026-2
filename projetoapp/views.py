@@ -29,3 +29,15 @@ def tela1(request):
 
 def tela2(request):
     return render(request, 'tela2.html')
+
+def aparencia(request):
+    return render(request, 'aparencia.html')
+
+def meuRestaurante(request):
+    return render(request, 'meuRestaurante.html')
+
+def cardapioPublico(request):
+    return render(request, 'cardapioPublico.html')
+
+def detalhesProduto(request):
+    return render(request, 'detalhesProduto.html')

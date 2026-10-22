@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bruschetta da casa - FoodLink</title>
+    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}">
+</head>
+
+<body>
+    <p class="logo">Food<span>Link</span></p>
+    <a href="{% url 'cardapioPublico' %}#entradas">Voltar ao cardápio</a>
+
+    <img class="foto" src="{% static 'img/bruschetta.jpg' %}" alt="Bruschetta da casa com tomate e manjericão">
+
+    <p class="categoria">Casa di Pasta · Entradas</p>
+    <h1>Bruschetta da casa</h1>
+    <p class="preco">R$ 24,00</p>
+    <p class="disponivel">Disponível</p>
+
+    <div class="descricao">
+        <h2>Descrição</h2>
+        <p>Pão rústico tostado, tomates frescos, manjericão e azeite extravirgem.</p>
+        <p>Porção com 4 unidades.</p>
+    </div>
+
+    <a class="botao" href="{% url 'cardapioPublico' %}">Ver outros pratos</a>
+
+    <p class="rodape">FoodLink · Cardápio digital</p>
+</body>
+</html>
