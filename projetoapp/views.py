@@ -53,3 +53,6 @@ def cardapioPublico(request):
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
+
+def esqueciSenha(request):
+    return render(request, 'esqueciSenha.html')
