@@ -1,5 +1,7 @@
 from django import forms
-from .models import Produto
+from .models import Produto, Categoria, Restaurante
+
+
 
 class ProdutoForm(forms.ModelForm):
     class Meta:
@@ -18,5 +20,19 @@ class CadastroForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.EmailField()
     senha = forms.CharField(widget=forms.PasswordInput)
+
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nome']
+
+class RestauranteForm(forms.ModelForm):
+    class Meta:
+        model = Restaurante
+        fields = ['nome', 'descricao', 'cozinha', 'horario', 'endereco', 'imagem']
+
+class EsqueciSenhaForm(forms.Form):
+    email = forms.EmailField()
+
     
 

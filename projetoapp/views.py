@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 import requests
-from .models import Produto
-from .forms import ProdutoForm, CadastroForm, LoginForm
+from .models import Produto, Restaurante
+from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
 
 
 
@@ -55,7 +56,14 @@ def inicioCliente(request):
     return render(request, 'inicioCliente.html')
 
 def novaCategoria(request):
-    return render(request, 'novaCategoria.html')
+    if request.method == "POST":
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('adicionarProduto')
+    else:
+        form = CategoriaForm()
+    return render(request, 'novaCategoria.html', {'form': form})
 
 def qrcode(request):
     return render(request, 'qrcode.html')
@@ -74,7 +82,16 @@ def aparencia(request):
     return render(request, 'aparencia.html')
 
 def meuRestaurante(request):
-    return render(request, 'meuRestaurante.html')
+    restaurante = Restaurante.objects.first()
+    if request.method == "POST":
+        form = RestauranteForm(request.POST, instance=restaurante)
+        if form.is_valid():
+            form.save()
+            return redirect('meuRestaurante')
+    else:
+        form = RestauranteForm(instance=restaurante)
+    return render(request, 'meuRestaurante.html', {'form': form})
+
 
 def cardapioPublico(request):
     return render(request, 'cardapioPublico.html')
@@ -101,4 +118,20 @@ def entrar(request):
     return render(request, 'login.html', {'form': form})
 
 def esqueciSenha(request):
-    return render(request, 'esqueciSenha.html')
+    enviado = False
+    if request.method == "POST":
+        form = EsqueciSenhaForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            if User.objects.filter(username=email).exists():
+                send_mail(
+                    subject='Recuperação de senha - FoodLink',
+                    message='Recebemos um pedido para recuperar sua senha.',
+                    from_email='nao-responda@foodlink.com',
+                    recipient_list=[email],
+                )
+            enviado = True
+    else:
+        form = EsqueciSenhaForm()
+    return render(request, 'esqueciSenha.html', {'form': form, 'enviado': enviado})
+
