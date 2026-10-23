@@ -21,18 +21,19 @@ from projetoapp.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',home),
-    path('cadastro/', cadastro),
-    path('busca/', busca),
-    path('favoritos/', favoritos),
-    path('adicionarProduto/', adicionarProduto),
-    path('inicioCliente/', inicioCliente),
+    path('', home, name='home'),
+    path('cadastro/', cadastro, name='cadastro'),
+    path('busca/', busca, name='busca'),
+    path('favoritos/', favoritos, name='favoritos'),
+    path('adicionarProduto/', adicionarProduto, name='adicionarProduto'),
+    path('inicioCliente/', inicioCliente, name='inicioCliente'),
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
-    path('qrcode/', qrcode),
+    path('qrcode/', qrcode, name='qrcode'),
     path('cardapioDono/', tela1, name='cardapioDono'),
     path('editarProduto/', tela2),
     path('aparencia/', aparencia, name='aparencia'),
     path('meuRestaurante/', meuRestaurante, name='meuRestaurante'),
     path('cardapioPublico/', cardapioPublico, name='cardapioPublico'),
-    path('detalhesProduto/', detalhesProduto, name='detalhesProduto')
+    path('detalhesProduto/', detalhesProduto, name='detalhesProduto'),
+    path('esqueciSenha/', esqueciSenha, name='esqueciSenha')
 ] 
