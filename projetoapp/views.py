@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 import requests
 from .models import Produto
-from .forms import ProdutoForm
+from .forms import ProdutoForm, CadastroForm
+from django.contrib.auth.models import User
+
+
 
 def home(request):
     response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
@@ -13,7 +16,23 @@ def home(request):
     return render(request,'boasVindas.html', context)
 
 def cadastro(request):
-    return render (request,'cadastro.html')
+    if request.method == "POST":
+        form = CadastroForm(request.POST)
+        if form.is_valid():
+            dados = form.cleaned_data
+            if User.objects.filter(username=dados['email']).exists():
+                form.add_error('email', 'Esse email já está cadastrado.')
+            else:
+                User.objects.create_user(
+                    username=dados['email'],
+                    email=dados['email'],
+                    password=dados['senha'],
+                    first_name=dados['nome'],
+                )
+                return redirect('/')
+    else:
+        form = CadastroForm()
+    return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
     return render (request,'busca.html')

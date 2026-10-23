@@ -16,20 +16,26 @@
     <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
     <h1><b>Preencha com seus dados</b></h1>
 
-    <form>
-        <label>Nome completo</label><br>
-        <input type="text" placeholder="Como podemos te chamar?"><br><br>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
 
+        <label>Nome completo</label><br>
+        {{ form.nome }}<br><br>
+
+        <label>Email</label><br>
+        {{ form.email }}<br><br>
+        
         <label>CPF</label><br>
-        <input type="text" placeholder="000.000.000-00"><br><br>
+        {{ form.cpf }}<br><br>
 
         <label>Telefone</label><br>
-        <input type="text" placeholder="(00) 00000-0000"><br><br>
+        {{ form.telefone }}<br><br>
 
         <label>Escolha uma senha</label><br>
-        <input type="password" placeholder="Mínimo 8 caracteres"><br><br>
+        {{ form.senha }}<br><br>
 
-        <input type="checkbox">
+        {{ form.aceite }}
         <span style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</span>
 
         <br><br>
