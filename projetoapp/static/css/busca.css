@@ -1,18 +1,76 @@
-
-
 body{
     font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding: 20px 30px;
 }
 
-.superior-direito{
+.topo{
     display: flex;
-    justify-content: end;
-    text-align: right;
+    justify-content: space-between;
+    align-items: center;
 }
 
+h2{
+    text-align: center;
+    font-size: 28px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.linha-busca{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.linha-busca input{
+    padding: 12px;
+    width: 350px;
+    border-radius: 25px;
+    border: 2px solid chocolate;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.botao-principal{
+    background-color: chocolate;
+    color: white;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
 
 .centralizacao{
     display: flex;
     justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
 }
 
+.centralizacao img{
+    max-width: 600px;
+    border-radius: 20px;
+    border: 3px solid chocolate;
+}
+
+.centralizacao p{
+    font-weight: bold;
+}
+
+.destaque{
+    color: chocolate;
+}
