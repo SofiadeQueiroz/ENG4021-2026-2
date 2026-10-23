@@ -4,9 +4,20 @@ body{
     text-align: center;
 }
 
-.superior-direito{
+.topo{
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.botao-voltar{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 16px;
+    text-decoration: none;
 }
 
 h1{
@@ -34,6 +45,8 @@ h3{
     height: 50px;
     font-size: 16px;
     margin-bottom: 15px;
+    line-height: 50px;
+    text-decoration: none;
 }
 
 .botao-secundario{
@@ -44,6 +57,8 @@ h3{
     width: 260px;
     height: 50px;
     font-size: 16px;
+    line-height: 50px;
+    text-decoration: none;
 }
 
 .texto-centro{
