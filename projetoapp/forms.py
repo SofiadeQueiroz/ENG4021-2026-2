@@ -15,4 +15,8 @@ class CadastroForm(forms.Form):
     senha = forms.CharField(widget=forms.PasswordInput, min_length=8)
     aceite = forms.BooleanField()
 
+class LoginForm(forms.Form):
+    email = forms.EmailField()
+    senha = forms.CharField(widget=forms.PasswordInput)
     
+

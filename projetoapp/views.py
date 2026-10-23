@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 import requests
 from .models import Produto
-from .forms import ProdutoForm, CadastroForm
+from .forms import ProdutoForm, CadastroForm, LoginForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 
 
@@ -29,7 +30,7 @@ def cadastro(request):
                     password=dados['senha'],
                     first_name=dados['nome'],
                 )
-                return redirect('/')
+                return redirect('entrar')
     else:
         form = CadastroForm()
     return render(request, 'cadastro.html', {'form': form})
@@ -80,3 +81,21 @@ def cardapioPublico(request):
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
+
+def entrar(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            usuario = authenticate(
+                request,
+                username=form.cleaned_data['email'],
+                password=form.cleaned_data['senha'],
+            )
+            if usuario is not None:
+                login(request, usuario)
+                return redirect('cardapioDono')
+            else:
+                form.add_error(None, 'Email ou senha incorretos.')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
