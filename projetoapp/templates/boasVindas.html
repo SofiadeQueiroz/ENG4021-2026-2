@@ -1,28 +1,31 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport">
     <title>Boas-vindas</title>
     <link href="{% static 'css/boasVindas.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
-
+ 
 <body>
-    <div class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
-</div>
-
-    <h4 style="color: chocolate;">BEM-VINDO AO FOODLINK</h4>
-    <h1><b>Olá, Cliente!</b></h1>
-    <h3>Como você quer encontrar seu próximo sabor?</h3>
-
-    <div class="botoes-centralizados">
-        <button class="botao-principal">Buscar estabelecimento</button>
-        <button class="botao-secundario">Escanear QR Code</button>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
-
-    <p class="texto-centro"><a href="esqueciSenha.html">Esqueci minha senha</a></p>
-
-    <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
+ 
+    <h4 class="chamada">BEM-VINDO AO FOODLINK</h4>
+    <h1>Olá, Cliente!</h1>
+    <h3>Como você quer encontrar seu próximo sabor?</h3>
+ 
+    <div class="botoes-centralizados">
+        <a href="{% url 'busca' %}" class="botao-principal">Buscar estabelecimento</a>
+        <a href="{% url 'qrcode' %}" class="botao-secundario">Escanear QR Code</a>
+    </div>
+ 
+    <p class="texto-centro"><a href="{% url 'esqueciSenha' %}">Esqueci minha senha</a></p>
+ 
+    <p class="rodape-fixo">Food<span class="destaque">Link</span></p>
 </body>
+</html>

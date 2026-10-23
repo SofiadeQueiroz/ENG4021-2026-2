@@ -99,3 +99,6 @@ def entrar(request):
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
+
+def esqueciSenha(request):
+    return render(request, 'esqueciSenha.html')
