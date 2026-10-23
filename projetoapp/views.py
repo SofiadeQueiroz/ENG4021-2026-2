@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from .models import Produto
+from .forms import ProdutoForm
 
 def home(request):
     response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
@@ -21,7 +22,14 @@ def favoritos(request):
     return render(request,'favoritos.html')
 
 def adicionarProduto(request):
-    return render(request, 'adicionarProduto.html')
+    if request.method == "POST":
+        form = ProdutoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm()
+    return render(request, 'adicionarProduto.html', {'form': form})
 
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
