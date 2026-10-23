@@ -1,0 +1,47 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"> 
+    <title>Login</title>
+    <link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div>   
+       <button>Voltar</button><span class="direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="100"></span>
+    </div>
+
+    <div>
+        <h4 style="color: chocolate;">BEM-VINDO DE VOLTA</h4>
+        <h2>Insira seu login</h2>
+        <h5 style="color: grey;">Entre com o e-mail cadastrado para acessar sua conta</h5>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+    <div class="centralizacao">
+        <p>E-mail </p>
+        {{ form.email }}
+    </div>
+    <div class="centralizacao">
+        <p>Senha </p>
+        {{ form.senha }}
+    </div>
+    <div class="centralizacao">
+        <button type="button" style = "background-color: white; color: chocolate;">Esqueci minha senha</button>
+    </div>
+    <div>
+        <p>Food<span style="color: chocolate;">Link</span></p>
+    </div>
+     <div>   
+       <button type="submit">Seguir</button>
+    </div>
+    </form>
+
+
+
+</body>

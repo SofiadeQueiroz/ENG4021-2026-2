@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from .models import Produto
+from .forms import ProdutoForm, CadastroForm, LoginForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
+
 
 def home(request):
     response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
@@ -12,7 +17,23 @@ def home(request):
     return render(request,'boasVindas.html', context)
 
 def cadastro(request):
-    return render (request,'cadastro.html')
+    if request.method == "POST":
+        form = CadastroForm(request.POST)
+        if form.is_valid():
+            dados = form.cleaned_data
+            if User.objects.filter(username=dados['email']).exists():
+                form.add_error('email', 'Esse email já está cadastrado.')
+            else:
+                User.objects.create_user(
+                    username=dados['email'],
+                    email=dados['email'],
+                    password=dados['senha'],
+                    first_name=dados['nome'],
+                )
+                return redirect('entrar')
+    else:
+        form = CadastroForm()
+    return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
     return render (request,'busca.html')
@@ -21,7 +42,14 @@ def favoritos(request):
     return render(request,'favoritos.html')
 
 def adicionarProduto(request):
-    return render(request, 'adicionarProduto.html')
+    if request.method == "POST":
+        form = ProdutoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm()
+    return render(request, 'adicionarProduto.html', {'form': form})
 
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
@@ -53,6 +81,24 @@ def cardapioPublico(request):
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
+
+def entrar(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            usuario = authenticate(
+                request,
+                username=form.cleaned_data['email'],
+                password=form.cleaned_data['senha'],
+            )
+            if usuario is not None:
+                login(request, usuario)
+                return redirect('cardapioDono')
+            else:
+                form.add_error(None, 'Email ou senha incorretos.')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
 
 def esqueciSenha(request):
     return render(request, 'esqueciSenha.html')
