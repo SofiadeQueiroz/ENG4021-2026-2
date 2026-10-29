@@ -1,39 +1,30 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <title>Busca</title>
-    <link href="{% static 'css/busca.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-</head>
- 
-<body>
-    <div class="topo">
+{% block title %}Busca{% endblock %}
+{% block page_class %}page-busca{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/busca.css' %}">{% endblock %}
+{% block content %}
+<div class="topo">
         <a href="{% url 'inicioCliente' %}" class="botao-secundario">Voltar</a>
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
- 
+
     <h2>Onde vamos comer?</h2>
     <div class="linha-busca">
         <input type="search" placeholder="Busca" aria-label="Buscar">
         <button class="botao-principal">Favoritar</button>
     </div>
- 
+
     <div class="centralizacao">
         <img src="{% static 'img/mapa.png' %}" alt="Mapa">
     </div>
- 
+
     <div class="centralizacao">
         <button class="botao-principal">Três lugares próximos</button>
         <button class="botao-secundario">Tela cheia</button>
     </div>
- 
+
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
     </div>
-</body>
-</html>
- 
+{% endblock %}

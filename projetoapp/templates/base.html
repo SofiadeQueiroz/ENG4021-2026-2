@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}FoodLink{% endblock %}</title>
+    {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    {% block scripts %}{% endblock %}
+</head>
+<body class="{% block page_class %}{% endblock %}">
+    <a class="skip-link" href="#conteudo" tabindex="0">Pular para o conteúdo</a>
+    {% if user.is_authenticated %}
+    <header class="session-bar" aria-label="Sua conta">
+        <a href="{% url 'cardapioDono' %}" class="session-brand">FoodLink</a>
+        <span class="session-name">Olá, {{ user.first_name|default:user.username }}</span>
+        <form action="{% url 'sair' %}" method="post" class="logout-form">
+            {% csrf_token %}
+            <button type="submit">Sair</button>
+        </form>
+    </header>
+    {% endif %}
+    {% if messages %}
+    <div class="messages" role="status">
+        {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+    </div>
+    {% endif %}
+    <div class="page-content" id="conteudo" tabindex="-1">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

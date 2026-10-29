@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <title>Adicionar produto</title>
-    <link rel="stylesheet" href="../static/css/adicionarProduto.css">
-</head>
-
-<body>
-    <div class="logo">
-        <img src="../Juliana Bassan/novalogo.jpg" alt="FoodLink" width="100">
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Adicionar produto{% endblock %}
+{% block page_class %}page-adicionarProduto{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/adicionarProduto.css' %}">{% endblock %}
+{% block content %}
+<div class="logo">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="FoodLink" width="100">
     </div>
 
     <h1>Adicionar produto</h1>
@@ -18,17 +15,17 @@
         {% csrf_token %}
         {{ form.errors }}
         <div class="campo">
-            <label for="nome">Nome do produto</label><br>
+            <label for="id_nome">Nome do produto</label><br>
             {{ form.nome }}
         </div>
 
         <div class="campo">
-            <label for="descricao">Descrição</label><br>
+            <label for="id_descricao">Descrição</label><br>
             {{ form.descricao }}
         </div>
 
         <div class="campo">
-            <label for="preco">Preço (R$)</label><br>
+            <label for="id_preco">Preço (R$)</label><br>
             {{ form.preco }}
         </div>
 
@@ -43,7 +40,7 @@
         </div>
 
         <div class="campo">
-            <label for="foto">Link da foto</label><br>
+            <label for="id_imagem">Link da foto</label><br>
             {{ form.imagem }}
         </div>
 
@@ -55,8 +52,7 @@
         <button type="submit">Salvar produto</button>
     </form>
 
-    <p><a href="novaCategoria.html">Cadastrar uma categoria</a></p>
+    <p><a href="{% url 'novaCategoria' %}">Cadastrar uma categoria</a></p>
 
     <p class="rodape">FoodLink</p>
-</body>
-</html>
+{% endblock %}

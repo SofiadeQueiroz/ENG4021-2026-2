@@ -1,15 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cardápio da Casa di Pasta - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/cardapioPublico.css' %}">
-</head>
-
-<body>
-    <p class="logo">Food<span>Link</span></p>
+{% block title %}Cardápio da Casa di Pasta - FoodLink{% endblock %}
+{% block page_class %}page-cardapioPublico{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/cardapioPublico.css' %}">{% endblock %}
+{% block content %}
+<p class="logo">Food<span>Link</span></p>
 
     <h1>Casa di Pasta</h1>
     <p>Massas artesanais e receitas de família.</p>
@@ -63,5 +58,4 @@
     </div>
 
     <p class="rodape">FoodLink · Cardápio digital</p>
-</body>
-</html>
+{% endblock %}

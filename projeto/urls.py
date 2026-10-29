@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls.static import static 
+from django.conf.urls.static import static
 from projetoapp.views import *
 
 urlpatterns = [
@@ -30,11 +30,13 @@ urlpatterns = [
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
     path('qrcode/', qrcode, name='qrcode'),
     path('cardapioDono/', tela1, name='cardapioDono'),
-    path('editarProduto/', tela2),
+    path('editarProduto/', tela2, name='editarProduto'),
     path('aparencia/', aparencia, name='aparencia'),
     path('meuRestaurante/', meuRestaurante, name='meuRestaurante'),
     path('cardapioPublico/', cardapioPublico, name='cardapioPublico'),
     path('detalhesProduto/', detalhesProduto, name='detalhesProduto'),
     path('esqueciSenha/', esqueciSenha, name='esqueciSenha'),
     path('entrar/', entrar, name='entrar'),
-] 
+    path('sair/', sair, name='sair'),
+    path('api/cep/', endereco_cep, name='endereco_cep'),
+]

@@ -1,0 +1,962 @@
+[
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "320x568",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "375x812",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "768x1024",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "1440x900",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "chromium",
+    "viewport": "812x375",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "320x568",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "375x812",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "768x1024",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "1440x900",
+    "page": "meuRestaurante",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "boasVindas",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "cadastro",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "login",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "esqueciSenha",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "inicioCliente",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "busca",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "qrcode",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "cardapioPublico",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "detalhesProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "favoritos",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "tela1",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "tela2",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "adicionarProduto",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "novaCategoria",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "aparencia",
+    "status": "passed"
+  },
+  {
+    "browser": "webkit",
+    "viewport": "812x375",
+    "page": "meuRestaurante",
+    "status": "passed"
+  }
+]

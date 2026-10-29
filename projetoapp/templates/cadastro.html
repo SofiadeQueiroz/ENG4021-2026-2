@@ -1,46 +1,19 @@
+{% extends "base.html" %}
 {% load static %}
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport">
-    <title>Cadastro</title>
-    <link href="{% static 'css/cadastro.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div><button onclick="history.back()">Voltar</button><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
-</span></div>
-
-    <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
-    <h1><b>Preencha com seus dados</b></h1>
-
-    <form method="post">
+{% block title %}Crie sua conta · FoodLink{% endblock %}
+{% block page_class %}page-cadastro{% endblock %}
+{% block content %}
+<div class="auth-top"><a href="{% url 'home' %}">Voltar ao início</a><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80" alt="FoodLink"></div>
+<main>
+    <div class="auth-heading"><h1>Crie sua conta</h1><p>Preencha seus dados para gerenciar seu restaurante.</p></div>
+    <form method="post" class="auth-form">
         {% csrf_token %}
-        {{ form.errors }}
-
-        <label>Nome completo</label><br>
-        {{ form.nome }}<br><br>
-
-        <label>Email</label><br>
-        {{ form.email }}<br><br>
-        
-        <label>CPF</label><br>
-        {{ form.cpf }}<br><br>
-
-        <label>Telefone</label><br>
-        {{ form.telefone }}<br><br>
-
-        <label>Escolha uma senha</label><br>
-        {{ form.senha }}<br><br>
-
-        {{ form.aceite }}
-        <span style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</span>
-
-        <br><br>
-        <button class="botao-seta" type="submit">&#8594;</button>
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {{ form.non_field_errors }}
+        {% for field in form %}{% include 'includes/field.html' %}{% endfor %}
+        <button type="submit">Criar conta</button>
     </form>
-
-    <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
-</body>
+    <p>Já tem conta? <a href="{% url 'entrar' %}">Entrar</a></p>
+</main>
+<p class="rodape-fixo">FoodLink · Cardápio digital</p>
+{% endblock %}

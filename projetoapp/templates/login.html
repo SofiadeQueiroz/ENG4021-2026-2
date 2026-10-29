@@ -1,47 +1,19 @@
+{% extends "base.html" %}
 {% load static %}
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport"> 
-    <title>Login</title>
-    <link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div>   
-        <a href="{% url 'home' %}" class="botao-secundario">Voltar</a>
-        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="100"></span>
-    </div>
-
-    <div>
-        <h4 style="color: chocolate;">Bem-vindo de volta!</h4>
-        <h2>Insira seu login</h2>
-        <h5 style="color: grey;">Entre com o e-mail cadastrado para acessar sua conta</h5>
-    </div>
-    <form method="post">
+{% block title %}Bem-vindo de volta! · FoodLink{% endblock %}
+{% block page_class %}page-login{% endblock %}
+{% block content %}
+<div class="auth-top"><a href="{% url 'home' %}">Voltar ao início</a><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80" alt="FoodLink"></div>
+<main>
+    <div class="auth-heading"><h1>Bem-vindo de volta!</h1><p>Entre com seu e-mail e senha para acessar sua conta.</p></div>
+    <form method="post" class="auth-form">
         {% csrf_token %}
-        {{ form.errors }}
-    <div class="centralizacao">
-        <p>E-mail </p>
-        {{ form.email }}
-    </div>
-    <div class="centralizacao">
-        <p>Senha </p>
-        {{ form.senha }}
-    </div>
-    <div class="centralizacao">
-        <button type="button" style = "background-color: white; color: chocolate;">Esqueci minha senha</button>
-    </div>
-    <div>
-        <p>Food<span style="color: chocolate;">Link</span></p>
-    </div>
-     <div>   
-       <button type="submit">Seguir</button>
-    </div>
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {{ form.non_field_errors }}
+        {% for field in form %}{% include 'includes/field.html' %}{% endfor %}
+        <button type="submit">Entrar</button>
     </form>
-
-
-
-</body>
+    <p><a href="{% url 'esqueciSenha' %}">Esqueci minha senha</a></p><p>Ainda não tem conta? <a href="{% url 'cadastro' %}">Criar conta</a></p>
+</main>
+<p class="rodape-fixo">FoodLink · Cardápio digital</p>
+{% endblock %}

@@ -1,17 +1,11 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meu restaurante - FoodLink</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/meuRestaurante.css' %}" rel="stylesheet" type="text/css">
-</head>
-<body>
-    <header class="topo">
+{% block title %}Meu restaurante - FoodLink{% endblock %}
+{% block page_class %}page-meuRestaurante{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/meuRestaurante.css' %}">{% endblock %}
+{% block scripts %}<script src="{% static 'js/cep.js' %}" defer></script>{% endblock %}
+{% block content %}
+<header class="topo">
         <span class="logo-texto">FoodLink</span>
         <div class="acoes-topo">
             <a class="ver-cardapio" href="{% url 'cardapioPublico' %}">
@@ -48,8 +42,24 @@
                 </div>
             </div>
 
-            <label for="id_endereco">Endereço</label>
-            {{ form.endereco }}
+            <h2>Endereço do restaurante</h2>
+            <p class="ajuda">Consulte seu CEP para preencher o endereço ou digite os dados manualmente. A consulta envia apenas o CEP ao ViaCEP.</p>
+            <div class="cep-actions">
+                {% include 'includes/field.html' with field=form.cep %}
+                <button type="button" data-cep-url="{% url 'endereco_cep' %}">Buscar endereço</button>
+            </div>
+            <p id="cep-status" class="cep-status" role="status" aria-live="polite">O número e o complemento devem ser informados por você.</p>
+            <noscript><p>A consulta automática precisa de JavaScript. Você pode preencher e salvar todos os campos manualmente.</p></noscript>
+            {% include 'includes/field.html' with field=form.endereco %}
+            <div class="linha-campos">
+                {% include 'includes/field.html' with field=form.numero %}
+                {% include 'includes/field.html' with field=form.complemento %}
+            </div>
+            {% include 'includes/field.html' with field=form.bairro %}
+            <div class="linha-campos">
+                {% include 'includes/field.html' with field=form.cidade %}
+                {% include 'includes/field.html' with field=form.estado %}
+            </div>
 
             <label for="id_imagem">Imagem do restaurante</label>
             {{ form.imagem }}
@@ -78,10 +88,9 @@
             <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg>
             Meu restaurante
         </a>
-        <a class="item-menu" href="#" aria-label="QR Code">
+        <a class="item-menu" href="{% url 'qrcode' %}" aria-label="QR Code">
             <svg class="icone icone-menu" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
             QR Code
         </a>
     </nav>
-</body>
-</html>
+{% endblock %}

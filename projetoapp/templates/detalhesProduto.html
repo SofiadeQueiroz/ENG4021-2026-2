@@ -1,15 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bruschetta da casa - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}">
-</head>
-
-<body>
-    <p class="logo">Food<span>Link</span></p>
+{% block title %}Bruschetta da casa - FoodLink{% endblock %}
+{% block page_class %}page-detalhesProduto{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}">{% endblock %}
+{% block content %}
+<p class="logo">Food<span>Link</span></p>
     <a href="{% url 'cardapioPublico' %}#entradas">Voltar ao cardápio</a>
 
     <img class="foto" src="{% static 'img/bruschetta.jpg' %}" alt="Bruschetta da casa com tomate e manjericão">
@@ -28,5 +23,4 @@
     <a class="botao" href="{% url 'cardapioPublico' %}">Ver outros pratos</a>
 
     <p class="rodape">FoodLink · Cardápio digital</p>
-</body>
-</html>
+{% endblock %}

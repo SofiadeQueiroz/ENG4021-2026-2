@@ -1,14 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <title>Nova categoria</title>
-    <link rel="stylesheet" href="{% static 'css/novaCategoria.css' %}">
-</head>
-
-<body>
-    <div class="logo">
+{% block title %}Nova categoria{% endblock %}
+{% block page_class %}page-novaCategoria{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/novaCategoria.css' %}">{% endblock %}
+{% block content %}
+<div class="logo">
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="FoodLink" width="100">
     </div>
 
@@ -29,5 +25,4 @@
     </form>
 
     <p class="rodape">FoodLink</p>
-</body>
-</html>
+{% endblock %}

@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>FoodLink</title>
-    <link rel="stylesheet" href="tela2.css">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-</head>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}FoodLink{% endblock %}
+{% block page_class %}page-tela2{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/tela2.css' %}">{% endblock %}
+{% block content %}
+<div class="header">
 
-<body>
 
-<div class="header"> 
-
-    
     <p><span style="color:brown">SEU CARDAPIO</span></p>
     <h1> <b>Editar produto</b></h1>
 
@@ -41,12 +36,11 @@
 
     <h2>Foto do prato</h2>
     <input type="text" placeholder="Cole o link da imagem">
-    
+
     <div class="botoes">
         <button>Cancelar</button>
         <button>Salvar produto</button>
     </div>
 
 </div>
-</body>
-</html>
+{% endblock %}

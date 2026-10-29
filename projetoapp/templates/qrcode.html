@@ -1,17 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <title>QR Code</title>
-    <link href="{% static 'css/qrcode.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div class="topo">
+{% block title %}QR Code{% endblock %}
+{% block page_class %}page-qrcode{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/qrcode.css' %}">{% endblock %}
+{% block content %}
+<div class="topo">
         <a href="{% url 'inicioCliente' %}" class="botao-secundario">Voltar</a>
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="100">
     </div>
@@ -21,7 +14,7 @@
     <h5 class="descricao">Posicione o código dentro da moldura</h5>
 
     <div class="centralizacao">
-        <img src="https://play-lh.googleusercontent.com/BOGY3oCN4Bd-ogMXphOq2YjkwDdI8bQKtDVQ4ysQlZhXavDDsOqxKrGbTOiZ9TOnEjHVYRlwkq0gp-gJ1QtzIUY" alt="Moldura do leitor de QR Code">
+        <div class="scanner-frame" role="img" aria-label="Moldura do leitor de QR Code">Posicione o QR Code aqui</div>
     </div>
 
     <div class="centralizacao">
@@ -31,5 +24,4 @@
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
     </div>
-</body>
-</html>
+{% endblock %}

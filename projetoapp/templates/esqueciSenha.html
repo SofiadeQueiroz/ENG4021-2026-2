@@ -1,17 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <title>Esqueci minha senha</title>
-    <link href="{% static 'css/esqueciSenha.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div class="superior-direito">
+{% block title %}Esqueci minha senha{% endblock %}
+{% block page_class %}page-esqueciSenha{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/esqueciSenha.css' %}">{% endblock %}
+{% block content %}
+<div class="superior-direito">
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 
@@ -31,5 +24,4 @@
     {% endif %}
 
     <p class="texto-centro"><a href="{% url 'entrar' %}">Voltar</a></p>
-</body>
-</html>
+{% endblock %}
