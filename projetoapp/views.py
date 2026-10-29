@@ -5,17 +5,12 @@ from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, Restaura
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
+from .forms import ConsultaCEPForm
 
 
 
 def home(request):
-    response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
-    results_json = response.json()
-    movies = results_json['Search']
-    context = {
-        "movies": movies
-    }
-    return render(request,'boasVindas.html', context)
+    return render(request, 'boasVindas.html')
 
 def cadastro(request):
     if request.method == "POST":
@@ -83,14 +78,46 @@ def aparencia(request):
 
 def meuRestaurante(request):
     restaurante = Restaurante.objects.first()
+    cep_form = ConsultaCEPForm()
+    resultado_cep = ''
     if request.method == "POST":
-        form = RestauranteForm(request.POST, instance=restaurante)
-        if form.is_valid():
-            form.save()
-            return redirect('meuRestaurante')
+        if request.POST.get('acao') == 'consultar_cep':
+            cep_form = ConsultaCEPForm(request.POST)
+            dados_formulario = {campo: request.POST.get(campo, '') for campo in RestauranteForm.Meta.fields}
+            if cep_form.is_valid():
+                cep = cep_form.cleaned_data['cep'].replace('-', '')
+                try:
+                    resposta = requests.get(f'https://viacep.com.br/ws/{cep}/json/', timeout=5, allow_redirects=False)
+                    resposta.raise_for_status()
+                    endereco = resposta.json()
+                    if not isinstance(endereco, dict):
+                        raise ValueError('Resposta inválida')
+                    if endereco.get('erro') in (True, 'true'):
+                        cep_form.add_error('cep', 'CEP não encontrado. Confira os números.')
+                    elif any(not isinstance(endereco.get(campo), str) for campo in ('logradouro', 'bairro', 'localidade', 'uf')):
+                        raise ValueError('Resposta incompleta')
+                    elif not endereco['localidade'] or len(endereco['uf']) != 2:
+                        raise ValueError('Cidade ou UF inválida')
+                    else:
+                        partes = [endereco['logradouro'], endereco['bairro'], f"{endereco['localidade']}/{endereco['uf']}"]
+                        endereco_completo = ', '.join(parte for parte in partes if parte)
+                        if len(endereco_completo) > Restaurante._meta.get_field('endereco').max_length:
+                            cep_form.add_error('cep', 'O endereço retornado é longo demais. Preencha o endereço manualmente, com até 100 caracteres.')
+                        else:
+                            dados_formulario['endereco'] = endereco_completo
+                            resultado_cep = 'Endereço encontrado. Confira os dados e acrescente o número e o complemento antes de salvar.'
+                except (requests.RequestException, ValueError):
+                    cep_form.add_error('cep', 'Não foi possível consultar o CEP. Tente novamente ou preencha o endereço manualmente.')
+            # Consultar o CEP mantém os campos digitados e não salva o restaurante.
+            form = RestauranteForm(initial=dados_formulario, instance=restaurante)
+        else:
+            form = RestauranteForm(request.POST, instance=restaurante)
+            if form.is_valid():
+                form.save()
+                return redirect('meuRestaurante')
     else:
         form = RestauranteForm(instance=restaurante)
-    return render(request, 'meuRestaurante.html', {'form': form})
+    return render(request, 'meuRestaurante.html', {'form': form, 'cep_form': cep_form, 'resultado_cep': resultado_cep})
 
 
 def cardapioPublico(request):

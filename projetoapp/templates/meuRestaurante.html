@@ -20,34 +20,44 @@
     <h1>Meu restaurante</h1>
     <p class="descricao">Estas informações aparecem no seu cardápio.</p>
 
-    <form>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
         <label for="nome">Nome do restaurante</label>
-        <input id="nome" name="nome" type="text" value="Casa di Pasta" maxlength="60" required>
+        <input id="nome" name="nome" type="text" value="{{ form.nome.value|default_if_none:'' }}" maxlength="60" required>
 
         <label for="descricao">Descrição</label>
-        <textarea id="descricao" name="descricao" rows="4" maxlength="250" required>Massas artesanais, receitas de família e uma mesa sempre pronta para receber você.</textarea>
+        <textarea id="descricao" name="descricao" rows="4" maxlength="250" required>{{ form.descricao.value|default_if_none:'' }}</textarea>
 
         <div class="linha-campos">
             <div class="campo">
                 <label for="cozinha">Tipo de cozinha</label>
-                <input id="cozinha" name="cozinha" type="text" value="Italiana" maxlength="40" required>
+                <input id="cozinha" name="cozinha" type="text" value="{{ form.cozinha.value|default_if_none:'' }}" maxlength="40" required>
             </div>
             <div class="campo">
                 <label for="horario">Funcionamento</label>
-                <input id="horario" name="horario" type="text" value="12h às 23h" maxlength="80" required>
+                <input id="horario" name="horario" type="text" value="{{ form.horario.value|default_if_none:'' }}" maxlength="80" required>
             </div>
         </div>
 
+        <label for="id_cep">Consultar endereço pelo CEP</label>
+        {{ cep_form.cep }}
+        {{ cep_form.cep.errors }}
+        <button class="botao-secundario" type="submit" name="acao" value="consultar_cep" formnovalidate>Consultar CEP</button>
+        <p class="aviso">A consulta usa o ViaCEP para ajudar a preencher o endereço. Você também pode digitar o endereço manualmente.</p>
+        {% if resultado_cep %}
+            <p class="aviso" role="status">{{ resultado_cep }}</p>
+        {% endif %}
+
         <label for="endereco">Endereço</label>
-        <input id="endereco" name="endereco" type="text" placeholder="Rua, número e bairro" maxlength="100">
+        <input id="endereco" name="endereco" type="text" placeholder="Rua, número e bairro" value="{{ form.endereco.value|default_if_none:'' }}" maxlength="100">
 
         <label for="imagem">Imagem do restaurante</label>
-        <input id="imagem" name="imagem" type="url" placeholder="Cole o link da imagem">
+        <input id="imagem" name="imagem" type="url" placeholder="Cole o link da imagem" value="{{ form.imagem.value|default_if_none:'' }}">
 
         <p class="aviso">O link do cardápio continua o mesmo quando você muda o nome.</p>
 
-        <!-- O salvamento será ligado ao sistema na próxima etapa. -->
-        <button class="botao-principal" type="button">Salvar alterações</button>
+        <button class="botao-principal" type="submit">Salvar alterações</button>
         <p class="link-voltar"><a href="{% url 'cardapioDono' %}">Voltar ao cardápio</a></p>
     </form>
 

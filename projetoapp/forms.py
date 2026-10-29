@@ -31,6 +31,21 @@ class RestauranteForm(forms.ModelForm):
         model = Restaurante
         fields = ['nome', 'descricao', 'cozinha', 'horario', 'endereco', 'imagem']
 
+class ConsultaCEPForm(forms.Form):
+    cep = forms.RegexField(
+        regex=r'^[0-9]{5}-?[0-9]{3}$',
+        max_length=9,
+        required=False,
+        error_messages={'invalid': 'Informe um CEP com 8 números, como 01001-000.'},
+        widget=forms.TextInput(attrs={'inputmode': 'numeric', 'placeholder': '00000-000'}),
+    )
+
+    def clean_cep(self):
+        cep = self.cleaned_data['cep']
+        if not cep:
+            raise forms.ValidationError('Informe o CEP para fazer a consulta.')
+        return cep
+
 class EsqueciSenhaForm(forms.Form):
     email = forms.EmailField()
 
