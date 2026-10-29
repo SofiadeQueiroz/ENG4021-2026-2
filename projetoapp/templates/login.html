@@ -20,18 +20,25 @@
     <h2>Insira seu login</h2>
     <h5 class="descricao">Entre com o e-mail cadastrado para acessar sua conta</h5>
 
+    {% for message in messages %}
+        <p role="status">{{ message }}</p>
+    {% endfor %}
+
     <div class="centralizacao">
         <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
             {{ form.non_field_errors }}
 
             <div class="campo">
                 <label for="id_email">E-mail</label>
                 {{ form.email }}
+                {{ form.email.errors }}
             </div>
             <div class="campo">
                 <label for="id_senha">Senha</label>
                 {{ form.senha }}
+                {{ form.senha.errors }}
             </div>
 
             <p class="link-esqueci"><a href="{% url 'esqueciSenha' %}">Esqueci minha senha</a></p>

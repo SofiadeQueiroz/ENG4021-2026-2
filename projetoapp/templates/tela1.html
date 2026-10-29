@@ -26,6 +26,12 @@
                 <li><a href="{% url 'aparencia' %}">Aparencia</a></li>
                 <li><a href="{% url 'meuRestaurante' %}">Meu restaurante</a></li>
                 <li><a href="">QRCode</a></li>
+                <li>
+                    <form method="post" action="{% url 'sair' %}">
+                        {% csrf_token %}
+                        <button class="botao-sair" type="submit">Sair</button>
+                    </form>
+                </li>
 
             </ul>
         </nav>
