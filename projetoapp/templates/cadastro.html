@@ -1,16 +1,18 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cadastro</title>
-    <link href="{% static 'css/cadastro.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/Cadastro.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div><button onclick="history.back()">Voltar</button><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
+    <div><a href="{% url 'home' %}">Voltar</a><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
 </span></div>
 
     <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
@@ -44,3 +46,5 @@
 
     <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
 </body>
+
+</html>

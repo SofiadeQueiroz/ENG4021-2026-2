@@ -53,3 +53,22 @@ textarea {
     border: none;
     border-radius: 20px;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.header { max-width: 900px; margin: 0 auto; }
+input, textarea { width: 100%; }
+.precoCategoria > div { flex: 1; min-width: 0; }
+.botoes { flex-wrap: wrap; margin: 20px 0; }
+@media (max-width: 600px) {
+    .precoCategoria { flex-direction: column; gap: 0; }
+}

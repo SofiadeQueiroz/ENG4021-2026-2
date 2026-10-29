@@ -321,3 +321,21 @@ h3,
 label {
     color: #1a1a1a;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.topo { height: auto; min-height: 58px; flex-wrap: wrap; gap: 12px; }
+.acoes-topo { margin-right: 0; }
+.menu-inferior { position: static; margin-top: 30px; flex-wrap: wrap; gap: 16px; }
+.item-menu { font-size: 11px; min-height: 44px; justify-content: center; text-align: center; }
+.produto-previa { flex-wrap: wrap; }
+body { padding-bottom: 20px; }

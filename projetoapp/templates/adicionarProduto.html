@@ -1,14 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Adicionar produto</title>
-    <link rel="stylesheet" href="../static/css/adicionarProduto.css">
+    <link rel="stylesheet" href="{% static 'css/adicionarProduto.css' %}">
 </head>
 
 <body>
     <div class="logo">
-        <img src="../Juliana Bassan/novalogo.jpg" alt="FoodLink" width="100">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="FoodLink" width="100">
     </div>
 
     <h1>Adicionar produto</h1>

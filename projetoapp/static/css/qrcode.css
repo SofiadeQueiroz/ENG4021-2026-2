@@ -68,3 +68,17 @@ h2{
 .centralizacao p{
     font-weight: bold;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.topo { gap: 12px; flex-wrap: wrap; }
+.centralizacao img { width: 400px; max-width: 100%; }

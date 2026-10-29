@@ -85,3 +85,18 @@ h2 {
     margin-top: 35px;
     text-align: center;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.produto img { flex-shrink: 0; }
+.produto > div { min-width: 0; }
+.categorias { display: flex; flex-wrap: wrap; gap: 8px; }
