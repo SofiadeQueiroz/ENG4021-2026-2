@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="topo">
+        <a href="{% url 'home' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="100">
+    </div>
+
+    <h4 class="chamada">Bem-vindo de volta!</h4>
+    <h2>Insira seu login</h2>
+    <h5 class="descricao">Entre com o e-mail cadastrado para acessar sua conta</h5>
+
+    <div class="centralizacao">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="campo">
+                <label for="id_email">E-mail</label>
+                {{ form.email }}
+            </div>
+            <div class="campo">
+                <label for="id_senha">Senha</label>
+                {{ form.senha }}
+            </div>
+
+            <p class="link-esqueci"><a href="{% url 'esqueciSenha' %}">Esqueci minha senha</a></p>
+
+            <button type="submit" class="botao-principal">Seguir</button>
+        </form>
+    </div>
+
+    <p class="rodape-fixo">Food<span class="destaque">Link</span></p>
+</body>
+</html>
