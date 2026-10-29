@@ -133,14 +133,9 @@ textarea { resize: vertical; }
 }
 
 .topo { flex-wrap: wrap; gap: 12px; }
-.icone { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
-.ver-cardapio { display: flex; align-items: center; gap: 6px; }
 .campo { min-width: 0; }
 form { width: 100%; }
 .menu-inferior { position: static; margin-top: 30px; flex-wrap: wrap; gap: 16px; }
-.item-menu { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-.botao-salvar { background-color: chocolate; color: white; border: none; border-radius: 25px; width: 100%; min-height: 50px; font: inherit; padding: 12px; }
-.botao-cancelar { display: block; text-align: center; margin-top: 15px; color: chocolate; }
 body { padding-bottom: 20px; }
 @media (max-width: 600px) {
     .linha-campos { flex-direction: column; gap: 0; }
