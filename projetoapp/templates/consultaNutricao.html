@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Informações Nutricionais - FoodLink</title>
+</head>
+<body>
+
+    <h1>Informações Nutricionais</h1>
+
+    <form method="GET">
+        <input
+            type="text"
+            name="alimento"
+            placeholder="Digite um alimento"
+            value="{{ busca }}"
+            required
+        >
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if erro %}
+        <p>{{ erro }}</p>
+    {% endif %}
+
+    {% for alimento in alimentos %}
+        <h2>{{ alimento.description }}</h2>
+
+        <p>Marca: {{ alimento.brandOwner|default:"Não informada" }}</p>
+
+        <h3>Informações nutricionais</h3>
+
+        {% for nutriente in alimento.foodNutrients %}
+            <p>
+                {{ nutriente.nutrientName }}:
+                {{ nutriente.value }}
+                {{ nutriente.unitName }}
+            </p>
+        {% endfor %}
+
+        <hr>
+    {% empty %}
+        {% if busca and not erro %}
+            <p>Nenhum alimento encontrado.</p>
+        {% endif %}
+    {% endfor %}
+
+</body>
+</html>

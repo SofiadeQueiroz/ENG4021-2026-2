@@ -39,4 +39,7 @@ urlpatterns = [
     path('esqueciSenha/', esqueciSenha, name='esqueciSenha'),
     path('entrar/', entrar, name='entrar'),
     path('sair/', sair, name='sair'),
+    path('consultarCNPJ/', consultarCNPJ, name='consultarCNPJ'),
+    path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
+    path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
 ] 
