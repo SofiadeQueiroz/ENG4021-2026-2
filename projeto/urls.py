@@ -39,4 +39,8 @@ urlpatterns = [
     path('entrar/', entrar, name='entrar'),
     path('sair/', sair, name='sair'),
     path('accounts/', include('allauth.urls')),
+    path('consultarCNPJ/', consultarCNPJ, name='consultarCNPJ'),
+    path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
+    path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
+]
 ] 

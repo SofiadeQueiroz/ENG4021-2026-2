@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Alergênicos - FoodLink</title>
+</head>
+<body>
+    <h1>Consulta de Alergênicos</h1>
+
+    <form method="GET">
+        <input
+            type="text"
+            name="produto"
+            placeholder="Digite o nome do produto"
+            value="{{ busca }}"
+            required
+        >
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if erro %}
+        <p>{{ erro }}</p>
+    {% endif %}
+
+    {% for produto in produtos %}
+        <hr>
+        <h2>{{ produto.product_name|default:"Produto sem nome" }}</h2>
+
+        <p>
+            Marca: {{ produto.brands|default:"Não informada" }}
+        </p>
+
+        <h3>Alergênicos</h3>
+        <p>
+            {{ produto.allergens|default:"Não informado no cadastro" }}
+        </p>
+
+        <h3>Ingredientes</h3>
+        <p>
+            {{ produto.ingredients_text|default:"Não informado no cadastro" }}
+        </p>
+
+    {% empty %}
+        {% if busca and not erro %}
+            <p>Nenhum produto encontrado.</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
