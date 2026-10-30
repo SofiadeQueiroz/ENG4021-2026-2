@@ -162,7 +162,30 @@ def meuRestaurante(request):
 
 
 def cardapioPublico(request):
-    return render(request, 'cardapioPublico.html')
+    textos = {
+        'descricao': 'Massas artesanais e receitas de família.',
+        'entradas': 'Entradas',
+        'pratos': 'Pratos principais',
+        'bruschetta': 'Pão tostado com tomate e manjericão.',
+        'arancini': 'Bolinhos de risoto recheados com queijo.',
+        'carbonara': 'Massa com guanciale, queijo e gemas.',
+        'lasanha': 'Massa fresca, molho de carne e queijo gratinado.',
+        'detalhes': 'Ver detalhes',
+        'indisponivel': 'Indisponível no momento',
+    }
+
+    idioma = request.GET.get('idioma', 'pt')
+    if idioma == 'en':
+        descricoes = ['descricao', 'bruschetta', 'arancini', 'carbonara', 'lasanha']
+        for chave in descricoes:
+            resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': textos[chave], 'langpair': 'pt|en'})
+            textos[chave] = resposta.json()['responseData']['translatedText']
+
+        textos['entradas'] = 'Starters'
+        textos['pratos'] = 'Main courses'
+        textos['detalhes'] = 'See details'
+        textos['indisponivel'] = 'Unavailable right now'
+    return render(request, 'cardapioPublico.html', {'textos': textos, 'idioma': idioma})
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
