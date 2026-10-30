@@ -206,3 +206,7 @@ def esqueciSenha(request):
         form = EsqueciSenhaForm()
     return render(request, 'esqueciSenha.html', {'form': form, 'enviado': enviado})
 
+def qrcodeRestaurante(request):
+    link_cardapio = request.build_absolute_uri('/cardapioPublico/')
+    qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=B84E29&data=' + link_cardapio
+    return render(request, 'qrcodeRestaurante.html', {'qr_url': qr_url, 'link_cardapio': link_cardapio})

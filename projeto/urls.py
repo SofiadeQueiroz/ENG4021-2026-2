@@ -29,6 +29,7 @@ urlpatterns = [
     path('inicioCliente/', inicioCliente, name='inicioCliente'),
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
     path('qrcode/', qrcode, name='qrcode'),
+    path('qrcodeRestaurante/', qrcodeRestaurante, name='qrcodeRestaurante'),
     path('cardapioDono/', tela1, name='cardapioDono'),
     path('editarProduto/', tela2),
     path('aparencia/', aparencia, name='aparencia'),
