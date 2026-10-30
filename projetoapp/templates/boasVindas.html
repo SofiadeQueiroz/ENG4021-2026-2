@@ -1,40 +1,47 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <meta name="viewport">
     <title>Boas-vindas</title>
     <link href="{% static 'css/boasVindas.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
-
+ 
 <body>
-    <div class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
-</div>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
-    <h4 style="color: chocolate;">BEM-VINDO AO FOODLINK</h4>
-    <h1><b>Olá, Cliente!</b></h1>
-    <h3>Como você quer encontrar seu próximo sabor?</h3>
+    <h1>Bem-vindo ao FoodLink</h1>
+    <h3>Crie sua conta ou entre para encontrar seu próximo sabor</h3>
 
     <div class="exemplo">
-        {%for movie in movies%}
-        <div class="card" style = 'width: 18rem'>
-            <img style="width:100px;" src = "{{ movie.Poster}}" class = 'card-img-top'>
+        {% for movie in movies %}
+        <div class="card" style="width: 18rem">
+            <img style="width:100px;" src="{{ movie.Poster }}" class="card-img-top">
             <div>
-                <h5> {{ movie.Title}}</h5>
-                <p> Some quick example text to build on the card title and make up the bull of the</p>
+                <h5>{{ movie.Title }}</h5>
+                <p>Some quick example text to build on the card title and make up the bull of the</p>
             </div>
         </div>
         {% endfor %}
     </div>
-    
+
     <div class="botoes-centralizados">
-        <button class="botao-principal">Buscar estabelecimento</button>
-        <button class="botao-secundario">Escanear QR Code</button>
+        <a href="{% url 'cadastro' %}" class="botao-principal">Criar conta</a>
+        <!-- trocar o # pela rota da tela de login quando ela existir -->
+        <a href="{% url 'entrar' %}" class="botao-secundario">Entrar</a>
+ 
+        <p class="ou">ou</p>
+ 
+        <a href="{% url 'inicioCliente' %}" class="botao-secundario">Entrar sem conta</a>
+        
     </div>
-
-    <p class="texto-centro"><a href="esqueciSenha.html">Esqueci minha senha</a></p>
-
-    <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
+ 
+    <p class="rodape-fixo">Food<span class="destaque">Link</span></p>
 </body>
+</html>

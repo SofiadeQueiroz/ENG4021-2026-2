@@ -10,6 +10,16 @@ body{
   font-style: normal;
 
 }
+.botao-sair {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: brown;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+}
+
 .buscar {
     display: flex;
     gap: 10px;
@@ -104,4 +114,30 @@ h1{
 .preco{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: medium;
+}
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.navbar { flex-wrap: wrap; gap: 12px; padding: 20px 0; }
+.navbar nav { margin-left: 0; }
+.navbar ul { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.navbar li { margin-right: 0; }
+.buscar { flex-wrap: wrap; }
+.buscar input { width: auto; min-width: 0; flex: 1 1 160px; }
+.informacoes { min-width: 0; }
+.nome, .editApaga { flex-wrap: wrap; gap: 12px; }
+.Produtos > img { flex-shrink: 0; }
+@media (max-width: 600px) {
+    .Produtos { flex-direction: column; align-items: flex-start; padding: 20px 0; gap: 16px; }
+    .informacoes { margin-left: 0; width: 100%; }
+    .editApaga button { margin: 8px 0; }
 }

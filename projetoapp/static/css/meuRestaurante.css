@@ -1,0 +1,143 @@
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding: 20px 30px 90px;
+}
+
+.topo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chamada{
+    color: chocolate;
+    margin-top: 20px;
+}
+
+h1{
+    margin-top: 5px;
+    font-size: 32px;
+}
+
+.descricao{
+    color: #5f5f5f;
+    margin-bottom: 25px;
+}
+
+form{
+    background-color: white;
+    border: 1px solid #e5ddd0;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 500px;
+}
+
+label{
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+input,
+textarea{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.linha-campos{
+    display: flex;
+    gap: 15px;
+}
+
+.campo{
+    flex: 1;
+}
+
+.aviso{
+    color: #5f5f5f;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.botao-principal{
+    background-color: chocolate;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    width: 100%;
+    height: 50px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.link-voltar{
+    text-align: center;
+    margin-top: 15px;
+}
+
+.link-voltar a{
+    color: chocolate;
+}
+
+.menu-inferior{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 14px 0;
+    background-color: white;
+    border-top: 1px solid #e5ddd0;
+    font-size: 14px;
+}
+
+.menu-inferior a{
+    color: #444;
+    text-decoration: none;
+}
+
+.menu-inferior a.ativo{
+    color: chocolate;
+    font-weight: bold;
+}
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.topo { flex-wrap: wrap; gap: 12px; }
+.campo { min-width: 0; }
+form { width: 100%; }
+.menu-inferior { position: static; margin-top: 30px; flex-wrap: wrap; gap: 16px; }
+body { padding-bottom: 20px; }
+@media (max-width: 600px) {
+    .linha-campos { flex-direction: column; gap: 0; }
+    form { padding: 18px; }
+}

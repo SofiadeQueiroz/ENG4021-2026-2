@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Esqueci minha senha</title>
+    <link href="{% static 'css/esqueciSenha.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <h1>Esqueceu sua senha?</h1>
+    <p class="descricao">Informe o e-mail do seu cadastro para recuperar o acesso.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        <label for="id_email">E-mail</label>
+        {{ form.email }}
+        <button type="submit" class="botao-principal">Recuperar senha</button>
+    </form>
+
+    {% if enviado %}
+        <p class="texto-centro">Se esse e-mail estiver cadastrado, você vai receber as instruções.</p>
+    {% endif %}
+
+    <p class="texto-centro"><a href="{% url 'entrar' %}">Voltar</a></p>
+</body>
+</html>

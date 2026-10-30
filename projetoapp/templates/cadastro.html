@@ -1,40 +1,53 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cadastro</title>
-    <link href="{% static 'css/cadastro.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/Cadastro.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div><button onclick="history.back()">Voltar</button><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
+    <div><a href="{% url 'home' %}">Voltar</a><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
 </span></div>
 
     <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
     <h1><b>Preencha com seus dados</b></h1>
 
-    <form>
-        <label>Nome completo</label><br>
-        <input type="text" placeholder="Como podemos te chamar?"><br><br>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
 
-        <label>CPF</label><br>
-        <input type="text" placeholder="000.000.000-00"><br><br>
+        <label for="id_nome">Nome completo</label><br>
+        {{ form.nome }}<br><br>
 
-        <label>Telefone</label><br>
-        <input type="text" placeholder="(00) 00000-0000"><br><br>
+        <label for="id_email">Email</label><br>
+        {{ form.email }}<br><br>
+        
+        <label for="id_cpf">CPF</label><br>
+        {{ form.cpf }}<br><br>
 
-        <label>Escolha uma senha</label><br>
-        <input type="password" placeholder="Mínimo 8 caracteres"><br><br>
+        <label for="id_telefone">Telefone</label><br>
+        {{ form.telefone }}<br><br>
 
-        <input type="checkbox">
-        <span style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</span>
+        <label for="id_senha">Escolha uma senha</label><br>
+        {{ form.senha }}<br><br>
+
+        <label for="id_confirmar_senha">Confirme sua senha</label><br>
+        {{ form.confirmar_senha }}<br><br>
+
+        {{ form.aceite }}
+        <label for="id_aceite" style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</label>
 
         <br><br>
-        <button class="botao-seta" type="submit">&#8594;</button>
+        <button class="botao-seta" type="submit" aria-label="Criar conta">&#8594;</button>
     </form>
 
     <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
 </body>
+
+</html>

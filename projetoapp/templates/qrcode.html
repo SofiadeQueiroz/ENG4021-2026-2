@@ -1,36 +1,36 @@
-
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
-    <meta name="viewport"> 
     <title>QR Code</title>
-    <link href="../static/css/qrcode.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/qrcode.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div>   
-       <button>Voltar</button><span class="superior-direito">
-        <img src="../Juliana Bassan/novalogo.jpg" width="100"></span>
+    <div class="topo">
+        <a href="{% url 'inicioCliente' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="100">
     </div>
 
-    <div>
-        <h4 style="color: chocolate;">CARDÁPIO DIGITAL</h4>
-        <h2>Aponte a câmera para o QR Code</h2>
-        <h5 style="color: grey;">Posicione o código dentro da moldura</h5>
-    </div>
+    <h4 class="chamada">CARDÁPIO DIGITAL</h4>
+    <h2>Aponte a câmera para o QR Code</h2>
+    <h5 class="descricao">Posicione o código dentro da moldura</h5>
+
     <div class="centralizacao">
-        <img src="https://play-lh.googleusercontent.com/BOGY3oCN4Bd-ogMXphOq2YjkwDdI8bQKtDVQ4ysQlZhXavDDsOqxKrGbTOiZ9TOnEjHVYRlwkq0gp-gJ1QtzIUY" width="500">
+        <img src="https://play-lh.googleusercontent.com/BOGY3oCN4Bd-ogMXphOq2YjkwDdI8bQKtDVQ4ysQlZhXavDDsOqxKrGbTOiZ9TOnEjHVYRlwkq0gp-gJ1QtzIUY" alt="Moldura do leitor de QR Code">
     </div>
+
     <div class="centralizacao">
-        <button>Câmera pronta</button>
+        <button class="botao-principal">Câmera pronta</button>
     </div>
+
     <div class="centralizacao">
-        <p>Food<span style="color: chocolate;">Link</span></p>
+        <p>Food<span class="destaque">Link</span></p>
     </div>
-     
-
-
-
 </body>
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Aparência</title>
+    <link href="{% static 'css/aparencia.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="topo">
+        <a href="{% url 'cardapioPublico' %}" class="botao-secundario">Ver cardápio</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <h4 class="chamada">DO SEU JEITO</h4>
+    <h1>Aparência</h1>
+    <p class="descricao">Um toque seu, sem complicação.</p>
+
+    <form>
+        <h2>Cor de destaque</h2>
+        <p class="ajuda">Escolha a cor das categorias e dos preços.</p>
+
+        <div class="cores">
+            <label class="opcao-cor" for="terracota">
+                <input id="terracota" name="cor" type="radio" value="#b84e29" checked>
+                <span class="amostra terracota"></span>
+                Terracota
+            </label>
+            <label class="opcao-cor" for="verde">
+                <input id="verde" name="cor" type="radio" value="#4f7a4e">
+                <span class="amostra verde"></span>
+                Verde
+            </label>
+            <label class="opcao-cor" for="grafite">
+                <input id="grafite" name="cor" type="radio" value="#2b2b2b">
+                <span class="amostra grafite"></span>
+                Grafite
+            </label>
+        </div>
+
+        <label class="titulo-campo" for="capa">Imagem de capa</label>
+        <input id="capa" name="capa" type="url" placeholder="Cole o link da imagem">
+        <p class="ajuda">Use uma foto que combine com o seu restaurante.</p>
+
+        <h2>Prévia do cardápio</h2>
+        <!-- Prévia fixa para mostrar o layout, sem JavaScript. -->
+        <div class="previa">
+            <div class="capa-previa">Casa di Pasta</div>
+            <div class="conteudo-previa">
+                <p class="tipo-cozinha">ITALIANA</p>
+                <h3>Casa di Pasta</h3>
+                <p class="texto-previa">Massas artesanais e receitas de família.</p>
+                <span class="categoria-previa">Entradas</span>
+                <div class="produto-previa">
+                    <span>Bruschetta da casa</span>
+                    <strong>R$ 24,00</strong>
+                </div>
+            </div>
+        </div>
+        <p class="ajuda">Exemplo com a cor terracota.</p>
+
+        <!-- O salvamento será ligado ao sistema na próxima etapa. -->
+        <button class="botao-principal" type="button">Salvar aparência</button>
+        <p class="link-voltar"><a href="{% url 'cardapioDono' %}">Voltar ao cardápio</a></p>
+    </form>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}" class="ativo">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="#">QR Code</a>
+    </nav>
+</body>
+</html>

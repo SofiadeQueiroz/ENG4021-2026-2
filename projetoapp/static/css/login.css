@@ -1,0 +1,133 @@
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding: 20px 30px;
+    text-align: center;
+}
+
+.topo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chamada{
+    color: chocolate;
+    margin-top: 20px;
+}
+
+h2{
+    font-size: 28px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.descricao{
+    color: #5f5f5f;
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 25px;
+}
+
+.destaque{
+    color: chocolate;
+}
+
+.centralizacao{
+    display: flex;
+    justify-content: center;
+}
+
+form{
+    background-color: white;
+    border: 1px solid #e5ddd0;
+    border-radius: 20px;
+    padding: 25px;
+    width: 380px;
+    text-align: left;
+}
+
+.campo{
+    margin-bottom: 20px;
+}
+
+label{
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+input[type="email"],
+input[type="password"]{
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.errorlist{
+    color: firebrick;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+}
+
+.link-esqueci{
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.link-esqueci a{
+    color: chocolate;
+}
+
+.botao-principal{
+    background-color: chocolate;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    width: 100%;
+    height: 50px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.rodape-fixo{
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.topo { gap: 12px; flex-wrap: wrap; }
+form { max-width: 100%; }
+.rodape-fixo { position: static; width: auto; margin: 40px 0 16px; }
+@media (max-width: 600px) {
+    form { padding: 18px; }
+}

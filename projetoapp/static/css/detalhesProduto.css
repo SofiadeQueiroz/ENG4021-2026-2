@@ -1,0 +1,94 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fbf7f0;
+    color: #1a1a1a;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span,
+a,
+.preco {
+    color: #b84e29;
+}
+
+.foto {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    margin-top: 25px;
+    border-radius: 8px;
+}
+
+.categoria {
+    color: #5c5750;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 26px;
+    margin: 10px 0;
+}
+
+.preco {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.disponivel {
+    color: #3b6b35;
+}
+
+.descricao {
+    padding: 15px;
+    margin: 25px 0;
+    background-color: white;
+    border: 1px solid #ddd5ca;
+    border-radius: 8px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.botao {
+    display: block;
+    padding: 12px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #b84e29;
+    color: white;
+    border-radius: 8px;
+}
+
+.rodape {
+    margin-top: 35px;
+    text-align: center;
+    font-size: 12px;
+    color: #5c5750;
+}
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
