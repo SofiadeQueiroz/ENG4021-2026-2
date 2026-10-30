@@ -1,87 +1,105 @@
-* {
-    box-sizing: border-box;
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding: 20px 30px;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #fbf7f0;
-    color: #1a1a1a;
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 20px;
-    font-size: 14px;
-    line-height: 1.5;
+.superior-direito{
+    display: flex;
+    justify-content: end;
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: bold;
+.centralizacao{
+    display: flex;
+    justify-content: center;
 }
 
-.logo span,
-a,
-.preco {
-    color: #b84e29;
+.cardapio{
+    width: 100%;
+    max-width: 700px;
 }
 
-h1 {
-    font-size: 28px;
+h1{
+    font-size: 32px;
+    margin-top: 5px;
     margin-bottom: 10px;
 }
 
-h2 {
-    margin-top: 30px;
-    font-size: 20px;
+.info{
+    color: #5f5f5f;
 }
 
-.categorias {
-    margin-top: 25px;
+.destaque{
+    color: chocolate;
 }
 
-.categorias a {
+.categorias{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.categorias a{
     display: inline-block;
-    padding: 8px 12px;
-    margin-bottom: 5px;
-    background-color: #edbaa5;
-    color: #1a1a1a;
-    border-radius: 8px;
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 8px 18px;
+    margin-right: 8px;
+    margin-bottom: 8px;
     text-decoration: none;
 }
 
-.produto {
+h2{
+    font-size: 22px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.produto{
     display: flex;
     gap: 15px;
-    padding: 20px 0;
-    border-bottom: 1px solid #ddd5ca;
+    background-color: white;
+    border: 1px solid #e5ddd0;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-.produto img {
-    width: 85px;
-    height: 85px;
+.produto img{
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
-.produto h3 {
-    font-size: 16px;
-    margin: 0;
+.produto h3{
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 6px;
 }
 
-.produto p {
-    margin: 8px 0;
+.produto p{
+    margin-top: 0;
+    margin-bottom: 8px;
 }
 
-.preco {
+.produto a{
+    color: chocolate;
+}
+
+.preco{
+    color: chocolate;
     font-weight: bold;
 }
 
-.indisponivel,
-.rodape {
-    color: #5c5750;
-    font-size: 12px;
+.indisponivel{
+    color: #5f5f5f;
+    font-size: 14px;
 }
 
-.rodape {
+.rodape{
     margin-top: 35px;
     text-align: center;
+    color: #5f5f5f;
 }

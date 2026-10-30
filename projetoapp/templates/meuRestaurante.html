@@ -2,64 +2,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meu restaurante - FoodLink</title>
+    <meta charset="utf-8">
+    <title>Meu restaurante</title>
+    <link href="{% static 'css/meuRestaurante.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/meuRestaurante.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header class="topo">
-        <span class="logo-texto">FoodLink</span>
-        <div class="acoes-topo">
-            <a class="ver-cardapio" href="{% url 'cardapioPublico' %}">
-                <svg class="icone" viewBox="0 0 24 24"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg>
-                Ver cardápio
-            </a>
+    <div class="topo">
+        <a href="{% url 'cardapioPublico' %}" class="botao-secundario">Ver cardápio</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
-        </div>
-    </header>
+    <h4 class="chamada">SUA IDENTIDADE</h4>
+    <h1>Meu restaurante</h1>
+    <p class="descricao">Estas informações aparecem no seu cardápio.</p>
 
-    <main class="conteudo">
-        <p class="restaurante">SUA IDENTIDADE</p>
-        <h1>Meu restaurante</h1>
-        <p class="descricao">Estas informações aparecem no seu cardápio.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        <label for="nome">Nome do restaurante</label>
+        <input id="nome" name="nome" type="text" value="{{ form.nome.value|default_if_none:'' }}" maxlength="60" required>
 
-        <form class="formulario" method="post">
-            {% csrf_token %}
-            {{ form.errors }}
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" rows="4" maxlength="250" required>{{ form.descricao.value|default_if_none:'' }}</textarea>
 
-            <label for="id_nome">Nome do restaurante</label>
-            {{ form.nome }}
-
-            <label for="id_descricao">Descrição</label>
-            {{ form.descricao }}
-
-            <div class="linha-campos">
-                <div class="campo">
-                    <label for="id_cozinha">Tipo de cozinha</label>
-                    {{ form.cozinha }}
-                </div>
-                <div class="campo">
-                    <label for="id_horario">Funcionamento</label>
-                    {{ form.horario }}
-                </div>
+        <div class="linha-campos">
+            <div class="campo">
+                <label for="cozinha">Tipo de cozinha</label>
+                <input id="cozinha" name="cozinha" type="text" value="{{ form.cozinha.value|default_if_none:'' }}" maxlength="40" required>
             </div>
+            <div class="campo">
+                <label for="horario">Funcionamento</label>
+                <input id="horario" name="horario" type="text" value="{{ form.horario.value|default_if_none:'' }}" maxlength="80" required>
+            </div>
+        </div>
 
-            <label for="id_endereco">Endereço</label>
-            {{ form.endereco }}
+        <label for="id_cep">Consultar endereço pelo CEP</label>
+        {{ cep_form.cep }}
+        {{ cep_form.cep.errors }}
+        <button class="botao-secundario" type="submit" name="acao" value="consultar_cep" formnovalidate>Consultar CEP</button>
+        <p class="aviso">A consulta usa o ViaCEP para ajudar a preencher o endereço. Você também pode digitar o endereço manualmente.</p>
+        {% if resultado_cep %}
+            <p class="aviso" role="status">{{ resultado_cep }}</p>
+        {% endif %}
 
-            <label for="id_imagem">Imagem do restaurante</label>
-            {{ form.imagem }}
+        <label for="endereco">Endereço</label>
+        <input id="endereco" name="endereco" type="text" placeholder="Rua, número e bairro" value="{{ form.endereco.value|default_if_none:'' }}" maxlength="100">
 
-            <p class="aviso">O link do cardápio continua o mesmo quando você muda o nome.</p>
+        <label for="imagem">Imagem do restaurante</label>
+        <input id="imagem" name="imagem" type="url" placeholder="Cole o link da imagem" value="{{ form.imagem.value|default_if_none:'' }}">
 
-            <button class="botao-salvar" type="submit">Salvar alterações</button>
-            <a class="botao-cancelar" href="{% url 'cardapioDono' %}">Voltar ao cardápio</a>
-        </form>
-    </main>
+        <p class="aviso">O link do cardápio continua o mesmo quando você muda o nome.</p>
+
+        <button class="botao-principal" type="submit">Salvar alterações</button>
+        <p class="link-voltar"><a href="{% url 'cardapioDono' %}">Voltar ao cardápio</a></p>
+    </form>
 
     <nav class="menu-inferior">
         <a class="item-menu" href="{% url 'cardapioDono' %}">

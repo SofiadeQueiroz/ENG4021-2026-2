@@ -3,102 +3,77 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aparência - FoodLink</title>
+    <title>Aparência</title>
+    <link href="{% static 'css/aparencia.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link href="{% static 'css/aparencia.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header class="topo">
-        <span class="logo-texto">FoodLink</span>
-        <div class="acoes-topo">
-            <a class="ver-cardapio" href="{% url 'cardapioPublico' %}">
-                <svg class="icone" viewBox="0 0 24 24"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg>
-                Ver cardápio
-            </a>
+    <div class="topo">
+        <a href="{% url 'cardapioPublico' %}" class="botao-secundario">Ver cardápio</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
+    <h4 class="chamada">DO SEU JEITO</h4>
+    <h1>Aparência</h1>
+    <p class="descricao">Um toque seu, sem complicação.</p>
+
+    <form>
+        <h2>Cor de destaque</h2>
+        <p class="ajuda">Escolha a cor das categorias e dos preços.</p>
+
+        <div class="cores">
+            <label class="opcao-cor" for="terracota">
+                <input id="terracota" name="cor" type="radio" value="#b84e29" checked>
+                <span class="amostra terracota"></span>
+                Terracota
+            </label>
+            <label class="opcao-cor" for="verde">
+                <input id="verde" name="cor" type="radio" value="#4f7a4e">
+                <span class="amostra verde"></span>
+                Verde
+            </label>
+            <label class="opcao-cor" for="grafite">
+                <input id="grafite" name="cor" type="radio" value="#2b2b2b">
+                <span class="amostra grafite"></span>
+                Grafite
+            </label>
         </div>
-    </header>
 
-    <main class="conteudo">
-        <p class="restaurante">DO SEU JEITO</p>
-        <h1>Aparência</h1>
-        <p class="descricao">Um toque seu, sem complicação.</p>
+        <label class="titulo-campo" for="capa">Imagem de capa</label>
+        <input id="capa" name="capa" type="url" placeholder="Cole o link da imagem">
+        <p class="ajuda">Use uma foto que combine com o seu restaurante.</p>
 
-        <form class="formulario">
-            <h2>Cor de destaque</h2>
-            <p class="ajuda">Escolha a cor das categorias e dos preços.</p>
-
-            <div class="cores">
-                <label class="opcao-cor" for="terracota">
-                    <input id="terracota" name="cor" type="radio" value="#b84e29" checked>
-                    <span class="amostra terracota"></span>
-                    Terracota
-                </label>
-                <label class="opcao-cor" for="verde">
-                    <input id="verde" name="cor" type="radio" value="#4f7a4e">
-                    <span class="amostra verde"></span>
-                    Verde
-                </label>
-                <label class="opcao-cor" for="grafite">
-                    <input id="grafite" name="cor" type="radio" value="#2b2b2b">
-                    <span class="amostra grafite"></span>
-                    Grafite
-                </label>
-            </div>
-
-            <label class="titulo-campo" for="capa">Imagem de capa</label>
-            <input class="campo-link" id="capa" name="capa" type="url" placeholder="Cole o link da imagem">
-            <p class="ajuda">Use uma foto que combine com o seu restaurante.</p>
-
-            <h2>Prévia do cardápio</h2>
-            <!-- Prévia fixa para mostrar o layout, sem JavaScript. -->
-            <div class="previa">
-                <div class="capa-previa">
-                    <span>Casa di Pasta</span>
-                </div>
-                <div class="conteudo-previa">
-                    <p class="tipo-cozinha">ITALIANA</p>
-                    <h3>Casa di Pasta</h3>
-                    <p class="texto-previa">Massas artesanais e receitas de família.</p>
-                    <span class="categoria-previa">Entradas</span>
-                    <div class="produto-previa">
-                        <span>Bruschetta da casa</span>
-                        <strong>R$ 24,00</strong>
-                    </div>
+        <h2>Prévia do cardápio</h2>
+        <!-- Prévia fixa para mostrar o layout, sem JavaScript. -->
+        <div class="previa">
+            <div class="capa-previa">Casa di Pasta</div>
+            <div class="conteudo-previa">
+                <p class="tipo-cozinha">ITALIANA</p>
+                <h3>Casa di Pasta</h3>
+                <p class="texto-previa">Massas artesanais e receitas de família.</p>
+                <span class="categoria-previa">Entradas</span>
+                <div class="produto-previa">
+                    <span>Bruschetta da casa</span>
+                    <strong>R$ 24,00</strong>
                 </div>
             </div>
-            <p class="ajuda">Exemplo com a cor terracota.</p>
+        </div>
+        <p class="ajuda">Exemplo com a cor terracota.</p>
 
-            <!-- O salvamento será ligado ao sistema na próxima etapa. -->
-            <button class="botao-salvar" type="button">Salvar aparência</button>
-            <a class="botao-cancelar" href="{% url 'cardapioDono' %}">Voltar ao cardápio</a>
-        </form>
-    </main>
+        <!-- O salvamento será ligado ao sistema na próxima etapa. -->
+        <button class="botao-principal" type="button">Salvar aparência</button>
+        <p class="link-voltar"><a href="{% url 'cardapioDono' %}">Voltar ao cardápio</a></p>
+    </form>
 
     <nav class="menu-inferior">
-        <a class="item-menu" href="{% url 'cardapioDono' %}">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
-            Cardápio
-        </a>
-        <a class="item-menu" href="{% url 'novaCategoria' %}" aria-label="Categorias">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg>
-            Categorias
-        </a>
-        <a class="item-menu ativo" href="{% url 'aparencia' %}" aria-current="page">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.55C21.97 6.01 17.46 2 12 2z"/></svg>
-            Aparência
-        </a>
-        <a class="item-menu" href="{% url 'meuRestaurante' %}">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg>
-            Meu restaurante
-        </a>
-        <a class="item-menu" href="#" aria-label="QR Code">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
-            QR Code
-        </a>
+        <a href="{% url 'cardapioDono' %}">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}" class="ativo">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="#">QR Code</a>
     </nav>
 </body>
 </html>
