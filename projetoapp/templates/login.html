@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -46,6 +47,9 @@
 
             <button type="submit" class="botao-principal">Seguir</button>
         </form>
+
+        <p style="text-align:center;">ou</p>
+        <a href="{% provider_login_url 'google' %}" class="botao-secundario">Entrar com Google</a>
     </div>
 
     <p class="rodape-fixo">Food<span class="destaque">Link</span></p>
