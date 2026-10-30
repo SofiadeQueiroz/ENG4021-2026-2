@@ -66,4 +66,20 @@ h3{
     bottom: 10px;
     width: 100%;
 }
- 
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.botao-principal, .botao-secundario {
+    max-width: 100%; height: auto; min-height: 50px;
+    line-height: 1.4; padding: 12px 16px;
+}
+.rodape-fixo { position: static; width: auto; margin: 40px 0 16px; }

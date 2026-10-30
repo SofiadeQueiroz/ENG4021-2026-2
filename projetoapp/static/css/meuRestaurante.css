@@ -120,3 +120,24 @@ textarea{
     color: chocolate;
     font-weight: bold;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+.topo { flex-wrap: wrap; gap: 12px; }
+.campo { min-width: 0; }
+form { width: 100%; }
+.menu-inferior { position: static; margin-top: 30px; flex-wrap: wrap; gap: 16px; }
+body { padding-bottom: 20px; }
+@media (max-width: 600px) {
+    .linha-campos { flex-direction: column; gap: 0; }
+    form { padding: 18px; }
+}

@@ -41,3 +41,23 @@ label{
     width: 100%;
     text-align: center;
 }
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+input, textarea, select, button { max-width: 100%; }
+button { min-height: 44px; }
+textarea { resize: vertical; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+}
+
+input[type="email"] {
+    width: 90%; padding: 12px; border-radius: 10px;
+    border: 1px solid lightgray; font-family: inherit;
+}
+.rodape-fixo { position: static; width: auto; margin: 40px 0 16px; clear: both; }
+@media (max-width: 600px) {
+    input[type="text"], input[type="password"], input[type="email"] { width: 100%; }
+}
