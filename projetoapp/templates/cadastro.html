@@ -20,26 +20,29 @@
         {% csrf_token %}
         {{ form.errors }}
 
-        <label>Nome completo</label><br>
+        <label for="id_nome">Nome completo</label><br>
         {{ form.nome }}<br><br>
 
-        <label>Email</label><br>
+        <label for="id_email">Email</label><br>
         {{ form.email }}<br><br>
         
-        <label>CPF</label><br>
+        <label for="id_cpf">CPF</label><br>
         {{ form.cpf }}<br><br>
 
-        <label>Telefone</label><br>
+        <label for="id_telefone">Telefone</label><br>
         {{ form.telefone }}<br><br>
 
-        <label>Escolha uma senha</label><br>
+        <label for="id_senha">Escolha uma senha</label><br>
         {{ form.senha }}<br><br>
 
+        <label for="id_confirmar_senha">Confirme sua senha</label><br>
+        {{ form.confirmar_senha }}<br><br>
+
         {{ form.aceite }}
-        <span style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</span>
+        <label for="id_aceite" style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</label>
 
         <br><br>
-        <button class="botao-seta" type="submit">&#8594;</button>
+        <button class="botao-seta" type="submit" aria-label="Criar conta">&#8594;</button>
     </form>
 
     <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
