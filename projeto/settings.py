@@ -128,3 +128,10 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Resend (envio de e-mail por API)
+import os
+from dotenv import load_dotenv
+
+load_dotenv(BASE_DIR / '.env')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')

@@ -63,11 +63,26 @@
     </form>
 
     <nav class="menu-inferior">
-        <a href="{% url 'cardapioDono' %}">Cardápio</a>
-        <a href="{% url 'novaCategoria' %}">Categorias</a>
-        <a href="{% url 'aparencia' %}">Aparência</a>
-        <a href="{% url 'meuRestaurante' %}" class="ativo">Meu restaurante</a>
-        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+        <a class="item-menu" href="{% url 'cardapioDono' %}">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            Cardápio
+        </a>
+        <a class="item-menu" href="{% url 'novaCategoria' %}" aria-label="Categorias">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg>
+            Categorias
+        </a>
+        <a class="item-menu" href="{% url 'aparencia' %}">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.650-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.550C21.97 6.01 17.46 2 12 2z"/></svg>
+            Aparência
+        </a>
+        <a class="item-menu ativo" href="{% url 'meuRestaurante' %}" aria-current="page">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg>
+            Meu restaurante
+        </a>
+        <a class="item-menu" href="{% url 'qrcodeRestaurante' %}" aria-label="QR Code">
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+            QR Code
+        </a>
     </nav>
 </body>
 </html>
