@@ -44,7 +44,22 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
-    return render (request,'busca.html')
+    endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
+    restaurante = Restaurante.objects.first()
+    if restaurante and restaurante.endereco:
+        endereco = restaurante.endereco
+
+    resposta = requests.get('https://nominatim.openstreetmap.org/search', params={'q': endereco, 'format': 'json'}, headers={'User-Agent': 'FoodLink-PUC'})
+    resultados = resposta.json()
+
+    lat = -22.979
+    lon = -43.233
+    if resultados:
+        lat = float(resultados[0]['lat'])
+        lon = float(resultados[0]['lon'])
+
+    mapa_url = f'https://www.openstreetmap.org/export/embed.html?bbox={lon-0.01},{lat-0.01},{lon+0.01},{lat+0.01}&marker={lat},{lon}'
+    return render(request, 'busca.html', {'mapa_url': mapa_url, 'endereco': endereco})
 
 @never_cache
 @login_required(login_url='entrar')
