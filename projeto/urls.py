@@ -37,4 +37,5 @@ urlpatterns = [
     path('detalhesProduto/', detalhesProduto, name='detalhesProduto'),
     path('esqueciSenha/', esqueciSenha, name='esqueciSenha'),
     path('entrar/', entrar, name='entrar'),
+    path('sair/', sair, name='sair'),
 ] 
