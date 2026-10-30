@@ -18,23 +18,28 @@
     <div class="centralizacao">
         <div class="cardapio">
             <h1>Casa di Pasta</h1>
-            <p>Massas artesanais e receitas de família.</p>
+            <p>{{ textos.descricao }}</p>
             <p class="info">Italiana · Funcionamento: 12h às 23h</p>
 
             <div class="categorias">
-                <a href="#entradas">Entradas</a>
-                <a href="#pratos">Pratos principais</a>
+                <a href="#entradas">{{ textos.entradas }}</a>
+                <a href="#pratos">{{ textos.pratos }}</a>
+                {% if idioma == 'en' %}
+                    <a href="?idioma=pt">Português</a>
+                {% else %}
+                    <a href="?idioma=en">English</a>
+                {% endif %}
             </div>
 
-            <h2 id="entradas">Entradas</h2>
+            <h2 id="entradas">{{ textos.entradas }}</h2>
 
             <div class="produto">
                 <img src="{% static 'img/bruschetta.jpg' %}" alt="Bruschetta da casa">
                 <div>
                     <h3>Bruschetta da casa</h3>
-                    <p>Pão tostado com tomate e manjericão.</p>
+                    <p>{{ textos.bruschetta }}</p>
                     <p class="preco">R$ 24,00</p>
-                    <a href="{% url 'detalhesProduto' %}">Ver detalhes</a>
+                    <a href="{% url 'detalhesProduto' %}">{{ textos.detalhes }}</a>
                 </div>
             </div>
 
@@ -42,19 +47,19 @@
                 <img src="{% static 'img/arancini.jpg' %}" alt="Arancini de queijo">
                 <div>
                     <h3>Arancini de queijo</h3>
-                    <p>Bolinhos de risoto recheados com queijo.</p>
+                    <p>{{ textos.arancini }}</p>
                     <p class="preco">R$ 29,90</p>
-                    <p class="indisponivel">Indisponível no momento</p>
+                    <p class="indisponivel">{{ textos.indisponivel }}</p>
                 </div>
             </div>
 
-            <h2 id="pratos">Pratos principais</h2>
+            <h2 id="pratos">{{ textos.pratos }}</h2>
 
             <div class="produto">
                 <img src="{% static 'img/carbonara.jpg' %}" alt="Spaghetti alla carbonara">
                 <div>
                     <h3>Spaghetti alla carbonara</h3>
-                    <p>Massa com guanciale, queijo e gemas.</p>
+                    <p>{{ textos.carbonara }}</p>
                     <p class="preco">R$ 49,90</p>
                 </div>
             </div>
@@ -63,7 +68,7 @@
                 <img src="{% static 'img/lasanha.jpg' %}" alt="Lasanha à bolonhesa">
                 <div>
                     <h3>Lasanha à bolonhesa</h3>
-                    <p>Massa fresca, molho de carne e queijo gratinado.</p>
+                    <p>{{ textos.lasanha }}</p>
                     <p class="preco">R$ 46,90</p>
                 </div>
             </div>

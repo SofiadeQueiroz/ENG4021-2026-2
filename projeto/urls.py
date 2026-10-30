@@ -29,6 +29,7 @@ urlpatterns = [
     path('inicioCliente/', inicioCliente, name='inicioCliente'),
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
     path('qrcode/', qrcode, name='qrcode'),
+    path('qrcodeRestaurante/', qrcodeRestaurante, name='qrcodeRestaurante'),
     path('cardapioDono/', tela1, name='cardapioDono'),
     path('editarProduto/', tela2),
     path('aparencia/', aparencia, name='aparencia'),
@@ -39,4 +40,7 @@ urlpatterns = [
     path('redefinirSenha/<uidb64>/<token>/', redefinirSenha, name='redefinirSenha'),
     path('entrar/', entrar, name='entrar'),
     path('sair/', sair, name='sair'),
+    path('consultarCNPJ/', consultarCNPJ, name='consultarCNPJ'),
+    path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
+    path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
 ] 
