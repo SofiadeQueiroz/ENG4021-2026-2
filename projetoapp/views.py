@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 import requests
-from .models import Produto
-from .forms import ProdutoForm, CadastroForm, LoginForm
+from .models import Produto, Restaurante
+from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
@@ -55,7 +55,14 @@ def inicioCliente(request):
     return render(request, 'inicioCliente.html')
 
 def novaCategoria(request):
-    return render(request, 'novaCategoria.html')
+    if request.method == "POST":
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('adicionarProduto')
+    else:
+        form = CategoriaForm()
+    return render(request, 'novaCategoria.html', {'form': form})
 
 def qrcode(request):
     return render(request, 'qrcode.html')
@@ -74,7 +81,16 @@ def aparencia(request):
     return render(request, 'aparencia.html')
 
 def meuRestaurante(request):
-    return render(request, 'meuRestaurante.html')
+    restaurante = Restaurante.objects.first()
+    if request.method == "POST":
+        form = RestauranteForm(request.POST, instance=restaurante)
+        if form.is_valid():
+            form.save()
+            return redirect('meuRestaurante')
+    else:
+        form = RestauranteForm(instance=restaurante)
+    return render(request, 'meuRestaurante.html', {'form': form})
+
 
 def cardapioPublico(request):
     return render(request, 'cardapioPublico.html')

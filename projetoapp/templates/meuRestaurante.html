@@ -27,34 +27,36 @@
         <h1>Meu restaurante</h1>
         <p class="descricao">Estas informações aparecem no seu cardápio.</p>
 
-        <form class="formulario">
-            <label for="nome">Nome do restaurante</label>
-            <input id="nome" name="nome" type="text" value="Casa di Pasta" maxlength="60" required>
+        <form class="formulario" method="post">
+            {% csrf_token %}
+            {{ form.errors }}
 
-            <label for="descricao">Descrição</label>
-            <textarea id="descricao" name="descricao" rows="4" maxlength="250" required>Massas artesanais, receitas de família e uma mesa sempre pronta para receber você.</textarea>
+            <label for="id_nome">Nome do restaurante</label>
+            {{ form.nome }}
+
+            <label for="id_descricao">Descrição</label>
+            {{ form.descricao }}
 
             <div class="linha-campos">
                 <div class="campo">
-                    <label for="cozinha">Tipo de cozinha</label>
-                    <input id="cozinha" name="cozinha" type="text" value="Italiana" maxlength="40" required>
+                    <label for="id_cozinha">Tipo de cozinha</label>
+                    {{ form.cozinha }}
                 </div>
                 <div class="campo">
-                    <label for="horario">Funcionamento</label>
-                    <input id="horario" name="horario" type="text" value="12h às 23h" maxlength="80" required>
+                    <label for="id_horario">Funcionamento</label>
+                    {{ form.horario }}
                 </div>
             </div>
 
-            <label for="endereco">Endereço</label>
-            <input id="endereco" name="endereco" type="text" placeholder="Rua, número e bairro" maxlength="100">
+            <label for="id_endereco">Endereço</label>
+            {{ form.endereco }}
 
-            <label for="imagem">Imagem do restaurante</label>
-            <input id="imagem" name="imagem" type="url" placeholder="Cole o link da imagem">
+            <label for="id_imagem">Imagem do restaurante</label>
+            {{ form.imagem }}
 
             <p class="aviso">O link do cardápio continua o mesmo quando você muda o nome.</p>
 
-            <!-- O salvamento será ligado ao sistema na próxima etapa. -->
-            <button class="botao-salvar" type="button">Salvar alterações</button>
+            <button class="botao-salvar" type="submit">Salvar alterações</button>
             <a class="botao-cancelar" href="{% url 'cardapioDono' %}">Voltar ao cardápio</a>
         </form>
     </main>
@@ -69,7 +71,7 @@
             Categorias
         </a>
         <a class="item-menu" href="{% url 'aparencia' %}">
-            <svg class="icone icone-menu" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.55C21.97 6.01 17.46 2 12 2z"/></svg>
+            <svg class="icone icone-menu" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.650-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.55-2.5 5.55-5.550C21.97 6.01 17.46 2 12 2z"/></svg>
             Aparência
         </a>
         <a class="item-menu ativo" href="{% url 'meuRestaurante' %}" aria-current="page">
