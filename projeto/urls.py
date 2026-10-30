@@ -30,5 +30,8 @@ urlpatterns = [
     path('novaCategoria/', novaCategoria),
     path('qrcode/', qrcode),
     path('cardapioDono/', tela1),
-    path('editarProduto/', tela2)
+    path('editarProduto/', tela2),
+    path('consultarCNPJ/', consultarCNPJ, name='consultarCNPJ'),
+    path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
+    path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
 ] 
