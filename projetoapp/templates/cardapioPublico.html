@@ -3,65 +3,73 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cardápio da Casa di Pasta - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/cardapioPublico.css' %}">
+    <title>Cardápio da Casa di Pasta</title>
+    <link href="{% static 'css/cardapioPublico.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <p class="logo">Food<span>Link</span></p>
-
-    <h1>Casa di Pasta</h1>
-    <p>Massas artesanais e receitas de família.</p>
-    <p>Italiana · Funcionamento: 12h às 23h</p>
-
-    <div class="categorias">
-        <a href="#entradas">Entradas</a>
-        <a href="#pratos">Pratos principais</a>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 
-    <h2 id="entradas">Entradas</h2>
+    <div class="centralizacao">
+        <div class="cardapio">
+            <h1>Casa di Pasta</h1>
+            <p>Massas artesanais e receitas de família.</p>
+            <p class="info">Italiana · Funcionamento: 12h às 23h</p>
 
-    <div class="produto">
-        <img src="{% static 'img/bruschetta.jpg' %}" alt="Bruschetta da casa">
-        <div>
-            <h3>Bruschetta da casa</h3>
-            <p>Pão tostado com tomate e manjericão.</p>
-            <p class="preco">R$ 24,00</p>
-            <a href="{% url 'detalhesProduto' %}">Ver detalhes</a>
+            <div class="categorias">
+                <a href="#entradas">Entradas</a>
+                <a href="#pratos">Pratos principais</a>
+            </div>
+
+            <h2 id="entradas">Entradas</h2>
+
+            <div class="produto">
+                <img src="{% static 'img/bruschetta.jpg' %}" alt="Bruschetta da casa">
+                <div>
+                    <h3>Bruschetta da casa</h3>
+                    <p>Pão tostado com tomate e manjericão.</p>
+                    <p class="preco">R$ 24,00</p>
+                    <a href="{% url 'detalhesProduto' %}">Ver detalhes</a>
+                </div>
+            </div>
+
+            <div class="produto">
+                <img src="{% static 'img/arancini.jpg' %}" alt="Arancini de queijo">
+                <div>
+                    <h3>Arancini de queijo</h3>
+                    <p>Bolinhos de risoto recheados com queijo.</p>
+                    <p class="preco">R$ 29,90</p>
+                    <p class="indisponivel">Indisponível no momento</p>
+                </div>
+            </div>
+
+            <h2 id="pratos">Pratos principais</h2>
+
+            <div class="produto">
+                <img src="{% static 'img/carbonara.jpg' %}" alt="Spaghetti alla carbonara">
+                <div>
+                    <h3>Spaghetti alla carbonara</h3>
+                    <p>Massa com guanciale, queijo e gemas.</p>
+                    <p class="preco">R$ 49,90</p>
+                </div>
+            </div>
+
+            <div class="produto">
+                <img src="{% static 'img/lasanha.jpg' %}" alt="Lasanha à bolonhesa">
+                <div>
+                    <h3>Lasanha à bolonhesa</h3>
+                    <p>Massa fresca, molho de carne e queijo gratinado.</p>
+                    <p class="preco">R$ 46,90</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="produto">
-        <img src="{% static 'img/arancini.jpg' %}" alt="Arancini de queijo">
-        <div>
-            <h3>Arancini de queijo</h3>
-            <p>Bolinhos de risoto recheados com queijo.</p>
-            <p class="preco">R$ 29,90</p>
-            <p class="indisponivel">Indisponível no momento</p>
-        </div>
-    </div>
-
-    <h2 id="pratos">Pratos principais</h2>
-
-    <div class="produto">
-        <img src="{% static 'img/carbonara.jpg' %}" alt="Spaghetti alla carbonara">
-        <div>
-            <h3>Spaghetti alla carbonara</h3>
-            <p>Massa com guanciale, queijo e gemas.</p>
-            <p class="preco">R$ 49,90</p>
-        </div>
-    </div>
-
-    <div class="produto">
-        <img src="{% static 'img/lasanha.jpg' %}" alt="Lasanha à bolonhesa">
-        <div>
-            <h3>Lasanha à bolonhesa</h3>
-            <p>Massa fresca, molho de carne e queijo gratinado.</p>
-            <p class="preco">R$ 46,90</p>
-        </div>
-    </div>
-
-    <p class="rodape">FoodLink · Cardápio digital</p>
+    <p class="rodape">Food<span class="destaque">Link</span> · Cardápio digital</p>
 </body>
 </html>
