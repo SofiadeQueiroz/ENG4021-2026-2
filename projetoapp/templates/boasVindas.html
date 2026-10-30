@@ -17,6 +17,18 @@
     <h1><b>Olá, Cliente!</b></h1>
     <h3>Como você quer encontrar seu próximo sabor?</h3>
 
+    <div class="exemplo">
+        {%for movie in movies%}
+        <div class="card" style = 'width: 18rem'>
+            <img style="width:100px;" src = "{{ movie.Poster}}" class = 'card-img-top'>
+            <div>
+                <h5> {{ movie.Title}}</h5>
+                <p> Some quick example text to build on the card title and make up the bull of the</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
     <div class="botoes-centralizados">
         <button class="botao-principal">Buscar estabelecimento</button>
         <button class="botao-secundario">Escanear QR Code</button>
