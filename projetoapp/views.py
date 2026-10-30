@@ -50,7 +50,22 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
-    return render (request,'busca.html')
+    endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
+    restaurante = Restaurante.objects.first()
+    if restaurante and restaurante.endereco:
+        endereco = restaurante.endereco
+
+    resposta = requests.get('https://nominatim.openstreetmap.org/search', params={'q': endereco, 'format': 'json'}, headers={'User-Agent': 'FoodLink-PUC'})
+    resultados = resposta.json()
+
+    lat = -22.979
+    lon = -43.233
+    if resultados:
+        lat = float(resultados[0]['lat'])
+        lon = float(resultados[0]['lon'])
+
+    mapa_url = f'https://www.openstreetmap.org/export/embed.html?bbox={lon-0.01},{lat-0.01},{lon+0.01},{lat+0.01}&marker={lat},{lon}'
+    return render(request, 'busca.html', {'mapa_url': mapa_url, 'endereco': endereco})
 
 @never_cache
 @login_required(login_url='entrar')
@@ -153,7 +168,30 @@ def meuRestaurante(request):
 
 
 def cardapioPublico(request):
-    return render(request, 'cardapioPublico.html')
+    textos = {
+        'descricao': 'Massas artesanais e receitas de família.',
+        'entradas': 'Entradas',
+        'pratos': 'Pratos principais',
+        'bruschetta': 'Pão tostado com tomate e manjericão.',
+        'arancini': 'Bolinhos de risoto recheados com queijo.',
+        'carbonara': 'Massa com guanciale, queijo e gemas.',
+        'lasanha': 'Massa fresca, molho de carne e queijo gratinado.',
+        'detalhes': 'Ver detalhes',
+        'indisponivel': 'Indisponível no momento',
+    }
+
+    idioma = request.GET.get('idioma', 'pt')
+    if idioma == 'en':
+        descricoes = ['descricao', 'bruschetta', 'arancini', 'carbonara', 'lasanha']
+        for chave in descricoes:
+            resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': textos[chave], 'langpair': 'pt|en'})
+            textos[chave] = resposta.json()['responseData']['translatedText']
+
+        textos['entradas'] = 'Starters'
+        textos['pratos'] = 'Main courses'
+        textos['detalhes'] = 'See details'
+        textos['indisponivel'] = 'Unavailable right now'
+    return render(request, 'cardapioPublico.html', {'textos': textos, 'idioma': idioma})
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
@@ -212,6 +250,11 @@ def esqueciSenha(request):
         form = EsqueciSenhaForm()
     return render(request, 'esqueciSenha.html', {'form': form, 'enviado': enviado})
 
+def qrcodeRestaurante(request):
+    link_cardapio = request.build_absolute_uri('/cardapioPublico/')
+    qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=B84E29&data=' + link_cardapio
+    return render(request, 'qrcodeRestaurante.html', {'qr_url': qr_url, 'link_cardapio': link_cardapio})
+  
 def consultarCNPJ(request):
     cnpj = request.GET.get('cnpj', '').replace('.', '').replace('/', '').replace('-', '')
 
