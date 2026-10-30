@@ -36,5 +36,6 @@ urlpatterns = [
     path('cardapioPublico/', cardapioPublico, name='cardapioPublico'),
     path('detalhesProduto/', detalhesProduto, name='detalhesProduto'),
     path('esqueciSenha/', esqueciSenha, name='esqueciSenha'),
+    path('redefinirSenha/<uidb64>/<token>/', redefinirSenha, name='redefinirSenha'),
     path('entrar/', entrar, name='entrar'),
 ] 

@@ -4,6 +4,12 @@ from .models import Produto, Restaurante
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from django.conf import settings
 
 
 
@@ -117,4 +123,63 @@ def entrar(request):
     return render(request, 'login.html', {'form': form})
 
 def esqueciSenha(request):
-    return render(request, 'esqueciSenha.html')
+    enviado = False
+    if request.method == "POST":
+        form = EsqueciSenhaForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            usuario = User.objects.filter(username=email).first()
+            if usuario is not None:
+                uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+                token = default_token_generator.make_token(usuario)
+                link = request.build_absolute_uri(reverse('redefinirSenha', args=[uid, token]))
+                enviar_email_resend(
+                    email,
+                    'Recuperação de senha - FoodLink',
+                    'Recebemos um pedido para recuperar sua senha.\n\nClique no link abaixo para criar uma nova senha:\n' + link + '\n\nSe você não fez esse pedido, ignore este e-mail.',
+                )
+            enviado = True
+    else:
+        form = EsqueciSenhaForm()
+    return render(request, 'esqueciSenha.html', {'form': form, 'enviado': enviado})
+
+def redefinirSenha(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        usuario = User.objects.get(pk=uid)
+    except (ValueError, TypeError, OverflowError, User.DoesNotExist):
+        usuario = None
+
+    link_valido = usuario is not None and default_token_generator.check_token(usuario, token)
+
+    if not link_valido:
+        return render(request, 'redefinirSenha.html', {'link_valido': False})
+
+    if request.method == "POST":
+        form = NovaSenhaForm(request.POST)
+        if form.is_valid():
+            usuario.set_password(form.cleaned_data['senha'])
+            usuario.save()
+            return redirect('entrar')
+    else:
+        form = NovaSenhaForm()
+    return render(request, 'redefinirSenha.html', {'form': form, 'link_valido': True})
+
+def enviar_email_resend(destinatario, assunto, texto):
+    resposta = requests.post(
+        'https://api.resend.com/emails',
+        headers={
+            'Authorization': 'Bearer ' + str(settings.RESEND_API_KEY),
+            'Content-Type': 'application/json',
+        },
+        json={
+            'from': 'FoodLink <onboarding@resend.dev>',
+            'to': [destinatario],
+            'subject': assunto,
+            'text': texto,
+        },
+        timeout=10,
+    )
+    if resposta.status_code != 200:
+        print('Erro Resend:', resposta.status_code, resposta.text)
+    return resposta.status_code == 200
