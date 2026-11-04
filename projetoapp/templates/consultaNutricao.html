@@ -1,50 +1,54 @@
-
+{% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Informações Nutricionais - FoodLink</title>
+    <link href="{% static 'css/consultaNutricao.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
+
 <body>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
     <h1>Informações Nutricionais</h1>
+    <p class="descricao">Busque um alimento (em inglês) para ver seus nutrientes.</p>
 
     <form method="GET">
-        <input
-            type="text"
-            name="alimento"
-            placeholder="Digite um alimento"
-            value="{{ busca }}"
-            required
-        >
-        <button type="submit">Buscar</button>
+        <label for="alimento">Alimento</label>
+        <input type="text" id="alimento" name="alimento" placeholder="Digite um alimento" value="{{ busca }}" required>
+        <button type="submit" class="botao-principal">Buscar</button>
     </form>
 
     {% if erro %}
-        <p>{{ erro }}</p>
+        <p class="mensagem-erro">{{ erro }}</p>
     {% endif %}
 
     {% for alimento in alimentos %}
-        <h2>{{ alimento.description }}</h2>
-
-        <p>Marca: {{ alimento.brandOwner|default:"Não informada" }}</p>
-
-        <h3>Informações nutricionais</h3>
-
-        {% for nutriente in alimento.foodNutrients %}
-            <p>
-                {{ nutriente.nutrientName }}:
-                {{ nutriente.value }}
-                {{ nutriente.unitName }}
-            </p>
-        {% endfor %}
-
-        <hr>
+        <div class="card-alimento">
+            <h2>{{ alimento.description }}</h2>
+            <p><strong>Marca:</strong> {{ alimento.brandOwner|default:"Não informada" }}</p>
+            <h3>Informações nutricionais</h3>
+            <ul class="nutrientes">
+                {% for nutriente in alimento.foodNutrients %}
+                    <li>
+                        <span>{{ nutriente.nutrientName }}</span>
+                        <span>{{ nutriente.value }} {{ nutriente.unitName }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% empty %}
         {% if busca and not erro %}
-            <p>Nenhum alimento encontrado.</p>
+            <p class="texto-centro">Nenhum alimento encontrado.</p>
         {% endif %}
     {% endfor %}
 
+    <p class="texto-centro"><a href="{% url 'cardapioDono' %}">Voltar</a></p>
 </body>
 </html>
