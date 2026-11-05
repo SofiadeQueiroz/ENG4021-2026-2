@@ -109,9 +109,19 @@ def qrcode(request):
 @never_cache
 @login_required(login_url='entrar')
 def tela1(request):
+    q = request.GET.get('q', '')
+    categoria = request.GET.get('categoria', '')
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
     produtos = Produto.objects.all()
+    if q:
+        produtos = produtos.filter(nome__icontains=q)
+    if categoria:
+        produtos = produtos.filter(categoria=categoria)
     context = {
-        'produtos': produtos
+        'produtos': produtos,
+        'q': q,
+        'categoria': categoria,
+        'categorias': categorias
     }
     return render(request, 'tela1.html', context)
 
