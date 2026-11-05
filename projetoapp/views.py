@@ -141,7 +141,32 @@ def novaCategoria(request):
     return render(request, 'novaCategoria.html', {'form': form})
 
 def qrcode(request):
-    return render(request, 'qrcode.html')
+    erro = None
+    if request.method == "POST":
+        imagem = request.FILES.get('imagem')
+        if imagem is None:
+            erro = 'Escolha uma imagem do QR Code antes de enviar.'
+        elif imagem.size > 1024 * 1024:
+            erro = 'A imagem tem mais de 1 MB. Envie um print recortando só o QR Code.'
+        else:
+            try:
+                resposta = requests.post(
+                    'https://api.qrserver.com/v1/read-qr-code/',
+                    files={'file': (imagem.name, imagem.read(), imagem.content_type)},
+                    timeout=10,
+                )
+                resposta.raise_for_status()
+                conteudo = resposta.json()[0]['symbol'][0]['data']
+            except (requests.RequestException, ValueError, KeyError, IndexError):
+                erro = 'Não foi possível ler a imagem. Tente novamente.'
+            else:
+                if not conteudo:
+                    erro = 'Nenhum QR Code encontrado na imagem. Tente uma imagem mais nítida.'
+                elif conteudo.startswith(('http://', 'https://')) and url_has_allowed_host_and_scheme(conteudo, allowed_hosts={request.get_host()}):
+                    return redirect(conteudo)
+                else:
+                    erro = 'Este QR Code não é de um cardápio do FoodLink.'
+    return render(request, 'qrcode.html', {'erro': erro})
 
 @never_cache
 @estabelecimento_required
