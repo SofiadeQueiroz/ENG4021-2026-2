@@ -5,30 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Nova categoria</title>
-    <link rel="stylesheet" href="{% static 'css/novaCategoria.css' %}">
+    <link href="{% static 'css/novaCategoria.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="logo">
-        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="FoodLink" width="100">
+    <div class="topo">
+        <a href="{% url 'adicionarProduto' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 
-    <a href="{% url 'adicionarProduto' %}">Voltar ao cadastro de produto</a>
-
+    <h4 class="chamada">ORGANIZE SEU CARDÁPIO</h4>
     <h1>Nova categoria</h1>
-    <p>Crie uma categoria para organizar os produtos do cardápio.</p>
+    <p class="descricao">Crie uma categoria para organizar os produtos do cardápio.</p>
 
     <form method="post">
         {% csrf_token %}
         {{ form.errors }}
-        <label for="id_nome">Nome da categoria</label><br>
+        <label for="id_nome">Nome da categoria</label>
         {{ form.nome }}
 
-        <p>
-            <button type="submit">Salvar categoria</button>
-        </p>
+        <button class="botao-principal" type="submit">Salvar categoria</button>
     </form>
 
-    <p class="rodape">FoodLink</p>
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}" class="ativo">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+    </nav>
 </body>
 </html>
