@@ -67,7 +67,9 @@
                  <h2>{{ produto.nome }}</h2>
 
                     <div class="editApaga">
-                        <button>Editar</button>
+                        <form method="get" action="{% url 'editarProduto' produto.pk %}">
+    <button type="submit">Editar</button>
+</form>
                         <button>Apagar</button>
                     </div>
                 </div>

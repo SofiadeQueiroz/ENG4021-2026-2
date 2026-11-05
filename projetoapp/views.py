@@ -16,6 +16,7 @@ from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.conf import settings
 from .forms import ConsultaCEPForm
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 
@@ -131,8 +132,17 @@ def tela1(request):
 
 @never_cache
 @login_required(login_url='entrar')
-def tela2(request):
-    return render(request, 'tela2.html')
+def editarProduto(request, pk):
+    produto = get_object_or_404(Produto, pk=pk)
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
+    if request.method == "POST":
+        form = ProdutoForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm(instance=produto)
+    return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
 
 @never_cache
 @login_required(login_url='entrar')
