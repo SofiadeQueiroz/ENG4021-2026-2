@@ -1,48 +1,148 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #faf7f2;
-    padding: 20px;
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding: 20px 30px;
 }
 
-.logo {
+.topo{
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
 }
 
-h1 {
+.chamada{
+    color: chocolate;
+    margin-top: 20px;
+}
+
+h1{
+    margin-top: 5px;
+    font-size: 32px;
+}
+
+.descricao{
+    color: #5f5f5f;
+    margin-bottom: 25px;
+}
+
+form{
+    background-color: white;
+    border: 1px solid #e5ddd0;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 500px;
+}
+
+label{
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+form input:not([type="checkbox"]),
+textarea,
+select{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: white;
+}
+
+textarea{
+    height: 100px;
+    resize: vertical;
+}
+
+.linha-campos{
+    display: flex;
+    gap: 15px;
+}
+
+.campo{
+    flex: 1;
+    min-width: 0;
+}
+
+.aviso{
+    font-size: 14px;
+    margin: -10px 0 20px;
+}
+
+.aviso a{
     color: chocolate;
 }
 
-form {
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 20px;
-    max-width: 400px;
+.opcao{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.campo {
-    margin-bottom: 15px;
+.opcao label{
+    margin-bottom: 0;
+    font-weight: normal;
 }
 
-input[type="text"],
-input[type="url"],
-textarea,
-select {
-    padding: 8px;
-    width: 90%;
-    margin-top: 5px;
-    font-family: Arial, sans-serif;
-}
-
-button {
-    background-color: #b84e29;
+.botao-principal{
+    background-color: chocolate;
     color: white;
     border: none;
-    padding: 10px 15px;
+    border-radius: 25px;
+    width: 100%;
+    height: 50px;
+    font-family: inherit;
+    font-size: 16px;
 }
 
-.rodape {
-    margin-top: 40px;
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.centralizacao{
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.centralizacao p{
+    font-weight: bold;
+}
+
+.destaque{
+    color: chocolate;
+}
+
+.menu-inferior{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 30px;
+    padding: 14px 0;
+    background-color: white;
+    border-top: 1px solid #e5ddd0;
+    font-size: 14px;
+}
+
+.menu-inferior a{
+    color: #444;
+    text-decoration: none;
+}
+
+.menu-inferior a.ativo{
     color: chocolate;
     font-weight: bold;
 }
@@ -52,10 +152,11 @@ body { margin: 0 auto; overflow-wrap: anywhere; }
 img { max-width: 100%; height: auto; }
 input, textarea, select, button { max-width: 100%; }
 button { min-height: 44px; }
-textarea { resize: vertical; }
 @media (max-width: 600px) {
     body { padding-left: 16px; padding-right: 16px; }
+    form { padding: 18px; }
+    .linha-campos { flex-direction: column; gap: 0; }
 }
 
+.topo { flex-wrap: wrap; gap: 12px; }
 form { width: 100%; }
-input[type="number"] { padding: 8px; width: 90%; margin-top: 5px; font-family: inherit; }
