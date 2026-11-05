@@ -54,8 +54,13 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
+    q = request.GET.get('q', '')
+    restaurantes = Restaurante.objects.all()
+    if q:
+        restaurantes = restaurantes.filter(nome__icontains=q)
+    restaurante = restaurantes.first()
+
     endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
-    restaurante = Restaurante.objects.first()
     if restaurante and restaurante.endereco:
         endereco = restaurante.endereco
 
@@ -68,8 +73,7 @@ def busca(request):
         lat = float(resultados[0]['lat'])
         lon = float(resultados[0]['lon'])
 
-    mapa_url = f'https://www.openstreetmap.org/export/embed.html?bbox={lon-0.01},{lat-0.01},{lon+0.01},{lat+0.01}&marker={lat},{lon}'
-    return render(request, 'busca.html', {'mapa_url': mapa_url, 'endereco': endereco})
+    return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
 @never_cache
 @login_required(login_url='entrar')
