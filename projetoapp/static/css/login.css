@@ -114,7 +114,6 @@ input[type="password"]{
     text-align: center;
 }
 
-/* Ajustes de largura para celular, tablet e computador. */
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0 auto; overflow-wrap: anywhere; }
 img { max-width: 100%; height: auto; }
