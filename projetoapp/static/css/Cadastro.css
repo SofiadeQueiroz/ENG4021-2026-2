@@ -34,6 +34,36 @@ label{
     float: right;
 }
 
+.escolha-tipo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.botao-principal,
+.botao-secundario{
+    width: 260px;
+    max-width: 100%;
+    padding: 14px 16px;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.botao-principal{
+    background-color: chocolate;
+    color: white;
+}
+
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+}
+
 .rodape-fixo{
     position: fixed;
     bottom: 10px;

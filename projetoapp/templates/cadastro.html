@@ -15,21 +15,36 @@
     <div><a href="{% url 'home' %}">Voltar</a><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
 </span></div>
 
+    {% if not tipo %}
+    <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
+    <h1><b>Como você vai usar o FoodLink?</b></h1>
+
+    <div class="escolha-tipo">
+        <a href="{% url 'cadastro' %}?tipo=cliente" class="botao-principal">Sou cliente</a>
+        <a href="{% url 'cadastro' %}?tipo=estabelecimento" class="botao-secundario">Sou estabelecimento</a>
+    </div>
+    {% else %}
     <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
     <h1><b>Preencha com seus dados</b></h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.errors }}
+        {{ form.tipo }}
 
-        <label for="id_nome">Nome completo</label><br>
+        <label for="id_nome">{% if tipo == 'cliente' %}Nome completo{% else %}Nome do estabelecimento{% endif %}</label><br>
         {{ form.nome }}<br><br>
 
         <label for="id_email">Email</label><br>
         {{ form.email }}<br><br>
-        
+
+        {% if tipo == 'cliente' %}
         <label for="id_cpf">CPF</label><br>
         {{ form.cpf }}<br><br>
+        {% else %}
+        <label for="id_cnpj">CNPJ</label><br>
+        {{ form.cnpj }}<br><br>
+        {% endif %}
 
         <label for="id_telefone">Telefone</label><br>
         {{ form.telefone }}<br><br>
@@ -46,6 +61,9 @@
         <br><br>
         <button class="botao-seta" type="submit" aria-label="Criar conta">&#8594;</button>
     </form>
+
+    <p><a href="{% url 'cadastro' %}">Trocar tipo de conta</a></p>
+    {% endif %}
 
     <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
 </body>
