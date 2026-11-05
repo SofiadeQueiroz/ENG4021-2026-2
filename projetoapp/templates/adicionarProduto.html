@@ -36,11 +36,12 @@
 
         <div class="campo">
             <label for="categoria">Categoria</label><br>
-            <select id="categoria" name="categoria">
-                <option>Entradas</option>
-                <option>Pratos principais</option>
-                <option>Bebidas</option>
-                <option>Sobremesas</option>
+            <select id="categoria" name="categoria" required>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.nome }}" {% if form.categoria.value == categoria.nome %}selected{% endif %}>{{ categoria.nome }}</option>
+                {% empty %}
+                <option value="">Cadastre uma categoria primeiro</option>
+                {% endfor %}
             </select>
         </div>
 

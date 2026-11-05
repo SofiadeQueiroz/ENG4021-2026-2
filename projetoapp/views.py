@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 import requests
-from .models import Produto, Restaurante
+from .models import Produto, Restaurante, Categoria
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -86,7 +86,7 @@ def adicionarProduto(request):
             return redirect('cardapioDono')
     else:
         form = ProdutoForm()
-    return render(request, 'adicionarProduto.html', {'form': form})
+    return render(request, 'adicionarProduto.html', {'form': form, 'categorias': Categoria.objects.all()})
 
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
