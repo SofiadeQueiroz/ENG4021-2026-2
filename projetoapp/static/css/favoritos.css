@@ -75,3 +75,29 @@ h2{
     width: 100%;
     text-align: center;
 }
+
+.rodape-fixo{
+    background-color: antiquewhite;
+    bottom: 0;
+    padding: 10px 0;
+    margin: 0;
+}
+
+body{
+    padding-bottom: 60px;
+}
+
+@media (max-width: 600px){
+    body{
+        padding: 15px 15px 60px 15px;
+    }
+
+    h2{
+        font-size: 24px;
+        margin-top: 20px;
+    }
+
+    .favorito{
+        padding: 12px 15px;
+    }
+}

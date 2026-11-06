@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 import requests
+import math
+from django.http import JsonResponse
 from datetime import date
 from .models import Produto, Restaurante
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
@@ -270,7 +272,9 @@ def meuRestaurante(request):
         else:
             form = RestauranteForm(request.POST, instance=restaurante)
             if form.is_valid():
-                form.save()
+                restaurante_salvo = form.save(commit=False)
+                restaurante_salvo.latitude, restaurante_salvo.longitude = buscar_coordenadas(restaurante_salvo.endereco)
+                restaurante_salvo.save()
                 return redirect('meuRestaurante')
     else:
         form = RestauranteForm(instance=restaurante)
@@ -578,6 +582,59 @@ def consultarAlergenicos(request):
     })
 
 
+def buscar_coordenadas(endereco):
+    if not endereco:
+        return None, None
+    try:
+        resposta = requests.get(
+            'https://nominatim.openstreetmap.org/search',
+            params={'q': endereco, 'format': 'json', 'limit': 1},
+            headers={'User-Agent': 'FoodLink-PUC'},
+            timeout=5,
+        )
+        resposta.raise_for_status()
+        resultados = resposta.json()
+        if resultados:
+            return float(resultados[0]['lat']), float(resultados[0]['lon'])
+    except (requests.RequestException, ValueError, KeyError):
+        pass
+    return None, None
+
+
+
+def distancia_km(lat1, lon1, lat2, lon2):
+    raio_terra = 6371
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    return 2 * raio_terra * math.asin(math.sqrt(a))
+
+
+def proximos(request):
+    try:
+        lat = float(request.GET.get('lat', ''))
+        lon = float(request.GET.get('lon', ''))
+    except ValueError:
+        return JsonResponse({'erro': 'Latitude e longitude inválidas.'}, status=400)
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        return JsonResponse({'erro': 'Latitude e longitude fora do intervalo.'}, status=400)
+
+    restaurantes = Restaurante.objects.filter(latitude__isnull=False, longitude__isnull=False)
+    lista = []
+    for r in restaurantes:
+        lista.append({
+            'id': r.id,
+            'nome': r.nome,
+            'cozinha': r.cozinha,
+            'endereco': r.endereco,
+            'latitude': r.latitude,
+            'longitude': r.longitude,
+            'distancia_km': round(distancia_km(lat, lon, r.latitude, r.longitude), 2),
+        })
+    lista.sort(key=lambda item: item['distancia_km'])
+    return JsonResponse({'restaurantes': lista[:3]})
+
+
 def buscar_alergenicos_api(busca):
     try:
         response = requests.get(
@@ -601,3 +658,4 @@ def buscar_alergenicos_api(busca):
 
     except requests.exceptions.RequestException:
         return [], 'Não foi possível conectar à API.'
+

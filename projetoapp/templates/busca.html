@@ -41,10 +41,9 @@
     </div>
  
     <div class="centralizacao">
-        <button class="botao-principal">Três lugares próximos</button>
-        <button class="botao-secundario">Tela cheia</button>
+        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>        <button class="botao-secundario">Tela cheia</button>
     </div>
- 
+        <div class="resultados" id="lista-proximos"></div>
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
     </div>
@@ -56,6 +55,46 @@
     }).addTo(mapa);
     L.marker([{{ lat }}, {{ lon }}]).addTo(mapa)
         .bindPopup('{{ endereco|escapejs }}').openPopup();
+        
+    var camadaProximos = L.layerGroup().addTo(mapa);
+    var botaoProximos = document.getElementById('botao-proximos');
+    var listaProximos = document.getElementById('lista-proximos');
+
+    botaoProximos.addEventListener('click', function () {
+        listaProximos.textContent = 'Buscando...';
+        camadaProximos.clearLayers();
+
+        fetch('{% url "proximos" %}?lat={{ lat }}&lon={{ lon }}')
+            .then(function (resposta) {
+                if (!resposta.ok) { throw new Error('Erro ' + resposta.status); }
+                return resposta.json();
+            })
+            .then(function (dados) {
+                listaProximos.textContent = '';
+                if (dados.restaurantes.length === 0) {
+                    listaProximos.textContent = 'Nenhum restaurante com localização cadastrada.';
+                    return;
+                }
+                var pontos = [[{{ lat }}, {{ lon }}]];
+                dados.restaurantes.forEach(function (r) {
+                    var p = document.createElement('p');
+                    var nome = document.createElement('b');
+                    nome.textContent = r.nome;
+                    p.appendChild(nome);
+                    p.appendChild(document.createTextNode(
+                        ' · ' + r.cozinha + ' · ' + r.endereco + ' · ' + r.distancia_km.toFixed(2).replace('.', ',') + ' km'
+                    ));
+                    listaProximos.appendChild(p);
+
+                    L.marker([r.latitude, r.longitude]).addTo(camadaProximos).bindPopup(r.nome);
+                    pontos.push([r.latitude, r.longitude]);
+                });
+                mapa.fitBounds(pontos, { padding: [30, 30] });
+            })
+            .catch(function () {
+                listaProximos.textContent = 'Não foi possível buscar os restaurantes. Tente novamente.';
+            });
+    });
 </script>
 </body>
 </html>
