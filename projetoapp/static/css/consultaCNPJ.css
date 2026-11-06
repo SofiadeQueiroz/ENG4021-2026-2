@@ -83,3 +83,17 @@ form { width: 100%; }
 @media (max-width: 600px) {
     body { padding-left: 16px; padding-right: 16px; }
 }
+
+input[type="text"]{
+    font-size: 16px;
+}
+
+@media (max-width: 600px){
+    h1{
+        font-size: 26px;
+    }
+
+    .resultado{
+        padding: 14px 16px;
+    }
+}
