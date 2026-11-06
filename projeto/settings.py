@@ -158,7 +158,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-LOGIN_REDIRECT_URL = '/meuRestaurante/'
+LOGIN_REDIRECT_URL = '/entrar/'
 LOGOUT_REDIRECT_URL = '/'
 
 ACCOUNT_LOGIN_METHODS = {'email'}

@@ -121,7 +121,6 @@ textarea{
     font-weight: bold;
 }
 
-/* Ajustes de largura para celular, tablet e computador. */
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0 auto; overflow-wrap: anywhere; }
 img { max-width: 100%; height: auto; }
@@ -140,22 +139,4 @@ body { padding-bottom: 20px; }
 @media (max-width: 600px) {
     .linha-campos { flex-direction: column; gap: 0; }
     form { padding: 18px; }
-}
-/* Ícones do menu inferior */
-.menu-inferior .item-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-}
-
-.menu-inferior .icone-menu {
-    width: 24px;
-    height: 24px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }

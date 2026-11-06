@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 import requests
 import math
+from functools import wraps
 from django.http import JsonResponse
 from datetime import date
-from .models import Produto, Restaurante
+from .models import Produto, Restaurante, Categoria, Perfil
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -23,6 +24,32 @@ from .forms import ConsultaCEPForm
 from django.shortcuts import render, redirect, get_object_or_404
 
 
+def eh_estabelecimento(usuario):
+    return hasattr(usuario, 'perfil') and usuario.perfil.tipo == 'estabelecimento'
+
+def pagina_inicial(usuario):
+    if eh_estabelecimento(usuario):
+        return redirect('cardapioDono')
+    return redirect('inicioCliente')
+
+def estabelecimento_required(view):
+    @wraps(view)
+    @login_required(login_url='entrar')
+    def verificar(request, *args, **kwargs):
+        if not eh_estabelecimento(request.user):
+            return redirect('inicioCliente')
+        return view(request, *args, **kwargs)
+    return verificar
+
+def cliente_required(view):
+    @wraps(view)
+    @login_required(login_url='entrar')
+    def verificar(request, *args, **kwargs):
+        if eh_estabelecimento(request.user):
+            return redirect('cardapioDono')
+        return view(request, *args, **kwargs)
+    return verificar
+
 
 def home(request):
     response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
@@ -36,18 +63,28 @@ def home(request):
 @never_cache
 def cadastro(request):
     if request.user.is_authenticated:
-        return redirect('cardapioDono')
+        return pagina_inicial(request.user)
+    tipo = request.POST.get('tipo', request.GET.get('tipo'))
+    if tipo not in ('cliente', 'estabelecimento'):
+        return render(request, 'cadastro.html', {'tipo': None})
     if request.method == "POST":
         form = CadastroForm(request.POST)
         if form.is_valid():
             dados = form.cleaned_data
             try:
                 with transaction.atomic():
-                    User.objects.create_user(
+                    usuario = User.objects.create_user(
                         username=dados['email'],
                         email=dados['email'],
                         password=dados['senha'],
                         first_name=dados['nome'],
+                    )
+                    Perfil.objects.create(
+                        usuario=usuario,
+                        tipo=dados['tipo'],
+                        cpf=dados['cpf'],
+                        cnpj=dados['cnpj'],
+                        telefone=dados['telefone'],
                     )
             except IntegrityError:
                 form.add_error('email', 'Esse e-mail já está cadastrado.')
@@ -55,8 +92,8 @@ def cadastro(request):
                 messages.success(request, 'Conta criada. Entre com seu e-mail e senha.')
                 return redirect('entrar')
     else:
-        form = CadastroForm()
-    return render(request, 'cadastro.html', {'form': form})
+        form = CadastroForm(initial={'tipo': tipo})
+    return render(request, 'cadastro.html', {'form': form, 'tipo': tipo})
 
 def busca(request):
     q = request.GET.get('q', '')
@@ -81,13 +118,12 @@ def busca(request):
     return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
 @never_cache
-@login_required(login_url='entrar')
+@cliente_required
 def favoritos(request):
     return render(request,'favoritos.html')
 
 @never_cache
-@login_required(login_url='entrar')
-
+@estabelecimento_required
 def adicionarProduto(request):
     produtos_api = []
     erro_api = None
@@ -142,6 +178,7 @@ def adicionarProduto(request):
 
     return render(request, 'adicionarProduto.html', {
         'form': form,
+        'categorias': Categoria.objects.all(),
         'produtos_api': produtos_api,
         'erro_api': erro_api,
         'alergenicos_encontrados': alergenicos_encontrados,
@@ -181,7 +218,7 @@ def inicioCliente(request):
     return render(request, 'inicioCliente.html')
 
 @never_cache
-@login_required(login_url='entrar')
+@estabelecimento_required
 def novaCategoria(request):
     if request.method == "POST":
         form = CategoriaForm(request.POST)
@@ -193,14 +230,39 @@ def novaCategoria(request):
     return render(request, 'novaCategoria.html', {'form': form})
 
 def qrcode(request):
-    return render(request, 'qrcode.html')
+    erro = None
+    if request.method == "POST":
+        imagem = request.FILES.get('imagem')
+        if imagem is None:
+            erro = 'Escolha uma imagem do QR Code antes de enviar.'
+        elif imagem.size > 1024 * 1024:
+            erro = 'A imagem tem mais de 1 MB. Envie um print recortando só o QR Code.'
+        else:
+            try:
+                resposta = requests.post(
+                    'https://api.qrserver.com/v1/read-qr-code/',
+                    files={'file': (imagem.name, imagem.read(), imagem.content_type)},
+                    timeout=10,
+                )
+                resposta.raise_for_status()
+                conteudo = resposta.json()[0]['symbol'][0]['data']
+            except (requests.RequestException, ValueError, KeyError, IndexError):
+                erro = 'Não foi possível ler a imagem. Tente novamente.'
+            else:
+                if not conteudo:
+                    erro = 'Nenhum QR Code encontrado na imagem. Tente uma imagem mais nítida.'
+                elif conteudo.startswith(('http://', 'https://')) and url_has_allowed_host_and_scheme(conteudo, allowed_hosts={request.get_host()}):
+                    return redirect(conteudo)
+                else:
+                    erro = 'Este QR Code não é de um cardápio do FoodLink.'
+    return render(request, 'qrcode.html', {'erro': erro})
 
 @never_cache
-@login_required(login_url='entrar')
+@estabelecimento_required
 def tela1(request):
     q = request.GET.get('q', '')
     categoria = request.GET.get('categoria', '')
-    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
+    categorias = Categoria.objects.values_list('nome', flat=True)
     produtos = Produto.objects.all()
     if q:
         produtos = produtos.filter(nome__icontains=q)
@@ -215,10 +277,10 @@ def tela1(request):
     return render(request, 'tela1.html', context)
 
 @never_cache
-@login_required(login_url='entrar')
+@estabelecimento_required
 def editarProduto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
-    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
+    categorias = Categoria.objects.values_list('nome', flat=True)
     if request.method == "POST":
         form = ProdutoForm(request.POST, instance=produto)
         if form.is_valid():
@@ -229,12 +291,12 @@ def editarProduto(request, pk):
     return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
 
 @never_cache
-@login_required(login_url='entrar')
+@estabelecimento_required
 def aparencia(request):
     return render(request, 'aparencia.html')
 
 @never_cache
-@login_required(login_url='entrar')
+@estabelecimento_required
 def meuRestaurante(request):
     restaurante = Restaurante.objects.first()
     cep_form = ConsultaCEPForm()
@@ -386,7 +448,7 @@ def detalhesProduto(request, id):
 @never_cache
 def entrar(request):
     if request.user.is_authenticated:
-        return redirect('cardapioDono')
+        return pagina_inicial(request.user)
     destino = request.POST.get('next', request.GET.get('next', ''))
     email_nao_cadastrado = False
     if request.method == "POST":
@@ -408,7 +470,7 @@ def entrar(request):
                         destino, allowed_hosts={request.get_host()}, require_https=request.is_secure()
                     ):
                         return redirect(destino)
-                    return redirect('cardapioDono')
+                    return pagina_inicial(usuario)
                 else:
                     form.add_error(None, 'Senha incorretos.')
     else:
@@ -485,11 +547,15 @@ def enviar_email_resend(destinatario, assunto, texto):
         print('Erro Resend:', resposta.status_code, resposta.text)
     return resposta.status_code == 200
 
+@never_cache
+@estabelecimento_required
 def qrcodeRestaurante(request):
     link_cardapio = request.build_absolute_uri('/cardapioPublico/')
     qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=B84E29&data=' + link_cardapio
     return render(request, 'qrcodeRestaurante.html', {'qr_url': qr_url, 'link_cardapio': link_cardapio})
   
+@never_cache
+@estabelecimento_required
 def consultarCNPJ(request):
     cnpj = request.GET.get('cnpj', '').replace('.', '').replace('/', '').replace('-', '')
 
@@ -529,6 +595,8 @@ def consultarCNPJ(request):
 
 
 
+@never_cache
+@estabelecimento_required
 def consultarNutricao(request):
     alimento = request.GET.get('alimento', '').strip()
 
@@ -566,7 +634,8 @@ def consultarNutricao(request):
         'busca': alimento
     })
 
-
+@never_cache
+@estabelecimento_required
 def consultarAlergenicos(request):
     busca = request.GET.get('produto', '').strip()
     produtos = []
