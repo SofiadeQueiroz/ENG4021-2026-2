@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import requests
 from datetime import date
 from .models import Produto, Restaurante
@@ -269,8 +269,11 @@ def cardapioPublico(request):
         'moedas': simbolos,
     })
 
-def detalhesProduto(request):
-    return render(request, 'detalhesProduto.html')
+def detalhesProduto(request, id):
+    # Busca o produto pelo id que veio na URL; se não existir, mostra a página de erro 404
+    produto = get_object_or_404(Produto, id=id)
+    preco = f'R$ {produto.preco:.2f}'.replace('.', ',')
+    return render(request, 'detalhesProduto.html', {'produto': produto, 'preco': preco})
 
 @never_cache
 def entrar(request):

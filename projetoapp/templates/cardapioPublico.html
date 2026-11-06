@@ -60,7 +60,7 @@
                             <h3>{{ item.produto.nome }}</h3>
                             <p>{{ item.descricao }}</p>
                             <p class="preco">{{ item.preco }}</p>
-                            <a href="{% url 'detalhesProduto' %}">{{ textos.detalhes }}</a>
+                            <a href="{% url 'detalhesProduto' item.produto.id %}">{{ textos.detalhes }}</a>
                         </div>
                     </div>
                 {% endfor %}
