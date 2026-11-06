@@ -32,6 +32,14 @@ body{
     border: 1px solid brown;
 }
 
+.buscar select {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid brown;
+    appearance: none;
+    background-color: white;
+}
+
 .buscar button {
     padding: 10px 20px;
     border: none;

@@ -18,6 +18,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils.text import slugify
 from .forms import ConsultaCEPForm
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 
@@ -56,8 +57,13 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
+    q = request.GET.get('q', '')
+    restaurantes = Restaurante.objects.all()
+    if q:
+        restaurantes = restaurantes.filter(nome__icontains=q)
+    restaurante = restaurantes.first()
+
     endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
-    restaurante = Restaurante.objects.first()
     if restaurante and restaurante.endereco:
         endereco = restaurante.endereco
 
@@ -70,8 +76,7 @@ def busca(request):
         lat = float(resultados[0]['lat'])
         lon = float(resultados[0]['lon'])
 
-    mapa_url = f'https://www.openstreetmap.org/export/embed.html?bbox={lon-0.01},{lat-0.01},{lon+0.01},{lat+0.01}&marker={lat},{lon}'
-    return render(request, 'busca.html', {'mapa_url': mapa_url, 'endereco': endereco})
+    return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
 @never_cache
 @login_required(login_url='entrar')
@@ -111,16 +116,35 @@ def qrcode(request):
 @never_cache
 @login_required(login_url='entrar')
 def tela1(request):
+    q = request.GET.get('q', '')
+    categoria = request.GET.get('categoria', '')
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
     produtos = Produto.objects.all()
+    if q:
+        produtos = produtos.filter(nome__icontains=q)
+    if categoria:
+        produtos = produtos.filter(categoria=categoria)
     context = {
-        'produtos': produtos
+        'produtos': produtos,
+        'q': q,
+        'categoria': categoria,
+        'categorias': categorias
     }
     return render(request, 'tela1.html', context)
 
 @never_cache
 @login_required(login_url='entrar')
-def tela2(request):
-    return render(request, 'tela2.html')
+def editarProduto(request, pk):
+    produto = get_object_or_404(Produto, pk=pk)
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
+    if request.method == "POST":
+        form = ProdutoForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm(instance=produto)
+    return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
 
 @never_cache
 @login_required(login_url='entrar')

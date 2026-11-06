@@ -17,38 +17,38 @@
     <p><span style="color:brown">SEU CARDAPIO</span></p>
     <h1> <b>Editar produto</b></h1>
 
-    <p>Cada detalhe ajuda na hora de escolher</p>
+        <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
 
-    <h2>Nome do produto</h2>
-    <input type="text" placeholder="Digite o nome do produto">
+        <h2>Nome do produto</h2>
+        {{ form.nome }}
 
+        <h2>Descricao</h2>
+        {{ form.descricao }}
 
-    <h2>Descricao</h2>
-    <textarea placeholder="Digite a descricao do produto"></textarea>
-
-
-    <div class="precoCategoria">
-
-        <div>
-            <h2>Preco</h2>
-            <input type="text" placeholder="R$ 0,00">
+        <div class="precoCategoria">
+            <div>
+                <h2>Preco</h2>
+                {{ form.preco }}
+            </div>
+            <div>
+                <h2>Categorias</h2>
+                <select name="categoria">
+                    {% for c in categorias %}
+                        <option {% if c == produto.categoria %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
 
-        <div>
-            <h2>Categorias</h2>
-            <input type="text" placeholder="Digite a categoria">
+        <h2>Foto do prato</h2>
+        {{ form.imagem }}
+
+        <div class="botoes">
+            <a href="{% url 'cardapioDono' %}" class="cancelar">Cancelar</a>
+            <button type="submit">Salvar produto</button>
         </div>
-
-    </div>
-
-    <h2>Foto do prato</h2>
-    <input type="text" placeholder="Cole o link da imagem">
-    
-    <div class="botoes">
-        <button>Cancelar</button>
-        <button>Salvar produto</button>
-    </div>
-
-</div>
+    </form>
 </body>
 </html>
