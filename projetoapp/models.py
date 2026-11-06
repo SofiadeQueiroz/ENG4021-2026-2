@@ -25,6 +25,8 @@ class Restaurante(models.Model):
     horario = models.CharField(max_length=80)
     endereco = models.CharField(max_length=100, blank=True)
     imagem = models.URLField(blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.nome

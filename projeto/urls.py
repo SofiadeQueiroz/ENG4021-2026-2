@@ -43,5 +43,5 @@ urlpatterns = [
     path('consultarCNPJ/', consultarCNPJ, name='consultarCNPJ'),
     path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
     path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
-]
-
+    path('proximos/', proximos, name='proximos'),
+] 
