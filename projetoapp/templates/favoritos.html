@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Seus favoritos</title>
     <link href="{% static 'css/favoritos.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +13,7 @@
 
 <body>
     <div class="topo">
-        <a href="{% url 'inicioCliente' %}" class="botao-secundario">Voltar</a>
+        <a href="{% url 'busca' %}" class="botao-secundario">Voltar</a>
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 

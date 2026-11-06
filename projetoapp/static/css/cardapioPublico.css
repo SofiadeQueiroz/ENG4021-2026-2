@@ -140,3 +140,53 @@ h2{
     text-align: center;
     color: #5f5f5f;
 }
+
+.produto img{
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px){
+    body{
+        padding: 15px 15px 90px 15px;
+    }
+
+    h1{
+        font-size: 26px;
+    }
+
+    .moedas{
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transform: none;
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px;
+        background-color: antiquewhite;
+        border-top: 1px solid #e5ddd0;
+    }
+
+    .moedas a{
+        width: 44px;
+        height: 44px;
+    }
+
+    .produto{
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .produto img{
+        width: 80px;
+        height: 80px;
+    }
+
+    .produto h3{
+        font-size: 16px;
+    }
+
+    .categorias a{
+        padding: 6px 14px;
+    }
+}

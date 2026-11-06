@@ -5,153 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Adicionar produto</title>
-    <link rel="stylesheet" href="{% static 'css/adicionarProduto.css' %}">
+    <link href="{% static 'css/adicionarProduto.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="logo">
-        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="FoodLink" width="100">
+    <div class="topo">
+        <a href="{% url 'cardapioDono' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 
+    <h4 class="chamada">NOVO NO CARDÁPIO</h4>
     <h1>Adicionar produto</h1>
-    <p>Preencha as informações do produto.</p>
+    <p class="descricao">Preencha as informações do produto.</p>
 
     <form method="post">
         {% csrf_token %}
         {{ form.errors }}
-        <div class="campo">
-            <label for="nome">Nome do produto</label><br>
-            {{ form.nome }}
-        </div>
+        <label for="id_nome">Nome do produto</label>
+        {{ form.nome }}
 
-        <div class="campo">
-            <label for="descricao">Descrição</label><br>
-            {{ form.descricao }}
-        </div>
+        <label for="id_descricao">Descrição</label>
+        {{ form.descricao }}
 
-        <div class="campo">
-            <label for="{{ form.ingredientes.id_for_label }}">Ingredientes</label><br>
-            {{ form.ingredientes }}
-            <small>Informe os ingredientes utilizados no preparo do prato.</small>
-        </div>
+        <label for="id_ingredientes">Ingredientes</label>
+        {{ form.ingredientes }}
+        <p class="ajuda">Informe os ingredientes utilizados no preparo do prato.</p>
 
-        <div class="campo">
-            <button type="submit" name="verificar_alergenicos" value="1">
-                Verificar alergênicos
-            </button>
-        </div>
+        <button class="botao-secundario" type="submit" name="verificar_alergenicos" value="1">Verificar alergênicos</button>
 
         {% if alergenicos_encontrados %}
-            <div class="resultados-locais">
-                <h3>Alergênicos identificados nos ingredientes</h3>
-
-                <ul>
-                    {% for alergênico in alergenicos_encontrados %}
-                        <li>{{ alergênico }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+        <div class="resultados">
+            <h3>Alergênicos identificados nos ingredientes</h3>
+            <ul>
+                {% for alergênico in alergenicos_encontrados %}
+                <li>{{ alergênico }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         {% elif request.method == "POST" and "verificar_alergenicos" in request.POST %}
-            <p>Nenhum dos alergênicos cadastrados foi identificado nos ingredientes.</p>
-        {% endif %} 
+        <p class="ajuda">Nenhum dos alergênicos cadastrados foi identificado nos ingredientes.</p>
+        {% endif %}
 
-<div class="campo">
-    <label for="produto_industrializado">
-        Consultar produto industrializado
-    </label><br>
+        <label for="produto_industrializado">Consultar produto industrializado</label>
+        <input type="text" id="produto_industrializado" name="produto_industrializado" value="{{ busca_api }}" placeholder="Ex.: Nutella, chocolate Nestlé...">
+        <p class="ajuda">Pesquise um produto utilizado no preparo da receita.</p>
 
-    <input
-        type="text"
-        id="produto_industrializado"
-        name="produto_industrializado"
-        value="{{ busca_api }}"
-        placeholder="Ex.: Nutella, chocolate Nestlé..."
-    >
+        <button class="botao-secundario" type="submit" name="consultar_api" value="1">Consultar Open Food Facts</button>
 
-    <small>
-        Pesquise um produto utilizado no preparo da receita.
-    </small>
-</div>
+        {% if erro_api %}
+        <p class="ajuda">{{ erro_api }}</p>
+        {% endif %}
 
-<button type="submit" name="consultar_api" value="1">
-    Consultar Open Food Facts
-</button>
-
-
-
-{% if erro_api %}
-    <p>{{ erro_api }}</p>
-{% endif %}
-
-{% if produtos_api %}
-    <div class="resultados-alergenicos">
-        <h3>Resultados da Open Food Facts</h3>
-
-        <p>Confira se o produto encontrado corresponde ao ingrediente utilizado.</p>
-
-        {% for produto in produtos_api %}
+        {% if produtos_api %}
+        <div class="resultados">
+            <h3>Resultados da Open Food Facts</h3>
+            <p class="ajuda">Confira se o produto encontrado corresponde ao ingrediente utilizado.</p>
+            {% for produto in produtos_api %}
             <div class="produto-api">
-
                 <h4>{{ produto.product_name }}</h4>
-
-                <p>
-                    <strong>Marca:</strong>
-                    {{ produto.brands|default:"Não informada" }}
-                </p>
-
-                <p>
-                    <strong>Alergênicos:</strong>
-                    {{ produto.allergens|default:"Não informados" }}
-                </p>
-
+                <p><strong>Marca:</strong> {{ produto.brands|default:"Não informada" }}</p>
+                <p><strong>Alergênicos:</strong> {{ produto.allergens|default:"Não informados" }}</p>
                 <details>
                     <summary>Ver ingredientes completos</summary>
-                    <p>
-                        {{ produto.ingredients_text|default:"Ingredientes não informados" }}
-                    </p>
+                    <p>{{ produto.ingredients_text|default:"Ingredientes não informados" }}</p>
                 </details>
-
             </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-        <div class="campo">
-            <label for="{{ form.alergenicos.id_for_label }}">Alergênicos</label><br>
-            {{ form.alergenicos }}
-            <small>Essas informações poderão ser verificadas e confirmadas pelo restaurante.</small>
+            {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="campo">
-            <label for="preco">Preço (R$)</label><br>
-            {{ form.preco }}
+        <label for="id_alergenicos">Alergênicos</label>
+        {{ form.alergenicos }}
+        <p class="ajuda">Essas informações poderão ser verificadas e confirmadas pelo restaurante.</p>
+
+        <div class="linha-campos">
+            <div class="campo">
+                <label for="id_preco">Preço (R$)</label>
+                {{ form.preco }}
+            </div>
+            <div class="campo">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.nome }}" {% if form.categoria.value == categoria.nome %}selected{% endif %}>{{ categoria.nome }}</option>
+                    {% empty %}
+                    <option value="">Cadastre uma categoria primeiro</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
+        <p class="aviso"><a href="{% url 'novaCategoria' %}">Cadastrar uma categoria</a></p>
 
-        <div class="campo">
-            <label for="categoria">Categoria</label><br>
-            <select id="categoria" name="categoria">
-                <option>Entradas</option>
-                <option>Pratos principais</option>
-                <option>Bebidas</option>
-                <option>Sobremesas</option>
-            </select>
-        </div>
+        <label for="id_imagem">Link da foto</label>
+        {{ form.imagem }}
 
-        <div class="campo">
-            <label for="foto">Link da foto</label><br>
-            {{ form.imagem }}
-        </div>
-
-        <div class="campo">
+        <div class="opcao">
             <input type="checkbox" id="disponivel" name="disponivel" checked>
             <label for="disponivel">Disponível no cardápio</label>
         </div>
 
-        <button type="submit">Salvar produto</button>
+        <button class="botao-principal" type="submit">Salvar produto</button>
     </form>
 
-    <p><a href="novaCategoria.html">Cadastrar uma categoria</a></p>
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
 
-    <p class="rodape">FoodLink</p>
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}" class="ativo">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+    </nav>
 </body>
 </html>

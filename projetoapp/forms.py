@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from .models import Produto, Categoria, Restaurante
+from .models import Produto, Categoria, Restaurante, Perfil
 
 
 
@@ -13,9 +13,11 @@ class ProdutoForm(forms.ModelForm):
 
 
 class CadastroForm(forms.Form):
+    tipo = forms.ChoiceField(choices=Perfil.TIPOS, widget=forms.HiddenInput)
     nome = forms.CharField(max_length=100)
     email = forms.EmailField(max_length=150)
-    cpf = forms.CharField(max_length=14)
+    cpf = forms.CharField(max_length=14, required=False)
+    cnpj = forms.CharField(max_length=18, required=False)
     telefone = forms.CharField(max_length=15)
     senha = forms.CharField(widget=forms.PasswordInput, min_length=8)
     confirmar_senha = forms.CharField(widget=forms.PasswordInput)
@@ -38,6 +40,15 @@ class CadastroForm(forms.Form):
                 self.add_error('senha', erro)
         if senha and dados.get('confirmar_senha') and senha != dados['confirmar_senha']:
             self.add_error('confirmar_senha', 'As senhas não coincidem.')
+        tipo = dados.get('tipo')
+        cpf = ''.join(c for c in dados.get('cpf', '') if c.isdigit())
+        cnpj = ''.join(c for c in dados.get('cnpj', '') if c.isdigit())
+        if tipo == 'cliente' and len(cpf) != 11:
+            self.add_error('cpf', 'Digite um CPF com 11 números.')
+        if tipo == 'estabelecimento' and len(cnpj) != 14:
+            self.add_error('cnpj', 'Digite um CNPJ com 14 números.')
+        dados['cpf'] = cpf if tipo == 'cliente' else ''
+        dados['cnpj'] = cnpj if tipo == 'estabelecimento' else ''
         return dados
 
 class LoginForm(forms.Form):

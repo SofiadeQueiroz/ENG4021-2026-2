@@ -13,12 +13,19 @@
  
 <body>
     <div class="topo">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'sair' %}">
+            {% csrf_token %}
+            <button class="botao-voltar" type="submit">Sair</button>
+        </form>
+        {% else %}
         <a href="{% url 'home' %}" class="botao-voltar">Voltar</a>
+        {% endif %}
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
  
     <h4 class="chamada">Bem-vindo ao FoodLink</h4>
-    <h1>Olá, Cliente!</h1>
+    <h1>Olá, {% if user.is_authenticated %}{{ user.first_name }}{% else %}Cliente{% endif %}!</h1>
     <h3>Como você quer encontrar seu próximo sabor?</h3>
  
     <div class="botoes-centralizados">

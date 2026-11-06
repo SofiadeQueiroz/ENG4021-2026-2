@@ -210,3 +210,32 @@ h3{
     color: chocolate;
     font-weight: bold;
 }
+
+@media (max-width: 600px){
+    body{
+        padding: 15px 15px 80px 15px;
+    }
+
+    h1{
+        font-size: 26px;
+    }
+
+    form{
+        padding: 18px;
+    }
+
+    .opcao-cor{
+        padding: 8px 12px;
+    }
+
+    .menu-inferior{
+        padding: 10px 0;
+        font-size: 11px;
+    }
+
+    .menu-inferior a{
+        flex: 1;
+        text-align: center;
+        padding: 0 2px;
+    }
+}

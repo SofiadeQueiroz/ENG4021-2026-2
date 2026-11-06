@@ -56,7 +56,6 @@ input[type="email"]{
     color: chocolate;
 }
 
-/* Ajustes de largura para celular, tablet e computador. */
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0 auto; overflow-wrap: anywhere; }
 img { max-width: 100%; height: auto; }
@@ -68,3 +67,15 @@ textarea { resize: vertical; }
 }
 
 form { width: 100%; }
+
+input[type="password"],
+input[type="text"]{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+}

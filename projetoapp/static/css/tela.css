@@ -1,151 +1,185 @@
-*{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
-}
 body{
-  font-family: "Oswald", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-
-}
-.botao-sair {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    background-color: brown;
-    color: white;
-    font: inherit;
-    cursor: pointer;
-}
-
-.buscar {
-    display: flex;
-    gap: 10px;
-}
-
-.buscar input {
-    padding: 10px;
-    width: 300px;
-    border-radius: 20px;
-    border: 1px solid brown;
-}
-
-.buscar select {
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid brown;
-    appearance: none;
-    background-color: white;
-}
-
-.buscar button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    background-color: brown;
-    color: white;
-}
-.navbar{
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    
-}
-nav{
-    margin-left: auto;
-    
-}
-nav ul{
-    display:inline-block;
-    list-style-type: none;
-
-}
-nav ul li{
-    display: inline-block;
-    margin-right: 20px;
-    
-}
-a{
-    text-decoration: none;
-    color:black
-}
-.btn{
-    display: inline-block;
-    background: brown;
-    color: white;
-    padding: 8px 30px;
-    margin: 30px 0;
-    border-radius: 30px;
-    baseline-source: auto;
-
-}
-body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: antiquewhite;
-    padding: 20px;
+    padding: 20px 30px;
+}
+
+.topo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chamada{
+    color: chocolate;
+    margin-top: 20px;
 }
 
 h1{
-    margin-bottom: 20px;
+    margin-top: 5px;
+    font-size: 32px;
 }
-.Produtos{
+
+.descricao{
+    color: #5f5f5f;
+    margin-bottom: 25px;
+}
+
+.acoes{
     display: flex;
     align-items: center;
-    margin-top: 20px;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.linha-busca{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.linha-busca input{
+    padding: 12px;
+    width: 350px;
+    border-radius: 25px;
+    border: 2px solid chocolate;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.linha-busca select{
+    padding: 12px;
+    border-radius: 25px;
+    border: 2px solid chocolate;
+    background-color: white;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.botao-principal{
+    background-color: chocolate;
+    color: white;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.botao-secundario{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.produto{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: white;
+    border: 1px solid #e5ddd0;
+    border-radius: 20px;
     padding: 20px;
+    margin-bottom: 15px;
+}
+
+.produto img{
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
 }
 
 .informacoes{
-    margin-left: 20px;
     flex: 1;
+    min-width: 0;
 }
-.nome{
+
+.informacoes h2{
+    font-size: 20px;
+    margin: 0 0 6px;
+}
+
+.descricao-produto{
+    color: #5f5f5f;
+    font-size: 14px;
+    margin: 0 0 8px;
+}
+
+.preco{
+    color: chocolate;
+    font-weight: bold;
+    margin: 0;
+}
+
+.acoes-produto{
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.editApaga{
-    display:flex;
     gap: 10px;
 }
 
-.editApaga button{
-    padding: 8px 30px;
-    margin: 30px 0;
-    border: none;
-    background-color: brown;
-    color:antiquewhite;
-    baseline-source: auto;
-    border-radius: 20px;
-}
-.preco{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: medium;
+.aviso{
+    color: #5f5f5f;
+    font-size: 14px;
 }
 
-/* Ajustes de largura para celular, tablet e computador. */
+.aviso a{
+    color: chocolate;
+}
+
+.centralizacao{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.centralizacao p{
+    font-weight: bold;
+}
+
+.destaque{
+    color: chocolate;
+}
+
+.menu-inferior{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 30px;
+    padding: 14px 0;
+    background-color: white;
+    border-top: 1px solid #e5ddd0;
+    font-size: 14px;
+}
+
+.menu-inferior a{
+    color: #444;
+    text-decoration: none;
+}
+
+.menu-inferior a.ativo{
+    color: chocolate;
+    font-weight: bold;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0 auto; overflow-wrap: anywhere; }
 img { max-width: 100%; height: auto; }
 input, textarea, select, button { max-width: 100%; }
 button { min-height: 44px; }
-textarea { resize: vertical; }
 @media (max-width: 600px) {
     body { padding-left: 16px; padding-right: 16px; }
 }
 
-.navbar { flex-wrap: wrap; gap: 12px; padding: 20px 0; }
-.navbar nav { margin-left: 0; }
-.navbar ul { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
-.navbar li { margin-right: 0; }
-.buscar { flex-wrap: wrap; }
-.buscar input { width: auto; min-width: 0; flex: 1 1 160px; }
-.informacoes { min-width: 0; }
-.nome, .editApaga { flex-wrap: wrap; gap: 12px; }
-.Produtos > img { flex-shrink: 0; }
+.topo, .acoes, .linha-busca { flex-wrap: wrap; gap: 12px; }
+.linha-busca input { width: auto; min-width: 0; flex: 1 1 180px; }
 @media (max-width: 600px) {
-    .Produtos { flex-direction: column; align-items: flex-start; padding: 20px 0; gap: 16px; }
-    .informacoes { margin-left: 0; width: 100%; }
-    .editApaga button { margin: 8px 0; }
+    .produto { flex-direction: column; align-items: flex-start; }
 }

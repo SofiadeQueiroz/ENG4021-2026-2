@@ -18,16 +18,30 @@
     </div>
 
     <h4 class="chamada">CARDÁPIO DIGITAL</h4>
-    <h2>Aponte a câmera para o QR Code</h2>
-    <h5 class="descricao">Posicione o código dentro da moldura</h5>
+    <h2>Envie a imagem do QR Code</h2>
+    <h5 class="descricao">Use um print ou uma foto do QR Code do restaurante</h5>
 
-    <div class="centralizacao">
-        <img src="https://play-lh.googleusercontent.com/BOGY3oCN4Bd-ogMXphOq2YjkwDdI8bQKtDVQ4ysQlZhXavDDsOqxKrGbTOiZ9TOnEjHVYRlwkq0gp-gJ1QtzIUY" alt="Moldura do leitor de QR Code">
-    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="centralizacao">
+            <img src="https://play-lh.googleusercontent.com/BOGY3oCN4Bd-ogMXphOq2YjkwDdI8bQKtDVQ4ysQlZhXavDDsOqxKrGbTOiZ9TOnEjHVYRlwkq0gp-gJ1QtzIUY" alt="Moldura do leitor de QR Code">
+        </div>
 
-    <div class="centralizacao">
-        <button class="botao-principal">Câmera pronta</button>
-    </div>
+        <div class="centralizacao">
+            <label for="imagem">Imagem do QR Code (até 1 MB)</label>
+        </div>
+        <div class="centralizacao">
+            <input id="imagem" name="imagem" type="file" accept="image/*" required>
+        </div>
+
+        <div class="centralizacao">
+            <button class="botao-principal" type="submit">Ler QR Code</button>
+        </div>
+    </form>
+
+    {% if erro %}
+    <p class="erro">{{ erro }}</p>
+    {% endif %}
 
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
