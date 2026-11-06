@@ -44,4 +44,4 @@ urlpatterns = [
     path('consultarNutricao/', consultarNutricao, name='consultarNutricao'),
     path('consultarAlergenicos/', consultarAlergenicos, name='consultarAlergenicos'),
 ]
-] 
+
