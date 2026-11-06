@@ -205,28 +205,32 @@ def entrar(request):
     if request.user.is_authenticated:
         return redirect('cardapioDono')
     destino = request.POST.get('next', request.GET.get('next', ''))
+    email_nao_cadastrado = False
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email'].lower()
             cadastrado = User.objects.filter(username__iexact=email).first()
-            usuario = authenticate(
-                request,
-                username=cadastrado.username if cadastrado else email,
-                password=form.cleaned_data['senha'],
-            )
-            if usuario is not None:
-                login(request, usuario)
-                if destino and url_has_allowed_host_and_scheme(
-                    destino, allowed_hosts={request.get_host()}, require_https=request.is_secure()
-                ):
-                    return redirect(destino)
-                return redirect('cardapioDono')
+            if cadastrado is None:
+                email_nao_cadastrado = True
             else:
-                form.add_error(None, 'Email ou senha incorretos.')
+                usuario = authenticate(
+                    request,
+                    username=cadastrado.username,
+                    password=form.cleaned_data['senha']
+                )
+                if usuario is not None:
+                    login(request, usuario)
+                    if destino and url_has_allowed_host_and_scheme(
+                        destino, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+                    ):
+                        return redirect(destino)
+                    return redirect('cardapioDono')
+                else:
+                    form.add_error(None, 'Senha incorretos.')
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form, 'next': destino})
+    return render(request, 'login.html', {'form': form, 'next': destino, 'email_nao_cadastrado': email_nao_cadastrado})
 
 
 @login_required(login_url='entrar')
