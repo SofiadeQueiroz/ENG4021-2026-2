@@ -33,6 +33,14 @@ h1{
     color: chocolate;
 }
 
+.feriado{
+    background-color: white;
+    border-left: 4px solid chocolate;
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #5f5f5f;
+}
+
 .categorias{
     margin-top: 20px;
     margin-bottom: 10px;
@@ -96,6 +104,35 @@ h2{
 .indisponivel{
     color: #5f5f5f;
     font-size: 14px;
+}
+
+.moedas{
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.moedas a{
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 50%;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.moedas a.ativa{
+    background-color: chocolate;
+    color: white;
 }
 
 .rodape{

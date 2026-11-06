@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import requests
+from datetime import date
 from .models import Produto, Restaurante
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
@@ -15,6 +16,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.conf import settings
+from django.utils.text import slugify
 from .forms import ConsultaCEPForm
 
 
@@ -174,28 +176,98 @@ def meuRestaurante(request):
 def cardapioPublico(request):
     textos = {
         'descricao': 'Massas artesanais e receitas de família.',
-        'entradas': 'Entradas',
-        'pratos': 'Pratos principais',
-        'bruschetta': 'Pão tostado com tomate e manjericão.',
-        'arancini': 'Bolinhos de risoto recheados com queijo.',
-        'carbonara': 'Massa com guanciale, queijo e gemas.',
-        'lasanha': 'Massa fresca, molho de carne e queijo gratinado.',
         'detalhes': 'Ver detalhes',
-        'indisponivel': 'Indisponível no momento',
+        'sem_produtos': 'Nenhum produto cadastrado ainda.',
     }
 
     idioma = request.GET.get('idioma', 'pt')
-    if idioma == 'en':
-        descricoes = ['descricao', 'bruschetta', 'arancini', 'carbonara', 'lasanha']
-        for chave in descricoes:
-            resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': textos[chave], 'langpair': 'pt|en'})
-            textos[chave] = resposta.json()['responseData']['translatedText']
 
-        textos['entradas'] = 'Starters'
-        textos['pratos'] = 'Main courses'
+    # Traduz um texto para inglês; se a API falhar, mantém o texto original
+    traducoes = {}
+    def traduzir(texto):
+        if idioma != 'en' or not texto:
+            return texto
+        if texto not in traducoes:
+            try:
+                resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': texto, 'langpair': 'pt|en'}, timeout=5)
+                traducoes[texto] = resposta.json()['responseData']['translatedText']
+            except (requests.RequestException, ValueError, KeyError, TypeError):
+                traducoes[texto] = texto
+        return traducoes[texto]
+
+    # Nomes de categoria comuns já traduzidos (a API traduz "Entradas" como "Inflows")
+    traducoes.update({'Entradas': 'Starters', 'Pratos principais': 'Main courses', 'Bebidas': 'Drinks', 'Sobremesas': 'Desserts'})
+
+    textos['descricao'] = traduzir(textos['descricao'])
+    if idioma == 'en':
         textos['detalhes'] = 'See details'
-        textos['indisponivel'] = 'Unavailable right now'
-    return render(request, 'cardapioPublico.html', {'textos': textos, 'idioma': idioma})
+        textos['sem_produtos'] = 'No products yet.'
+
+    simbolos = {'BRL': 'R$', 'USD': 'US$', 'EUR': '€', 'GBP': '£'}
+
+    moeda = request.GET.get('moeda', 'BRL')
+    if moeda not in simbolos:
+        moeda = 'BRL'
+
+    cotacao = 1
+    if moeda != 'BRL':
+        try:
+            resposta = requests.get(f'https://economia.awesomeapi.com.br/json/last/{moeda}-BRL', timeout=5)
+            cotacao = float(resposta.json()[f'{moeda}BRL']['bid'])
+        except (requests.RequestException, ValueError, KeyError):
+            moeda = 'BRL'
+
+    # Produtos cadastrados pelo dono, agrupados por categoria
+    categorias = {}
+    for produto in Produto.objects.order_by('categoria', 'nome'):
+        convertido = f'{float(produto.preco) / cotacao:.2f}'
+        if moeda == 'BRL':
+            convertido = convertido.replace('.', ',')
+
+        if produto.categoria not in categorias:
+            categorias[produto.categoria] = {
+                'nome': traduzir(produto.categoria),
+                'ancora': slugify(produto.categoria),
+                'produtos': [],
+            }
+        categorias[produto.categoria]['produtos'].append({
+            'produto': produto,
+            'descricao': traduzir(produto.descricao),
+            'preco': f'{simbolos[moeda]} {convertido}',
+        })
+
+    feriado = None
+    hoje = date.today()
+    try:
+        for ano in [hoje.year, hoje.year + 1]:
+            resposta = requests.get(f'https://brasilapi.com.br/api/feriados/v1/{ano}', timeout=5)
+            for item in resposta.json():
+                dia = date.fromisoformat(item['date'])
+                if dia >= hoje:
+                    feriado = {'nome': item['name'], 'data': dia.strftime('%d/%m'), 'hoje': dia == hoje}
+                    break
+            if feriado:
+                break
+    except (requests.RequestException, ValueError, KeyError, TypeError):
+        feriado = None
+
+    if idioma == 'en':
+        textos['feriado_hoje'] = 'Today is a holiday'
+        textos['proximo_feriado'] = 'Next holiday'
+        textos['aviso_feriado'] = 'opening hours may change.'
+    else:
+        textos['feriado_hoje'] = 'Hoje é feriado'
+        textos['proximo_feriado'] = 'Próximo feriado'
+        textos['aviso_feriado'] = 'o horário de funcionamento pode mudar.'
+
+    return render(request, 'cardapioPublico.html', {
+        'feriado': feriado,
+        'textos': textos,
+        'idioma': idioma,
+        'categorias': categorias.values(),
+        'moeda': moeda,
+        'moedas': simbolos,
+    })
 
 def detalhesProduto(request):
     return render(request, 'detalhesProduto.html')
