@@ -67,3 +67,15 @@ textarea { resize: vertical; }
 }
 
 form { width: 100%; }
+
+input[type="password"],
+input[type="text"]{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+}

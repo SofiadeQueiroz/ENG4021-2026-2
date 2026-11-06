@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import requests
+import math
 from functools import wraps
+from django.http import JsonResponse
+from datetime import date
 from .models import Produto, Restaurante, Categoria, Perfil
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
@@ -16,7 +19,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.conf import settings
+from django.utils.text import slugify
 from .forms import ConsultaCEPForm
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 def eh_estabelecimento(usuario):
@@ -91,8 +96,13 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form, 'tipo': tipo})
 
 def busca(request):
+    q = request.GET.get('q', '')
+    restaurantes = Restaurante.objects.all()
+    if q:
+        restaurantes = restaurantes.filter(nome__icontains=q)
+    restaurante = restaurantes.first()
+
     endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
-    restaurante = Restaurante.objects.first()
     if restaurante and restaurante.endereco:
         endereco = restaurante.endereco
 
@@ -105,8 +115,7 @@ def busca(request):
         lat = float(resultados[0]['lat'])
         lon = float(resultados[0]['lon'])
 
-    mapa_url = f'https://www.openstreetmap.org/export/embed.html?bbox={lon-0.01},{lat-0.01},{lon+0.01},{lat+0.01}&marker={lat},{lon}'
-    return render(request, 'busca.html', {'mapa_url': mapa_url, 'endereco': endereco})
+    return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
 @never_cache
 @cliente_required
@@ -116,14 +125,94 @@ def favoritos(request):
 @never_cache
 @estabelecimento_required
 def adicionarProduto(request):
+    produtos_api = []
+    erro_api = None
+    alergenicos_encontrados = []
+    busca_api = ''
+
     if request.method == "POST":
         form = ProdutoForm(request.POST)
+
+        busca_api = request.POST.get(
+            'produto_industrializado', ''
+        ).strip()
+
         if form.is_valid():
-            form.save()
-            return redirect('cardapioDono')
+
+            if 'verificar_alergenicos' in request.POST:
+
+                # Verificação local dos ingredientes
+                ingredientes = form.cleaned_data['ingredientes']
+
+                alergenicos_encontrados = verificar_alergenicos_locais(
+                    ingredientes
+                )
+
+            elif 'consultar_api' in request.POST:
+
+                # Verificação local dos ingredientes
+                ingredientes = form.cleaned_data['ingredientes']
+
+                alergenicos_encontrados = verificar_alergenicos_locais(
+                    ingredientes
+                )
+
+                # Consulta à Open Food Facts
+                if busca_api:
+                    produtos_api, erro_api = buscar_alergenicos_api(
+                        busca_api
+                    )
+                else:
+                    erro_api = 'Digite o nome de um produto para consultar.'
+
+                if not produtos_api and not erro_api:
+                    erro_api = 'Nenhum produto encontrado na Open Food Facts.'
+
+            else:
+                # Salva o produto
+                form.save()
+                return redirect('cardapioDono')
+
     else:
         form = ProdutoForm()
-    return render(request, 'adicionarProduto.html', {'form': form, 'categorias': Categoria.objects.all()})
+
+    return render(request, 'adicionarProduto.html', {
+        'form': form,
+        'categorias': Categoria.objects.all(),
+        'produtos_api': produtos_api,
+        'erro_api': erro_api,
+        'alergenicos_encontrados': alergenicos_encontrados,
+        'busca_api': busca_api
+    })
+
+def verificar_alergenicos_locais(ingredientes):
+    alergênicos = {
+        'Leite': ['leite', 'lactose', 'soro de leite',
+                  'caseína', 'manteiga', 'creme de leite'],
+        'Ovo': ['ovo', 'clara de ovo', 'gema'],
+        'Glúten': ['trigo', 'cevada', 'centeio',
+                   'malte', 'farinha de trigo'],
+        'Soja': ['soja', 'lecitina de soja'],
+        'Amendoim': ['amendoim'],
+        'Castanhas e nozes': ['castanha', 'nozes',
+                              'avelã', 'amêndoa'],
+        'Peixe': ['peixe'],
+        'Crustáceos': ['camarão', 'caranguejo', 'lagosta'],
+        'Gergelim': ['gergelim', 'sésamo'],
+        'Mostarda': ['mostarda'],
+        'Aipo': ['aipo']
+    }
+
+    ingredientes = ingredientes.lower()
+    encontrados = []
+
+    for alergênico, palavras in alergênicos.items():
+        for palavra in palavras:
+            if palavra in ingredientes:
+                encontrados.append(alergênico)
+                break
+
+    return encontrados
 
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
@@ -171,16 +260,35 @@ def qrcode(request):
 @never_cache
 @estabelecimento_required
 def tela1(request):
+    q = request.GET.get('q', '')
+    categoria = request.GET.get('categoria', '')
+    categorias = Categoria.objects.values_list('nome', flat=True)
     produtos = Produto.objects.all()
+    if q:
+        produtos = produtos.filter(nome__icontains=q)
+    if categoria:
+        produtos = produtos.filter(categoria=categoria)
     context = {
-        'produtos': produtos
+        'produtos': produtos,
+        'q': q,
+        'categoria': categoria,
+        'categorias': categorias
     }
     return render(request, 'tela1.html', context)
 
 @never_cache
 @estabelecimento_required
-def tela2(request):
-    return render(request, 'tela2.html')
+def editarProduto(request, pk):
+    produto = get_object_or_404(Produto, pk=pk)
+    categorias = Categoria.objects.values_list('nome', flat=True)
+    if request.method == "POST":
+        form = ProdutoForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm(instance=produto)
+    return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
 
 @never_cache
 @estabelecimento_required
@@ -226,7 +334,9 @@ def meuRestaurante(request):
         else:
             form = RestauranteForm(request.POST, instance=restaurante)
             if form.is_valid():
-                form.save()
+                restaurante_salvo = form.save(commit=False)
+                restaurante_salvo.latitude, restaurante_salvo.longitude = buscar_coordenadas(restaurante_salvo.endereco)
+                restaurante_salvo.save()
                 return redirect('meuRestaurante')
     else:
         form = RestauranteForm(instance=restaurante)
@@ -236,59 +346,136 @@ def meuRestaurante(request):
 def cardapioPublico(request):
     textos = {
         'descricao': 'Massas artesanais e receitas de família.',
-        'entradas': 'Entradas',
-        'pratos': 'Pratos principais',
-        'bruschetta': 'Pão tostado com tomate e manjericão.',
-        'arancini': 'Bolinhos de risoto recheados com queijo.',
-        'carbonara': 'Massa com guanciale, queijo e gemas.',
-        'lasanha': 'Massa fresca, molho de carne e queijo gratinado.',
         'detalhes': 'Ver detalhes',
-        'indisponivel': 'Indisponível no momento',
+        'sem_produtos': 'Nenhum produto cadastrado ainda.',
     }
 
     idioma = request.GET.get('idioma', 'pt')
+
+    # Traduz um texto para inglês; se a API falhar, mantém o texto original
+    traducoes = {}
+    def traduzir(texto):
+        if idioma != 'en' or not texto:
+            return texto
+        if texto not in traducoes:
+            try:
+                resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': texto, 'langpair': 'pt|en'}, timeout=5)
+                traducoes[texto] = resposta.json()['responseData']['translatedText']
+            except (requests.RequestException, ValueError, KeyError, TypeError):
+                traducoes[texto] = texto
+        return traducoes[texto]
+
+    # Nomes de categoria comuns já traduzidos (a API traduz "Entradas" como "Inflows")
+    traducoes.update({'Entradas': 'Starters', 'Pratos principais': 'Main courses', 'Bebidas': 'Drinks', 'Sobremesas': 'Desserts'})
+
+    textos['descricao'] = traduzir(textos['descricao'])
     if idioma == 'en':
-        descricoes = ['descricao', 'bruschetta', 'arancini', 'carbonara', 'lasanha']
-        for chave in descricoes:
-            resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': textos[chave], 'langpair': 'pt|en'})
-            textos[chave] = resposta.json()['responseData']['translatedText']
-
-        textos['entradas'] = 'Starters'
-        textos['pratos'] = 'Main courses'
         textos['detalhes'] = 'See details'
-        textos['indisponivel'] = 'Unavailable right now'
-    return render(request, 'cardapioPublico.html', {'textos': textos, 'idioma': idioma})
+        textos['sem_produtos'] = 'No products yet.'
 
-def detalhesProduto(request):
-    return render(request, 'detalhesProduto.html')
+    simbolos = {'BRL': 'R$', 'USD': 'US$', 'EUR': '€', 'GBP': '£'}
+
+    moeda = request.GET.get('moeda', 'BRL')
+    if moeda not in simbolos:
+        moeda = 'BRL'
+
+    cotacao = 1
+    if moeda != 'BRL':
+        try:
+            resposta = requests.get(f'https://economia.awesomeapi.com.br/json/last/{moeda}-BRL', timeout=5)
+            cotacao = float(resposta.json()[f'{moeda}BRL']['bid'])
+        except (requests.RequestException, ValueError, KeyError):
+            moeda = 'BRL'
+
+    # Produtos cadastrados pelo dono, agrupados por categoria
+    categorias = {}
+    for produto in Produto.objects.order_by('categoria', 'nome'):
+        convertido = f'{float(produto.preco) / cotacao:.2f}'
+        if moeda == 'BRL':
+            convertido = convertido.replace('.', ',')
+
+        if produto.categoria not in categorias:
+            categorias[produto.categoria] = {
+                'nome': traduzir(produto.categoria),
+                'ancora': slugify(produto.categoria),
+                'produtos': [],
+            }
+        categorias[produto.categoria]['produtos'].append({
+            'produto': produto,
+            'descricao': traduzir(produto.descricao),
+            'preco': f'{simbolos[moeda]} {convertido}',
+        })
+
+    feriado = None
+    hoje = date.today()
+    try:
+        for ano in [hoje.year, hoje.year + 1]:
+            resposta = requests.get(f'https://brasilapi.com.br/api/feriados/v1/{ano}', timeout=5)
+            for item in resposta.json():
+                dia = date.fromisoformat(item['date'])
+                if dia >= hoje:
+                    feriado = {'nome': item['name'], 'data': dia.strftime('%d/%m'), 'hoje': dia == hoje}
+                    break
+            if feriado:
+                break
+    except (requests.RequestException, ValueError, KeyError, TypeError):
+        feriado = None
+
+    if idioma == 'en':
+        textos['feriado_hoje'] = 'Today is a holiday'
+        textos['proximo_feriado'] = 'Next holiday'
+        textos['aviso_feriado'] = 'opening hours may change.'
+    else:
+        textos['feriado_hoje'] = 'Hoje é feriado'
+        textos['proximo_feriado'] = 'Próximo feriado'
+        textos['aviso_feriado'] = 'o horário de funcionamento pode mudar.'
+
+    return render(request, 'cardapioPublico.html', {
+        'feriado': feriado,
+        'textos': textos,
+        'idioma': idioma,
+        'categorias': categorias.values(),
+        'moeda': moeda,
+        'moedas': simbolos,
+    })
+
+def detalhesProduto(request, id):
+    # Busca o produto pelo id que veio na URL; se não existir, mostra a página de erro 404
+    produto = get_object_or_404(Produto, id=id)
+    preco = f'R$ {produto.preco:.2f}'.replace('.', ',')
+    return render(request, 'detalhesProduto.html', {'produto': produto, 'preco': preco})
 
 @never_cache
 def entrar(request):
     if request.user.is_authenticated:
         return pagina_inicial(request.user)
     destino = request.POST.get('next', request.GET.get('next', ''))
+    email_nao_cadastrado = False
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email'].lower()
             cadastrado = User.objects.filter(username__iexact=email).first()
-            usuario = authenticate(
-                request,
-                username=cadastrado.username if cadastrado else email,
-                password=form.cleaned_data['senha'],
-            )
-            if usuario is not None:
-                login(request, usuario)
-                if destino and url_has_allowed_host_and_scheme(
-                    destino, allowed_hosts={request.get_host()}, require_https=request.is_secure()
-                ):
-                    return redirect(destino)
-                return pagina_inicial(usuario)
+            if cadastrado is None:
+                email_nao_cadastrado = True
             else:
-                form.add_error(None, 'Email ou senha incorretos.')
+                usuario = authenticate(
+                    request,
+                    username=cadastrado.username,
+                    password=form.cleaned_data['senha']
+                )
+                if usuario is not None:
+                    login(request, usuario)
+                    if destino and url_has_allowed_host_and_scheme(
+                        destino, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+                    ):
+                        return redirect(destino)
+                    return pagina_inicial(usuario)
+                else:
+                    form.add_error(None, 'Senha incorretos.')
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form, 'next': destino})
+    return render(request, 'login.html', {'form': form, 'next': destino, 'email_nao_cadastrado': email_nao_cadastrado})
 
 
 @login_required(login_url='entrar')
@@ -397,8 +584,9 @@ def consultarCNPJ(request):
             else:
                 erro = f'Erro ao consultar CNPJ. Código: {response.status_code}'
 
-        except requests.exceptions.RequestException:
-            erro = 'Não foi possível conectar à API.'        
+        except requests.exceptions.RequestException as erro:
+            print("ERRO NA OPEN FOOD FACTS:", erro)
+            return [], f'Erro ao consultar a Open Food Facts: {erro}'      
 
     return render(request, 'consultaCNPJ.html', {
         'dados': dados,
@@ -454,32 +642,89 @@ def consultarAlergenicos(request):
     erro = None
 
     if busca:
-        try:
-            response = requests.get(
-    'https://world.openfoodfacts.org/cgi/search.pl',
-    params={
-        'search_terms': busca,
-        'json': 1,
-        'page_size': 5,
-        'fields': 'product_name,brands,allergens,ingredients_text'
-    },
-    headers={
-        'User-Agent': 'FoodLink/1.0 - PUC-Rio student project'
-    },
-    timeout=10
-)
-
-            if response.status_code == 200:
-                resultado = response.json()
-                produtos = resultado.get('products', [])
-            else:
-                erro = f'Erro na consulta: {response.status_code}'
-
-        except requests.exceptions.RequestException:
-            erro = 'Não foi possível conectar à API.'
-
+        produtos, erro = buscar_alergenicos_api(busca)
+        
     return render(request, 'consultaAlergenicos.html', {
         'produtos': produtos,
         'erro': erro,
         'busca': busca
     })
+
+
+def buscar_coordenadas(endereco):
+    if not endereco:
+        return None, None
+    try:
+        resposta = requests.get(
+            'https://nominatim.openstreetmap.org/search',
+            params={'q': endereco, 'format': 'json', 'limit': 1},
+            headers={'User-Agent': 'FoodLink-PUC'},
+            timeout=5,
+        )
+        resposta.raise_for_status()
+        resultados = resposta.json()
+        if resultados:
+            return float(resultados[0]['lat']), float(resultados[0]['lon'])
+    except (requests.RequestException, ValueError, KeyError):
+        pass
+    return None, None
+
+
+
+def distancia_km(lat1, lon1, lat2, lon2):
+    raio_terra = 6371
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    return 2 * raio_terra * math.asin(math.sqrt(a))
+
+
+def proximos(request):
+    try:
+        lat = float(request.GET.get('lat', ''))
+        lon = float(request.GET.get('lon', ''))
+    except ValueError:
+        return JsonResponse({'erro': 'Latitude e longitude inválidas.'}, status=400)
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        return JsonResponse({'erro': 'Latitude e longitude fora do intervalo.'}, status=400)
+
+    restaurantes = Restaurante.objects.filter(latitude__isnull=False, longitude__isnull=False)
+    lista = []
+    for r in restaurantes:
+        lista.append({
+            'id': r.id,
+            'nome': r.nome,
+            'cozinha': r.cozinha,
+            'endereco': r.endereco,
+            'latitude': r.latitude,
+            'longitude': r.longitude,
+            'distancia_km': round(distancia_km(lat, lon, r.latitude, r.longitude), 2),
+        })
+    lista.sort(key=lambda item: item['distancia_km'])
+    return JsonResponse({'restaurantes': lista[:3]})
+
+
+def buscar_alergenicos_api(busca):
+    try:
+        response = requests.get(
+            'https://world.openfoodfacts.org/cgi/search.pl',
+            params={
+                'search_terms': busca,
+                'json': 1,
+                'page_size': 5,
+                'fields': 'product_name,brands,allergens,ingredients_text'
+            },
+            headers={
+                'User-Agent': 'FoodLink/1.0 - PUC-Rio student project'
+            },
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        resultado = response.json()
+        return resultado.get('products', []), None
+
+    except requests.exceptions.RequestException:
+        return [], 'Não foi possível conectar à API.'
+

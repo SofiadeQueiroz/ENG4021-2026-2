@@ -29,10 +29,16 @@
         </form>
     </div>
 
-    <div class="linha-busca">
-        <input type="search" placeholder="Buscar produto" aria-label="Buscar produto">
-        <button class="botao-principal" type="button">Buscar</button>
-    </div>
+    <form method="get" class="linha-busca">
+        <input type="search" name="q" placeholder="Buscar produto" aria-label="Buscar produto" value="{{ q }}">
+        <select name="categoria" aria-label="Filtrar por categoria">
+            <option value="">Todas as categorias</option>
+            {% for c in categorias %}
+            <option {% if c == categoria %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+        <button class="botao-principal" type="submit">Buscar</button>
+    </form>
 
     {% for produto in produtos %}
     <div class="produto">
@@ -45,12 +51,17 @@
             <p class="preco">R$ {{ produto.preco }}</p>
         </div>
         <div class="acoes-produto">
-            <button class="botao-secundario" type="button">Editar</button>
+            <a href="{% url 'editarProduto' produto.pk %}" class="botao-secundario">Editar</a>
             <button class="botao-secundario" type="button">Apagar</button>
         </div>
     </div>
     {% empty %}
+    {% if q or categoria %}
+    <p class="aviso">Nenhum produto encontrado com esses filtros.</p>
+    <p class="aviso"><a href="{% url 'cardapioDono' %}">Ver todos os produtos</a></p>
+    {% else %}
     <p class="aviso">Nenhum produto cadastrado ainda.</p>
+    {% endif %}
     {% endfor %}
 
     <div class="centralizacao">

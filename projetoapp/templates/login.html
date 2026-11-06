@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -24,7 +25,16 @@
     {% for message in messages %}
         <p role="status">{{ message }}</p>
     {% endfor %}
+    {% if email_nao_cadastrado %}
+    <div class="aviso-cadastro">
+        <p>Este e-mail ainda não possui cadastro no FoodLink.</p>
+        <p>Crie sua conta para continuar!</p>
 
+        <a href="{% url 'cadastro' %}" class="botao-principal">
+            Criar minha conta
+        </a>
+    </div>
+    {% endif %}
     <div class="centralizacao">
         <form method="post">
             {% csrf_token %}
@@ -46,6 +56,15 @@
 
             <button type="submit" class="botao-principal">Seguir</button>
         </form>
+
+            </div>
+
+    <div style="max-width:420px; margin:16px auto 0; text-align:center;">
+        <p style="margin:0 0 12px;">ou</p>
+        <a href="{% provider_login_url 'google' %}"
+           style="display:block; padding:12px 16px; border:2px solid chocolate; border-radius:999px; color:chocolate; text-decoration:none; font-weight:600;">
+            Entrar com Google
+        </a>
     </div>
 
     <p class="rodape-fixo">Food<span class="destaque">Link</span></p>

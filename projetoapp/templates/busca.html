@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
  
 <body>
@@ -18,23 +20,82 @@
     </div>
  
     <h2>Onde vamos comer?</h2>
-    <div class="linha-busca">
-        <input type="search" placeholder="Busca" aria-label="Buscar">
-        <a href="{% url 'favoritos' %}" class="botao-principal">Favoritos</a>
+    <form method="get" class="linha-busca">
+    <input type="search" name="q" placeholder="Busca" aria-label="Buscar" value="{{ q }}">
+    <button type="submit" class="botao-secundario">Buscar</button>
+    <a href="{% url 'favoritos' %}" class="botao-principal">Favoritos</a>
+</form>
+
+{% if q %}
+    <div class="resultados">
+        {% for r in restaurantes %}
+            <p><b>{{ r.nome }}</b> · {{ r.cozinha }} · {{ r.endereco }}</p>
+        {% empty %}
+            <p>Nenhum restaurante encontrado para "{{ q }}".</p>
+        {% endfor %}
+    </div>
+{% endif %}
+ 
+    <div class="centralizacao">
+        <div id="mapa"></div>
     </div>
  
     <div class="centralizacao">
-        <iframe src="{{ mapa_url }}" width="600" height="400"></iframe>
+        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>        <button class="botao-secundario">Tela cheia</button>
     </div>
- 
-    <div class="centralizacao">
-        <button class="botao-principal">Três lugares próximos</button>
-        <button class="botao-secundario">Tela cheia</button>
-    </div>
- 
+        <div class="resultados" id="lista-proximos"></div>
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
     </div>
+    <script>
+    var mapa = L.map('mapa').setView([{{ lat }}, {{ lon }}], 16);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap',
+        referrerPolicy: 'strict-origin-when-cross-origin'
+    }).addTo(mapa);
+    L.marker([{{ lat }}, {{ lon }}]).addTo(mapa)
+        .bindPopup('{{ endereco|escapejs }}').openPopup();
+        
+    var camadaProximos = L.layerGroup().addTo(mapa);
+    var botaoProximos = document.getElementById('botao-proximos');
+    var listaProximos = document.getElementById('lista-proximos');
+
+    botaoProximos.addEventListener('click', function () {
+        listaProximos.textContent = 'Buscando...';
+        camadaProximos.clearLayers();
+
+        fetch('{% url "proximos" %}?lat={{ lat }}&lon={{ lon }}')
+            .then(function (resposta) {
+                if (!resposta.ok) { throw new Error('Erro ' + resposta.status); }
+                return resposta.json();
+            })
+            .then(function (dados) {
+                listaProximos.textContent = '';
+                if (dados.restaurantes.length === 0) {
+                    listaProximos.textContent = 'Nenhum restaurante com localização cadastrada.';
+                    return;
+                }
+                var pontos = [[{{ lat }}, {{ lon }}]];
+                dados.restaurantes.forEach(function (r) {
+                    var p = document.createElement('p');
+                    var nome = document.createElement('b');
+                    nome.textContent = r.nome;
+                    p.appendChild(nome);
+                    p.appendChild(document.createTextNode(
+                        ' · ' + r.cozinha + ' · ' + r.endereco + ' · ' + r.distancia_km.toFixed(2).replace('.', ',') + ' km'
+                    ));
+                    listaProximos.appendChild(p);
+
+                    L.marker([r.latitude, r.longitude]).addTo(camadaProximos).bindPopup(r.nome);
+                    pontos.push([r.latitude, r.longitude]);
+                });
+                mapa.fitBounds(pontos, { padding: [30, 30] });
+            })
+            .catch(function () {
+                listaProximos.textContent = 'Não foi possível buscar os restaurantes. Tente novamente.';
+            });
+    });
+</script>
 </body>
 </html>
  

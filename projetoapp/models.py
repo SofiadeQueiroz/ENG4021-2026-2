@@ -7,6 +7,8 @@ class Produto(models.Model):
     preco = models.DecimalField(max_digits=8, decimal_places=2)
     categoria = models.CharField(max_length=100)
     imagem = models.URLField(blank=True)
+    ingredientes = models.TextField(blank=True)
+    alergenicos = models.TextField(blank=True)
 
     def __str__(self):
         return self.nome# Create your models here.
@@ -26,6 +28,8 @@ class Restaurante(models.Model):
     horario = models.CharField(max_length=80)
     endereco = models.CharField(max_length=100, blank=True)
     imagem = models.URLField(blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.nome

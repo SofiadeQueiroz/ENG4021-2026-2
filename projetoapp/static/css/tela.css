@@ -47,6 +47,15 @@ h1{
     font-size: 16px;
 }
 
+.linha-busca select{
+    padding: 12px;
+    border-radius: 25px;
+    border: 2px solid chocolate;
+    background-color: white;
+    font-family: inherit;
+    font-size: 16px;
+}
+
 .botao-principal{
     background-color: chocolate;
     color: white;
@@ -117,6 +126,10 @@ h1{
 .aviso{
     color: #5f5f5f;
     font-size: 14px;
+}
+
+.aviso a{
+    color: chocolate;
 }
 
 .centralizacao{

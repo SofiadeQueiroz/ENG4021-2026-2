@@ -30,6 +30,57 @@
         <label for="id_descricao">Descrição</label>
         {{ form.descricao }}
 
+        <label for="id_ingredientes">Ingredientes</label>
+        {{ form.ingredientes }}
+        <p class="ajuda">Informe os ingredientes utilizados no preparo do prato.</p>
+
+        <button class="botao-secundario" type="submit" name="verificar_alergenicos" value="1">Verificar alergênicos</button>
+
+        {% if alergenicos_encontrados %}
+        <div class="resultados">
+            <h3>Alergênicos identificados nos ingredientes</h3>
+            <ul>
+                {% for alergênico in alergenicos_encontrados %}
+                <li>{{ alergênico }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% elif request.method == "POST" and "verificar_alergenicos" in request.POST %}
+        <p class="ajuda">Nenhum dos alergênicos cadastrados foi identificado nos ingredientes.</p>
+        {% endif %}
+
+        <label for="produto_industrializado">Consultar produto industrializado</label>
+        <input type="text" id="produto_industrializado" name="produto_industrializado" value="{{ busca_api }}" placeholder="Ex.: Nutella, chocolate Nestlé...">
+        <p class="ajuda">Pesquise um produto utilizado no preparo da receita.</p>
+
+        <button class="botao-secundario" type="submit" name="consultar_api" value="1">Consultar Open Food Facts</button>
+
+        {% if erro_api %}
+        <p class="ajuda">{{ erro_api }}</p>
+        {% endif %}
+
+        {% if produtos_api %}
+        <div class="resultados">
+            <h3>Resultados da Open Food Facts</h3>
+            <p class="ajuda">Confira se o produto encontrado corresponde ao ingrediente utilizado.</p>
+            {% for produto in produtos_api %}
+            <div class="produto-api">
+                <h4>{{ produto.product_name }}</h4>
+                <p><strong>Marca:</strong> {{ produto.brands|default:"Não informada" }}</p>
+                <p><strong>Alergênicos:</strong> {{ produto.allergens|default:"Não informados" }}</p>
+                <details>
+                    <summary>Ver ingredientes completos</summary>
+                    <p>{{ produto.ingredients_text|default:"Ingredientes não informados" }}</p>
+                </details>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <label for="id_alergenicos">Alergênicos</label>
+        {{ form.alergenicos }}
+        <p class="ajuda">Essas informações poderão ser verificadas e confirmadas pelo restaurante.</p>
+
         <div class="linha-campos">
             <div class="campo">
                 <label for="id_preco">Preço (R$)</label>

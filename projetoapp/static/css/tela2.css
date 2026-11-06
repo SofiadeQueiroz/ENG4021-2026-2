@@ -71,3 +71,18 @@ input, textarea { width: 100%; }
 @media (max-width: 600px) {
     .precoCategoria { flex-direction: column; gap: 0; }
 }
+
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 15px;
+    border: 1px solid brown;
+}
+
+.cancelar {
+    padding: 10px 25px;
+    border-radius: 20px;
+    border: 1px solid brown;
+    color: brown;
+    text-decoration: none;
+}

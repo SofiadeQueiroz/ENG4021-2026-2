@@ -89,3 +89,21 @@ textarea { resize: vertical; }
 .linha-busca, .centralizacao { flex-wrap: wrap; }
 .linha-busca input { width: auto; min-width: 0; flex: 1 1 180px; }
 .centralizacao img { width: 600px; max-width: 100%; }
+
+.resultados {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#mapa {
+    width: 600px;
+    max-width: 100%;
+    height: 400px;
+    border-radius: 20px;
+    border: 3px solid chocolate;
+}
+
+#mapa img {
+    border: none;
+    border-radius: 0;
+}
