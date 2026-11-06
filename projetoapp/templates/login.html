@@ -24,7 +24,16 @@
     {% for message in messages %}
         <p role="status">{{ message }}</p>
     {% endfor %}
+    {% if email_nao_cadastrado %}
+    <div class="aviso-cadastro">
+        <p>Este e-mail ainda não possui cadastro no FoodLink.</p>
+        <p>Crie sua conta para continuar!</p>
 
+        <a href="{% url 'cadastro' %}" class="botao-principal">
+            Criar minha conta
+        </a>
+    </div>
+    {% endif %}
     <div class="centralizacao">
         <form method="post">
             {% csrf_token %}
