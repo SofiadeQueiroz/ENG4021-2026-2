@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
  
 <body>
@@ -18,13 +20,24 @@
     </div>
  
     <h2>Onde vamos comer?</h2>
-    <div class="linha-busca">
-        <input type="search" placeholder="Busca" aria-label="Buscar">
-        <button class="botao-principal">Favoritos</button>
+    <form method="get" class="linha-busca">
+    <input type="search" name="q" placeholder="Busca" aria-label="Buscar" value="{{ q }}">
+    <button type="submit" class="botao-secundario">Buscar</button>
+    <a href="{% url 'favoritos' %}" class="botao-principal">Favoritos</a>
+</form>
+
+{% if q %}
+    <div class="resultados">
+        {% for r in restaurantes %}
+            <p><b>{{ r.nome }}</b> · {{ r.cozinha }} · {{ r.endereco }}</p>
+        {% empty %}
+            <p>Nenhum restaurante encontrado para "{{ q }}".</p>
+        {% endfor %}
     </div>
+{% endif %}
  
     <div class="centralizacao">
-        <img src="{% static 'img/mapa.png' %}" alt="Mapa">
+        <div id="mapa"></div>
     </div>
  
     <div class="centralizacao">
@@ -35,6 +48,15 @@
     <div class="centralizacao">
         <p>Food<span class="destaque">Link</span></p>
     </div>
+    <script>
+    var mapa = L.map('mapa').setView([{{ lat }}, {{ lon }}], 16);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap',
+        referrerPolicy: 'strict-origin-when-cross-origin'
+    }).addTo(mapa);
+    L.marker([{{ lat }}, {{ lon }}]).addTo(mapa)
+        .bindPopup('{{ endereco|escapejs }}').openPopup();
+</script>
 </body>
 </html>
  

@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import requests
+from datetime import date
 from .models import Produto, Restaurante
-from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm
+from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,8 +11,14 @@ from django.db import IntegrityError, transaction
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST
-from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from django.conf import settings
+from django.utils.text import slugify
 from .forms import ConsultaCEPForm
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 
@@ -50,7 +57,26 @@ def cadastro(request):
     return render(request, 'cadastro.html', {'form': form})
 
 def busca(request):
-    return render (request,'busca.html')
+    q = request.GET.get('q', '')
+    restaurantes = Restaurante.objects.all()
+    if q:
+        restaurantes = restaurantes.filter(nome__icontains=q)
+    restaurante = restaurantes.first()
+
+    endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
+    if restaurante and restaurante.endereco:
+        endereco = restaurante.endereco
+
+    resposta = requests.get('https://nominatim.openstreetmap.org/search', params={'q': endereco, 'format': 'json'}, headers={'User-Agent': 'FoodLink-PUC'})
+    resultados = resposta.json()
+
+    lat = -22.979
+    lon = -43.233
+    if resultados:
+        lat = float(resultados[0]['lat'])
+        lon = float(resultados[0]['lon'])
+
+    return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
 @never_cache
 @login_required(login_url='entrar')
@@ -90,16 +116,35 @@ def qrcode(request):
 @never_cache
 @login_required(login_url='entrar')
 def tela1(request):
+    q = request.GET.get('q', '')
+    categoria = request.GET.get('categoria', '')
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
     produtos = Produto.objects.all()
+    if q:
+        produtos = produtos.filter(nome__icontains=q)
+    if categoria:
+        produtos = produtos.filter(categoria=categoria)
     context = {
-        'produtos': produtos
+        'produtos': produtos,
+        'q': q,
+        'categoria': categoria,
+        'categorias': categorias
     }
     return render(request, 'tela1.html', context)
 
 @never_cache
 @login_required(login_url='entrar')
-def tela2(request):
-    return render(request, 'tela2.html')
+def editarProduto(request, pk):
+    produto = get_object_or_404(Produto, pk=pk)
+    categorias = ['Entradas', 'Pratos principais', 'Bebidas', 'Sobremesas']
+    if request.method == "POST":
+        form = ProdutoForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapioDono')
+    else:
+        form = ProdutoForm(instance=produto)
+    return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
 
 @never_cache
 @login_required(login_url='entrar')
@@ -153,10 +198,106 @@ def meuRestaurante(request):
 
 
 def cardapioPublico(request):
-    return render(request, 'cardapioPublico.html')
+    textos = {
+        'descricao': 'Massas artesanais e receitas de família.',
+        'detalhes': 'Ver detalhes',
+        'sem_produtos': 'Nenhum produto cadastrado ainda.',
+    }
 
-def detalhesProduto(request):
-    return render(request, 'detalhesProduto.html')
+    idioma = request.GET.get('idioma', 'pt')
+
+    # Traduz um texto para inglês; se a API falhar, mantém o texto original
+    traducoes = {}
+    def traduzir(texto):
+        if idioma != 'en' or not texto:
+            return texto
+        if texto not in traducoes:
+            try:
+                resposta = requests.get('https://api.mymemory.translated.net/get', params={'q': texto, 'langpair': 'pt|en'}, timeout=5)
+                traducoes[texto] = resposta.json()['responseData']['translatedText']
+            except (requests.RequestException, ValueError, KeyError, TypeError):
+                traducoes[texto] = texto
+        return traducoes[texto]
+
+    # Nomes de categoria comuns já traduzidos (a API traduz "Entradas" como "Inflows")
+    traducoes.update({'Entradas': 'Starters', 'Pratos principais': 'Main courses', 'Bebidas': 'Drinks', 'Sobremesas': 'Desserts'})
+
+    textos['descricao'] = traduzir(textos['descricao'])
+    if idioma == 'en':
+        textos['detalhes'] = 'See details'
+        textos['sem_produtos'] = 'No products yet.'
+
+    simbolos = {'BRL': 'R$', 'USD': 'US$', 'EUR': '€', 'GBP': '£'}
+
+    moeda = request.GET.get('moeda', 'BRL')
+    if moeda not in simbolos:
+        moeda = 'BRL'
+
+    cotacao = 1
+    if moeda != 'BRL':
+        try:
+            resposta = requests.get(f'https://economia.awesomeapi.com.br/json/last/{moeda}-BRL', timeout=5)
+            cotacao = float(resposta.json()[f'{moeda}BRL']['bid'])
+        except (requests.RequestException, ValueError, KeyError):
+            moeda = 'BRL'
+
+    # Produtos cadastrados pelo dono, agrupados por categoria
+    categorias = {}
+    for produto in Produto.objects.order_by('categoria', 'nome'):
+        convertido = f'{float(produto.preco) / cotacao:.2f}'
+        if moeda == 'BRL':
+            convertido = convertido.replace('.', ',')
+
+        if produto.categoria not in categorias:
+            categorias[produto.categoria] = {
+                'nome': traduzir(produto.categoria),
+                'ancora': slugify(produto.categoria),
+                'produtos': [],
+            }
+        categorias[produto.categoria]['produtos'].append({
+            'produto': produto,
+            'descricao': traduzir(produto.descricao),
+            'preco': f'{simbolos[moeda]} {convertido}',
+        })
+
+    feriado = None
+    hoje = date.today()
+    try:
+        for ano in [hoje.year, hoje.year + 1]:
+            resposta = requests.get(f'https://brasilapi.com.br/api/feriados/v1/{ano}', timeout=5)
+            for item in resposta.json():
+                dia = date.fromisoformat(item['date'])
+                if dia >= hoje:
+                    feriado = {'nome': item['name'], 'data': dia.strftime('%d/%m'), 'hoje': dia == hoje}
+                    break
+            if feriado:
+                break
+    except (requests.RequestException, ValueError, KeyError, TypeError):
+        feriado = None
+
+    if idioma == 'en':
+        textos['feriado_hoje'] = 'Today is a holiday'
+        textos['proximo_feriado'] = 'Next holiday'
+        textos['aviso_feriado'] = 'opening hours may change.'
+    else:
+        textos['feriado_hoje'] = 'Hoje é feriado'
+        textos['proximo_feriado'] = 'Próximo feriado'
+        textos['aviso_feriado'] = 'o horário de funcionamento pode mudar.'
+
+    return render(request, 'cardapioPublico.html', {
+        'feriado': feriado,
+        'textos': textos,
+        'idioma': idioma,
+        'categorias': categorias.values(),
+        'moeda': moeda,
+        'moedas': simbolos,
+    })
+
+def detalhesProduto(request, id):
+    # Busca o produto pelo id que veio na URL; se não existir, mostra a página de erro 404
+    produto = get_object_or_404(Produto, id=id)
+    preco = f'R$ {produto.preco:.2f}'.replace('.', ',')
+    return render(request, 'detalhesProduto.html', {'produto': produto, 'preco': preco})
 
 @never_cache
 def entrar(request):
@@ -200,18 +341,67 @@ def esqueciSenha(request):
         form = EsqueciSenhaForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            if User.objects.filter(username=email).exists():
-                send_mail(
-                    subject='Recuperação de senha - FoodLink',
-                    message='Recebemos um pedido para recuperar sua senha.',
-                    from_email='nao-responda@foodlink.com',
-                    recipient_list=[email],
+            usuario = User.objects.filter(username=email).first()
+            if usuario is not None:
+                uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+                token = default_token_generator.make_token(usuario)
+                link = request.build_absolute_uri(reverse('redefinirSenha', args=[uid, token]))
+                enviar_email_resend(
+                    email,
+                    'Recuperação de senha - FoodLink',
+                    'Recebemos um pedido para recuperar sua senha.\n\nClique no link abaixo para criar uma nova senha:\n' + link + '\n\nSe você não fez esse pedido, ignore este e-mail.',
                 )
             enviado = True
     else:
         form = EsqueciSenhaForm()
     return render(request, 'esqueciSenha.html', {'form': form, 'enviado': enviado})
 
+def redefinirSenha(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        usuario = User.objects.get(pk=uid)
+    except (ValueError, TypeError, OverflowError, User.DoesNotExist):
+        usuario = None
+
+    link_valido = usuario is not None and default_token_generator.check_token(usuario, token)
+
+    if not link_valido:
+        return render(request, 'redefinirSenha.html', {'link_valido': False})
+
+    if request.method == "POST":
+        form = NovaSenhaForm(request.POST)
+        if form.is_valid():
+            usuario.set_password(form.cleaned_data['senha'])
+            usuario.save()
+            return redirect('entrar')
+    else:
+        form = NovaSenhaForm()
+    return render(request, 'redefinirSenha.html', {'form': form, 'link_valido': True})
+
+def enviar_email_resend(destinatario, assunto, texto):
+    resposta = requests.post(
+        'https://api.resend.com/emails',
+        headers={
+            'Authorization': 'Bearer ' + str(settings.RESEND_API_KEY),
+            'Content-Type': 'application/json',
+        },
+        json={
+            'from': 'FoodLink <onboarding@resend.dev>',
+            'to': [destinatario],
+            'subject': assunto,
+            'text': texto,
+        },
+        timeout=10,
+    )
+    if resposta.status_code != 200:
+        print('Erro Resend:', resposta.status_code, resposta.text)
+    return resposta.status_code == 200
+
+def qrcodeRestaurante(request):
+    link_cardapio = request.build_absolute_uri('/cardapioPublico/')
+    qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=B84E29&data=' + link_cardapio
+    return render(request, 'qrcodeRestaurante.html', {'qr_url': qr_url, 'link_cardapio': link_cardapio})
+  
 def consultarCNPJ(request):
     cnpj = request.GET.get('cnpj', '').replace('.', '').replace('/', '').replace('-', '')
 

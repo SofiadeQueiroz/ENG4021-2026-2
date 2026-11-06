@@ -1,31 +1,44 @@
-def consultarCNPJ(request):
-    cnpj = request.GET.get('cnpj', '').replace('.', '').replace('/', '').replace('-', '')
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Consulta de CNPJ - FoodLink</title>
+    <link href="{% static 'css/consultaCNPJ.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
 
-    dados = None
-    erro = None
+<body>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
-    if cnpj:
-        try:
-            response = requests.get(
-                f'https://brasilapi.com.br/api/cnpj/v1/{cnpj}',
-                timeout=10
-            )
+    <h1>Consulta de CNPJ</h1>
+    <p class="descricao">Digite o CNPJ do restaurante para ver os dados da empresa.</p>
 
-            if response.status_code == 200:
-                dados = response.json()
-            elif response.status_code == 429:
-                erro = 'Muitas consultas realizadas. Aguarde um pouco e tente novamente.'
-            elif response.status_code == 404:
-                erro = 'CNPJ não encontrado.'
-            elif response.status_code == 400:
-                erro = 'CNPJ inválido.'
-            else:
-                erro = f'Erro ao consultar CNPJ. Código: {response.status_code}'
+    <form method="GET">
+        <label for="cnpj">CNPJ</label>
+        <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" value="{{ request.GET.cnpj }}" required>
+        <button type="submit" class="botao-principal">Consultar</button>
+    </form>
 
-        except requests.exceptions.RequestException:
-            erro = 'Não foi possível conectar à API.'
+    {% if erro %}
+        <p class="mensagem-erro">{{ erro }}</p>
+    {% endif %}
 
-    return render(request, 'consultaCNPJ.html', {
-        'dados': dados,
-        'erro': erro
-    })
+    {% if dados %}
+        <div class="resultado">
+            <h2>{{ dados.razao_social }}</h2>
+            <p><strong>Nome fantasia:</strong> {{ dados.nome_fantasia|default:"Não informado" }}</p>
+            <p><strong>Situação cadastral:</strong> {{ dados.descricao_situacao_cadastral|default:"Não informada" }}</p>
+            <p><strong>Atividade principal:</strong> {{ dados.cnae_fiscal_descricao|default:"Não informada" }}</p>
+            <p><strong>Endereço:</strong> {{ dados.logradouro }}, {{ dados.numero }} - {{ dados.bairro }}, {{ dados.municipio }}/{{ dados.uf }}</p>
+        </div>
+    {% endif %}
+
+    <p class="texto-centro"><a href="{% url 'meuRestaurante' %}">Voltar</a></p>
+</body>
+</html>

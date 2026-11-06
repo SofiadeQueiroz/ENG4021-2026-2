@@ -1,0 +1,43 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>QR Code do cardápio</title>
+    <link href="{% static 'css/qrcodeRestaurante.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="topo">
+        <a href="{% url 'cardapioPublico' %}" class="botao-secundario">Ver cardápio</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <h4 class="chamada">DIVULGUE SEU CARDÁPIO</h4>
+    <h1>QR Code</h1>
+    <p class="descricao">Imprima e coloque nas mesas. O cliente escaneia e abre o cardápio no celular.</p>
+
+    <div class="centralizacao">
+        <img src="{{ qr_url }}" alt="QR Code do cardápio" width="300" height="300">
+    </div>
+
+    <p class="aviso">Link do cardápio: <a href="{{ link_cardapio }}">{{ link_cardapio }}</a></p>
+
+    <div class="centralizacao">
+        <a href="{{ qr_url }}" target="_blank" class="botao-principal">Abrir QR Code para imprimir</a>
+    </div>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}" class="ativo">QR Code</a>
+    </nav>
+</body>
+</html>

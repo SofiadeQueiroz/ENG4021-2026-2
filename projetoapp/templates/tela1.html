@@ -26,7 +26,7 @@
                 <li><a href="">Categoria</a></li>
                 <li><a href="{% url 'aparencia' %}">Aparencia</a></li>
                 <li><a href="{% url 'meuRestaurante' %}">Meu restaurante</a></li>
-                <li><a href="">QRCode</a></li>
+                <li><a href="{% url 'qrcodeRestaurante' %}">QRCode</a></li>
                 <li>
                     <form method="post" action="{% url 'sair' %}">
                         {% csrf_token %}
@@ -45,10 +45,16 @@
     <p><a href="{% url 'cardapioPublico' %}">Ver cardápio</a></p>
     
     <a href="" class="btn"> + Adicionar produto </a>
-    <div class="buscar">
-        <input type="text" placeholder="Buscar">
-        <button>Buscar</button>
-    </div>
+    <form method="get" class="buscar">
+        <input type="text" name="q" placeholder="Buscar" value="{{ q }}">
+            <select name="categoria">
+        <option value="">Todas as categorias</option>
+        {% for c in categorias %}
+            <option {% if c == categoria %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+        <button type="submit">Buscar</button>
+    </form>
     
     {% for produto in produtos %}
         <div class="Produtos">
@@ -61,7 +67,9 @@
                  <h2>{{ produto.nome }}</h2>
 
                     <div class="editApaga">
-                        <button>Editar</button>
+                        <form method="get" action="{% url 'editarProduto' produto.pk %}">
+    <button type="submit">Editar</button>
+</form>
                         <button>Apagar</button>
                     </div>
                 </div>
@@ -70,9 +78,14 @@
                 <p class="preco">R$ {{ produto.preco }}</p>
             </div>
         </div>
-    {% empty %}
+   {% empty %}
+    {% if q or categoria %}
+        <p>Nenhum produto encontrado com esses filtros.</p>
+        <a href="{% url 'cardapioDono' %}">Ver todos os produtos</a>
+    {% else %}
         <p>Nenhum produto cadastrado ainda.</p>
-    {% endfor %}
+    {% endif %}
+{% endfor %}
     
     
 </div>

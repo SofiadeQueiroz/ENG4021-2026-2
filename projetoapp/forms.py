@@ -71,5 +71,13 @@ class ConsultaCEPForm(forms.Form):
 class EsqueciSenhaForm(forms.Form):
     email = forms.EmailField()
 
-    
+class NovaSenhaForm(forms.Form):
+    senha = forms.CharField(widget=forms.PasswordInput, min_length=8)
+    confirmar_senha = forms.CharField(widget=forms.PasswordInput, min_length=8)
 
+    def clean(self):
+        dados = super().clean()
+        if dados.get('senha') and dados.get('confirmar_senha'):
+            if dados['senha'] != dados['confirmar_senha']:
+                self.add_error('confirmar_senha', 'As senhas não são iguais.')
+        return dados
