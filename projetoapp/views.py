@@ -78,15 +78,95 @@ def favoritos(request):
 
 @never_cache
 @login_required(login_url='entrar')
+
 def adicionarProduto(request):
+    produtos_api = []
+    erro_api = None
+    alergenicos_encontrados = []
+    busca_api = ''
+
     if request.method == "POST":
         form = ProdutoForm(request.POST)
+
+        busca_api = request.POST.get(
+            'produto_industrializado', ''
+        ).strip()
+
         if form.is_valid():
-            form.save()
-            return redirect('cardapioDono')
+
+            if 'verificar_alergenicos' in request.POST:
+
+                # Verificação local dos ingredientes
+                ingredientes = form.cleaned_data['ingredientes']
+
+                alergenicos_encontrados = verificar_alergenicos_locais(
+                    ingredientes
+                )
+
+            elif 'consultar_api' in request.POST:
+
+                # Verificação local dos ingredientes
+                ingredientes = form.cleaned_data['ingredientes']
+
+                alergenicos_encontrados = verificar_alergenicos_locais(
+                    ingredientes
+                )
+
+                # Consulta à Open Food Facts
+                if busca_api:
+                    produtos_api, erro_api = buscar_alergenicos_api(
+                        busca_api
+                    )
+                else:
+                    erro_api = 'Digite o nome de um produto para consultar.'
+
+                if not produtos_api and not erro_api:
+                    erro_api = 'Nenhum produto encontrado na Open Food Facts.'
+
+            else:
+                # Salva o produto
+                form.save()
+                return redirect('cardapioDono')
+
     else:
         form = ProdutoForm()
-    return render(request, 'adicionarProduto.html', {'form': form})
+
+    return render(request, 'adicionarProduto.html', {
+        'form': form,
+        'produtos_api': produtos_api,
+        'erro_api': erro_api,
+        'alergenicos_encontrados': alergenicos_encontrados,
+        'busca_api': busca_api
+    })
+
+def verificar_alergenicos_locais(ingredientes):
+    alergênicos = {
+        'Leite': ['leite', 'lactose', 'soro de leite',
+                  'caseína', 'manteiga', 'creme de leite'],
+        'Ovo': ['ovo', 'clara de ovo', 'gema'],
+        'Glúten': ['trigo', 'cevada', 'centeio',
+                   'malte', 'farinha de trigo'],
+        'Soja': ['soja', 'lecitina de soja'],
+        'Amendoim': ['amendoim'],
+        'Castanhas e nozes': ['castanha', 'nozes',
+                              'avelã', 'amêndoa'],
+        'Peixe': ['peixe'],
+        'Crustáceos': ['camarão', 'caranguejo', 'lagosta'],
+        'Gergelim': ['gergelim', 'sésamo'],
+        'Mostarda': ['mostarda'],
+        'Aipo': ['aipo']
+    }
+
+    ingredientes = ingredientes.lower()
+    encontrados = []
+
+    for alergênico, palavras in alergênicos.items():
+        for palavra in palavras:
+            if palavra in ingredientes:
+                encontrados.append(alergênico)
+                break
+
+    return encontrados
 
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
@@ -335,8 +415,9 @@ def consultarCNPJ(request):
             else:
                 erro = f'Erro ao consultar CNPJ. Código: {response.status_code}'
 
-        except requests.exceptions.RequestException:
-            erro = 'Não foi possível conectar à API.'        
+        except requests.exceptions.RequestException as erro:
+            print("ERRO NA OPEN FOOD FACTS:", erro)
+            return [], f'Erro ao consultar a Open Food Facts: {erro}'      
 
     return render(request, 'consultaCNPJ.html', {
         'dados': dados,
@@ -382,38 +463,42 @@ def consultarNutricao(request):
         'busca': alimento
     })
 
+
 def consultarAlergenicos(request):
     busca = request.GET.get('produto', '').strip()
     produtos = []
     erro = None
 
     if busca:
-        try:
-            response = requests.get(
-    'https://world.openfoodfacts.org/cgi/search.pl',
-    params={
-        'search_terms': busca,
-        'json': 1,
-        'page_size': 5,
-        'fields': 'product_name,brands,allergens,ingredients_text'
-    },
-    headers={
-        'User-Agent': 'FoodLink/1.0 - PUC-Rio student project'
-    },
-    timeout=10
-)
-
-            if response.status_code == 200:
-                resultado = response.json()
-                produtos = resultado.get('products', [])
-            else:
-                erro = f'Erro na consulta: {response.status_code}'
-
-        except requests.exceptions.RequestException:
-            erro = 'Não foi possível conectar à API.'
-
+        produtos, erro = buscar_alergenicos_api(busca)
+        
     return render(request, 'consultaAlergenicos.html', {
         'produtos': produtos,
         'erro': erro,
         'busca': busca
     })
+
+
+def buscar_alergenicos_api(busca):
+    try:
+        response = requests.get(
+            'https://world.openfoodfacts.org/cgi/search.pl',
+            params={
+                'search_terms': busca,
+                'json': 1,
+                'page_size': 5,
+                'fields': 'product_name,brands,allergens,ingredients_text'
+            },
+            headers={
+                'User-Agent': 'FoodLink/1.0 - PUC-Rio student project'
+            },
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        resultado = response.json()
+        return resultado.get('products', []), None
+
+    except requests.exceptions.RequestException:
+        return [], 'Não foi possível conectar à API.'
