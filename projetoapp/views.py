@@ -5,7 +5,7 @@ from functools import wraps
 from django.http import JsonResponse
 from datetime import date
 from .models import Produto, Restaurante, Categoria, Perfil
-from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm
+from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm, ItensImportadosFormSet
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils.text import slugify
 from .forms import ConsultaCEPForm
+from .leitor_cardapio import extrair_linhas, interpretar_cardapio
 from django.shortcuts import render, redirect, get_object_or_404
 
 
@@ -228,6 +229,67 @@ def novaCategoria(request):
     else:
         form = CategoriaForm()
     return render(request, 'novaCategoria.html', {'form': form})
+
+@never_cache
+@estabelecimento_required
+def importarCardapio(request):
+    erro = None
+    formset = None
+    if request.method == "POST" and request.POST.get('acao') == 'salvar':
+        # Segundo momento: o dono revisou os itens e clicou em "Importar produtos"
+        formset = ItensImportadosFormSet(request.POST)
+        if formset.is_valid():
+            itens = [f.cleaned_data for f in formset if f.cleaned_data.get('incluir')]
+            if not itens:
+                erro = 'Marque pelo menos um produto para importar.'
+            else:
+                with transaction.atomic():
+                    for item in itens:
+                        categoria = Categoria.objects.filter(nome__iexact=item['categoria']).first()
+                        if categoria is None:
+                            categoria = Categoria.objects.create(nome=item['categoria'])
+                        Produto.objects.create(
+                            nome=item['nome'],
+                            descricao=item['descricao'],
+                            preco=item['preco'],
+                            categoria=categoria.nome,
+                        )
+                return redirect('cardapioDono')
+    elif request.method == "POST":
+        # Primeiro momento: o dono enviou o PDF
+        arquivo = request.FILES.get('cardapio')
+        if arquivo is None:
+            erro = 'Escolha o PDF do cardápio antes de enviar.'
+        elif not arquivo.name.lower().endswith('.pdf'):
+            erro = 'O arquivo precisa ser um PDF.'
+        elif arquivo.size > 5 * 1024 * 1024:
+            erro = 'O PDF tem mais de 5 MB.'
+        else:
+            try:
+                linhas = extrair_linhas(arquivo.read())
+            except ValueError as e:
+                erro = str(e)
+            except RuntimeError:
+                erro = 'Não foi possível abrir este PDF. Confira se o arquivo não está corrompido.'
+            else:
+                if not linhas:
+                    erro = 'Não encontramos texto neste PDF. Se ele for escaneado (uma foto do cardápio), a leitura ainda não está disponível.'
+                else:
+                    categorias = interpretar_cardapio(linhas)
+                    if not categorias:
+                        erro = 'Não encontramos produtos com preço neste PDF.'
+                    else:
+                        itens = [
+                            {'incluir': True, 'categoria': c['nome'], 'nome': p['nome'],
+                             'descricao': p['descricao'], 'preco': p['preco']}
+                            for c in categorias for p in c['produtos']
+                        ]
+                        formset = ItensImportadosFormSet(initial=itens)
+    return render(request, 'importarCardapio.html', {
+        'erro': erro,
+        'formset': formset,
+        'categorias_existentes': Categoria.objects.values_list('nome', flat=True),
+    })
 
 def qrcode(request):
     erro = None
