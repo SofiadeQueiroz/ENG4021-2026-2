@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Importar cardápio</title>
+    <link href="{% static 'css/importarCardapio.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="topo">
+        <a href="{% url 'cardapioDono' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <h4 class="chamada">IMPORTAR CARDÁPIO</h4>
+    <h1>Importar cardápio em PDF</h1>
+    <p class="descricao">Envie o cardápio do seu restaurante e cadastre todos os produtos de uma vez.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="cardapio">Arquivo do cardápio (PDF, até 5 MB)</label>
+        <input id="cardapio" name="cardapio" type="file" accept=".pdf,application/pdf" required>
+        <button class="botao-principal" type="submit">Ler cardápio</button>
+    </form>
+
+    {% if erro %}
+    <p class="erro">{{ erro }}</p>
+    {% endif %}
+
+    {% if formset %}
+    <form method="post" class="revisao">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <h2>Revise antes de importar</h2>
+        <p class="aviso">Corrija o que for preciso e desmarque os itens que não quiser importar.</p>
+
+        {% for form in formset %}
+        <div class="item">
+            <label class="incluir">{{ form.incluir }} Importar este produto</label>
+
+            <div class="linha-campos">
+                <div class="campo">
+                    <label for="{{ form.nome.id_for_label }}">Nome</label>
+                    {{ form.nome }}
+                    {{ form.nome.errors }}
+                </div>
+                <div class="campo campo-preco">
+                    <label for="{{ form.preco.id_for_label }}">Preço (R$)</label>
+                    {{ form.preco }}
+                    {{ form.preco.errors }}
+                </div>
+            </div>
+
+            <label for="{{ form.categoria.id_for_label }}">Categoria</label>
+            {{ form.categoria }}
+            {{ form.categoria.errors }}
+
+            <label for="{{ form.descricao.id_for_label }}">Descrição</label>
+            {{ form.descricao }}
+        </div>
+        {% endfor %}
+
+        <datalist id="lista-categorias">
+            {% for nome in categorias_existentes %}
+            <option value="{{ nome }}">
+            {% endfor %}
+        </datalist>
+
+        <button class="botao-principal" type="submit" name="acao" value="salvar">Importar produtos</button>
+    </form>
+    {% endif %}
+
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}" class="ativo">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+    </nav>
+</body>
+</html>

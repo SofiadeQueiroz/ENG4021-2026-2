@@ -23,6 +23,7 @@
 
     <div class="acoes">
         <a href="{% url 'adicionarProduto' %}" class="botao-principal">+ Adicionar produto</a>
+        <a href="{% url 'importarCardapio' %}" class="botao-secundario">Importar PDF</a>
         <form method="post" action="{% url 'sair' %}">
             {% csrf_token %}
             <button class="botao-secundario" type="submit">Sair</button>

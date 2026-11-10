@@ -60,6 +60,24 @@ class CategoriaForm(forms.ModelForm):
         model = Categoria
         fields = ['nome']
 
+class ItemImportadoForm(forms.Form):
+    incluir = forms.BooleanField(required=False, initial=True)
+    categoria = forms.CharField(max_length=50, required=False, widget=forms.TextInput(attrs={'list': 'lista-categorias'}))
+    nome = forms.CharField(max_length=100, required=False)
+    descricao = forms.CharField(required=False)
+    preco = forms.DecimalField(max_digits=8, decimal_places=2, min_value=0, required=False)
+
+    def clean(self):
+        dados = super().clean()
+        # Só exige os campos dos itens que vão ser importados
+        if dados.get('incluir'):
+            for campo in ['categoria', 'nome', 'preco']:
+                if dados.get(campo) in (None, ''):
+                    self.add_error(campo, 'Preencha este campo ou desmarque o item.')
+        return dados
+
+ItensImportadosFormSet = forms.formset_factory(ItemImportadoForm, extra=0)
+
 class RestauranteForm(forms.ModelForm):
     class Meta:
         model = Restaurante
