@@ -354,6 +354,15 @@ def editarProduto(request, pk):
 
 @never_cache
 @estabelecimento_required
+def apagarProduto(request, pk):
+    produto = get_object_or_404(Produto, pk=pk)
+    if request.method == "POST":
+        produto.delete()
+        return redirect('cardapioDono')
+    return render(request, 'apagarProduto.html', {'produto': produto})
+
+@never_cache
+@estabelecimento_required
 def aparencia(request):
     return render(request, 'aparencia.html')
 

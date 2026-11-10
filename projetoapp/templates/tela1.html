@@ -53,7 +53,7 @@
         </div>
         <div class="acoes-produto">
             <a href="{% url 'editarProduto' produto.pk %}" class="botao-secundario">Editar</a>
-            <button class="botao-secundario" type="button">Apagar</button>
+            <a href="{% url 'apagarProduto' produto.pk %}" class="botao-secundario">Apagar</a>
         </div>
     </div>
     {% empty %}
