@@ -48,3 +48,14 @@ class Perfil(models.Model):
 
     def __str__(self):
         return f'{self.usuario.username} ({self.tipo})'
+
+
+class Favorito(models.Model):
+    cliente = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('cliente', 'restaurante')
+
+    def __str__(self):
+        return f'{self.cliente.username} - {self.restaurante.nome}'

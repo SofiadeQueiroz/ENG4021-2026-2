@@ -4,7 +4,7 @@ import math
 from functools import wraps
 from django.http import JsonResponse
 from datetime import date
-from .models import Produto, Restaurante, Categoria, Perfil
+from .models import Produto, Restaurante, Categoria, Perfil, Favorito
 from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm, ItensImportadosFormSet
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -121,7 +121,13 @@ def busca(request):
 @never_cache
 @cliente_required
 def favoritos(request):
-    return render(request,'favoritos.html')
+    favoritos = Favorito.objects.filter(
+        cliente=request.user
+    ).select_related('restaurante')
+
+    return render(request, 'favoritos.html', {
+        'favoritos': favoritos
+    })
 
 @never_cache
 @estabelecimento_required
