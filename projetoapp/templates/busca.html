@@ -29,7 +29,12 @@
 {% if q %}
     <div class="resultados">
         {% for r in restaurantes %}
-            <p><b>{{ r.nome }}</b> · {{ r.cozinha }} · {{ r.endereco }}</p>
+            <p>
+                <b>
+                    <a href="{% url 'cardapioPublico' r.pk %}">{{ r.nome }}</a>
+                </b>
+                · {{ r.cozinha }} · {{ r.endereco }}
+            </p>
         {% empty %}
             <p>Nenhum restaurante encontrado para "{{ q }}".</p>
         {% endfor %}

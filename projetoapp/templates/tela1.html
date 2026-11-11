@@ -13,7 +13,9 @@
 
 <body>
     <div class="topo">
-        <a href="{% url 'cardapioPublico' %}" class="botao-secundario">Ver cardápio</a>
+        {% if restaurante %}
+            <a href="{% url 'cardapioPublico' restaurante.pk %}" class="botao-secundario">Ver cardápio</a>
+        {% endif %}
         <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
     </div>
 
