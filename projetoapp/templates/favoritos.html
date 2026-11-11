@@ -22,14 +22,15 @@
 
     <div class="centralizacao">
         <div class="lista">
-            <div class="favorito">
-                <h3>Couve-flor</h3>
-                <p>Brasileira</p>
-            </div>
-            <div class="favorito">
-                <h3>Le max</h3>
-                <p>Fast Food</p>
-            </div>
+            {% for favorito in favoritos %}
+                <div class="favorito">
+                    <h3>{{ favorito.restaurante.nome }}</h3>
+                    <p>{{ favorito.restaurante.cozinha }}</p>
+                </div>
+            {% empty %}
+                <p>Você ainda não tem restaurantes favoritos.</p>
+            {% endfor %}
+
         </div>
     </div>
 
