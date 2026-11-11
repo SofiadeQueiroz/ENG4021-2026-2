@@ -58,6 +58,17 @@ h1{
     text-decoration: none;
 }
 
+.voltar-gerenciamento {
+    display: inline-block;
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 8px 18px;
+    margin-bottom: 15px;
+    text-decoration: none;
+}
+
 h2{
     font-size: 22px;
     margin-top: 30px;
@@ -190,3 +201,4 @@ h2{
         padding: 6px 14px;
     }
 }
+

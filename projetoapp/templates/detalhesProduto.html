@@ -10,13 +10,19 @@
 
 <body>
     <p class="logo">Food<span>Link</span></p>
-    <a href="{% url 'cardapioPublico' %}#{{ produto.categoria|slugify }}">Voltar ao cardápio</a>
+   {% if produto.restaurante %}
+        <a href="{% url 'cardapioPublico' produto.restaurante.pk %}#{{ produto.categoria|slugify }}">Voltar ao cardápio</a>
+    {% else %}
+        <a href="{% url 'busca' %}">Voltar à busca</a>
+    {% endif %}
 
     {% if produto.imagem %}
         <img class="foto" src="{{ produto.imagem }}" alt="{{ produto.nome }}">
     {% endif %}
 
-    <p class="categoria">Casa di Pasta · {{ produto.categoria }}</p>
+    <p class="categoria">
+        {{ produto.restaurante.nome|default:"FoodLink" }} · {{ produto.categoria }}
+    </p>
     <h1>{{ produto.nome }}</h1>
     <p class="preco">{{ preco }}</p>
 
@@ -25,7 +31,11 @@
         <p>{{ produto.descricao }}</p>
     </div>
 
-    <a class="botao" href="{% url 'cardapioPublico' %}">Ver outros pratos</a>
+    {% if produto.restaurante %}
+        <a class="botao" href="{% url 'cardapioPublico' produto.restaurante.pk %}">Ver outros pratos</a>
+    {% else %}
+        <a class="botao" href="{% url 'busca' %}">Voltar à busca</a>
+    {% endif %}
 
     <p class="rodape">FoodLink · Cardápio digital</p>
 </body>

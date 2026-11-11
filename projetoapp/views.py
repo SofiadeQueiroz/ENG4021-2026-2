@@ -33,6 +33,9 @@ def pagina_inicial(usuario):
         return redirect('cardapioDono')
     return redirect('inicioCliente')
 
+def restaurante_do_usuario(usuario):
+    return Restaurante.objects.filter(usuario=usuario).first()
+
 def estabelecimento_required(view):
     @wraps(view)
     @login_required(login_url='entrar')
@@ -129,9 +132,16 @@ def favoritos(request):
         'favoritos': favoritos
     })
 
+
 @never_cache
 @estabelecimento_required
 def adicionarProduto(request):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante antes de adicionar produtos.')
+        return redirect('meuRestaurante')
+
     produtos_api = []
     erro_api = None
     alergenicos_encontrados = []
@@ -147,24 +157,17 @@ def adicionarProduto(request):
         if form.is_valid():
 
             if 'verificar_alergenicos' in request.POST:
-
-                # Verificação local dos ingredientes
                 ingredientes = form.cleaned_data['ingredientes']
-
                 alergenicos_encontrados = verificar_alergenicos_locais(
                     ingredientes
                 )
 
             elif 'consultar_api' in request.POST:
-
-                # Verificação local dos ingredientes
                 ingredientes = form.cleaned_data['ingredientes']
-
                 alergenicos_encontrados = verificar_alergenicos_locais(
                     ingredientes
                 )
 
-                # Consulta à Open Food Facts
                 if busca_api:
                     produtos_api, erro_api = buscar_alergenicos_api(
                         busca_api
@@ -176,8 +179,9 @@ def adicionarProduto(request):
                     erro_api = 'Nenhum produto encontrado na Open Food Facts.'
 
             else:
-                # Salva o produto
-                form.save()
+                produto = form.save(commit=False)
+                produto.restaurante = restaurante
+                produto.save()
                 return redirect('cardapioDono')
 
     else:
@@ -185,12 +189,13 @@ def adicionarProduto(request):
 
     return render(request, 'adicionarProduto.html', {
         'form': form,
-        'categorias': Categoria.objects.all(),
+        'categorias': Categoria.objects.filter(restaurante=restaurante),
         'produtos_api': produtos_api,
         'erro_api': erro_api,
         'alergenicos_encontrados': alergenicos_encontrados,
         'busca_api': busca_api
     })
+
 
 def verificar_alergenicos_locais(ingredientes):
     alergênicos = {
@@ -224,46 +229,81 @@ def verificar_alergenicos_locais(ingredientes):
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
 
+
 @never_cache
 @estabelecimento_required
 def novaCategoria(request):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
+        return redirect('meuRestaurante')
+
     if request.method == "POST":
         form = CategoriaForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            categoria = form.save(commit=False)
+            categoria.restaurante = restaurante
+            categoria.save()
             return redirect('adicionarProduto')
     else:
         form = CategoriaForm()
+
     return render(request, 'novaCategoria.html', {'form': form})
+
+
 
 @never_cache
 @estabelecimento_required
 def importarCardapio(request):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
+        return redirect('meuRestaurante')
+
     erro = None
     formset = None
+
     if request.method == "POST" and request.POST.get('acao') == 'salvar':
-        # Segundo momento: o dono revisou os itens e clicou em "Importar produtos"
         formset = ItensImportadosFormSet(request.POST)
+
         if formset.is_valid():
-            itens = [f.cleaned_data for f in formset if f.cleaned_data.get('incluir')]
+            itens = [
+                f.cleaned_data for f in formset
+                if f.cleaned_data.get('incluir')
+            ]
+
             if not itens:
                 erro = 'Marque pelo menos um produto para importar.'
             else:
                 with transaction.atomic():
                     for item in itens:
-                        categoria = Categoria.objects.filter(nome__iexact=item['categoria']).first()
+                        categoria = Categoria.objects.filter(
+                            nome__iexact=item['categoria'],
+                            restaurante=restaurante
+                        ).first()
+
                         if categoria is None:
-                            categoria = Categoria.objects.create(nome=item['categoria'])
+                            categoria = Categoria.objects.create(
+                                nome=item['categoria'],
+                                restaurante=restaurante
+                            )
+
                         Produto.objects.create(
                             nome=item['nome'],
                             descricao=item['descricao'],
                             preco=item['preco'],
                             categoria=categoria.nome,
+                            restaurante=restaurante
                         )
+
                 return redirect('cardapioDono')
+
     elif request.method == "POST":
-        # Primeiro momento: o dono enviou o PDF
         arquivo = request.FILES.get('cardapio')
+
         if arquivo is None:
             erro = 'Escolha o PDF do cardápio antes de enviar.'
         elif not arquivo.name.lower().endswith('.pdf'):
@@ -282,20 +322,32 @@ def importarCardapio(request):
                     erro = 'Não encontramos texto neste PDF. Se ele for escaneado (uma foto do cardápio), a leitura ainda não está disponível.'
                 else:
                     categorias = interpretar_cardapio(linhas)
+
                     if not categorias:
                         erro = 'Não encontramos produtos com preço neste PDF.'
                     else:
                         itens = [
-                            {'incluir': True, 'categoria': c['nome'], 'nome': p['nome'],
-                             'descricao': p['descricao'], 'preco': p['preco']}
-                            for c in categorias for p in c['produtos']
+                            {
+                                'incluir': True,
+                                'categoria': c['nome'],
+                                'nome': p['nome'],
+                                'descricao': p['descricao'],
+                                'preco': p['preco']
+                            }
+                            for c in categorias
+                            for p in c['produtos']
                         ]
+
                         formset = ItensImportadosFormSet(initial=itens)
+
     return render(request, 'importarCardapio.html', {
         'erro': erro,
         'formset': formset,
-        'categorias_existentes': Categoria.objects.values_list('nome', flat=True),
+        'categorias_existentes': Categoria.objects.filter(
+            restaurante=restaurante
+        ).values_list('nome', flat=True),
     })
+
 
 def qrcode(request):
     erro = None
@@ -325,106 +377,244 @@ def qrcode(request):
                     erro = 'Este QR Code não é de um cardápio do FoodLink.'
     return render(request, 'qrcode.html', {'erro': erro})
 
+
 @never_cache
 @estabelecimento_required
 def tela1(request):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
+        return redirect('meuRestaurante')
+
     q = request.GET.get('q', '')
     categoria = request.GET.get('categoria', '')
-    categorias = Categoria.objects.values_list('nome', flat=True)
-    produtos = Produto.objects.all()
+
+    categorias = Categoria.objects.filter(
+        restaurante=restaurante
+    ).values_list('nome', flat=True)
+
+    produtos = Produto.objects.filter(restaurante=restaurante)
+
     if q:
         produtos = produtos.filter(nome__icontains=q)
+
     if categoria:
         produtos = produtos.filter(categoria=categoria)
+
     context = {
         'produtos': produtos,
         'q': q,
         'categoria': categoria,
-        'categorias': categorias
+        'categorias': categorias,
+        'restaurante': restaurante,
     }
+
     return render(request, 'tela1.html', context)
+
+
 
 @never_cache
 @estabelecimento_required
 def editarProduto(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
-    categorias = Categoria.objects.values_list('nome', flat=True)
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        return redirect('meuRestaurante')
+
+    produto = get_object_or_404(
+        Produto,
+        pk=pk,
+        restaurante=restaurante
+    )
+
+    categorias = Categoria.objects.filter(
+        restaurante=restaurante
+    ).values_list('nome', flat=True)
+
     if request.method == "POST":
         form = ProdutoForm(request.POST, instance=produto)
+
         if form.is_valid():
-            form.save()
+            produto_salvo = form.save(commit=False)
+            produto_salvo.restaurante = restaurante
+            produto_salvo.save()
             return redirect('cardapioDono')
     else:
         form = ProdutoForm(instance=produto)
-    return render(request, 'tela2.html', {'form': form, 'produto': produto, 'categorias': categorias})
+
+    return render(request, 'tela2.html', {
+        'form': form,
+        'produto': produto,
+        'categorias': categorias
+    })
+
+
 
 @never_cache
 @estabelecimento_required
 def apagarProduto(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        return redirect('meuRestaurante')
+
+    produto = get_object_or_404(
+        Produto,
+        pk=pk,
+        restaurante=restaurante
+    )
+
     if request.method == "POST":
         produto.delete()
         return redirect('cardapioDono')
-    return render(request, 'apagarProduto.html', {'produto': produto})
+
+    return render(request, 'apagarProduto.html', {
+        'produto': produto
+    })
 
 @never_cache
 @estabelecimento_required
 def aparencia(request):
-    return render(request, 'aparencia.html')
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
+        return redirect('meuRestaurante')
+
+    return render(request, 'aparencia.html', {
+        'restaurante': restaurante
+    })
 
 @never_cache
 @estabelecimento_required
 def meuRestaurante(request):
-    restaurante = Restaurante.objects.first()
+    restaurante = restaurante_do_usuario(request.user)
+
     cep_form = ConsultaCEPForm()
     resultado_cep = ''
+
     if request.method == "POST":
+
         if request.POST.get('acao') == 'consultar_cep':
             cep_form = ConsultaCEPForm(request.POST)
-            dados_formulario = {campo: request.POST.get(campo, '') for campo in RestauranteForm.Meta.fields}
+
+            dados_formulario = {
+                campo: request.POST.get(campo, '')
+                for campo in RestauranteForm.Meta.fields
+            }
+
             if cep_form.is_valid():
                 cep = cep_form.cleaned_data['cep'].replace('-', '')
+
                 try:
-                    resposta = requests.get(f'https://viacep.com.br/ws/{cep}/json/', timeout=5, allow_redirects=False)
+                    resposta = requests.get(
+                        f'https://viacep.com.br/ws/{cep}/json/',
+                        timeout=5,
+                        allow_redirects=False
+                    )
                     resposta.raise_for_status()
+
                     endereco = resposta.json()
+
                     if not isinstance(endereco, dict):
                         raise ValueError('Resposta inválida')
+
                     if endereco.get('erro') in (True, 'true'):
-                        cep_form.add_error('cep', 'CEP não encontrado. Confira os números.')
-                    elif any(not isinstance(endereco.get(campo), str) for campo in ('logradouro', 'bairro', 'localidade', 'uf')):
+                        cep_form.add_error(
+                            'cep',
+                            'CEP não encontrado. Confira os números.'
+                        )
+
+                    elif any(
+                        not isinstance(endereco.get(campo), str)
+                        for campo in (
+                            'logradouro', 'bairro',
+                            'localidade', 'uf'
+                        )
+                    ):
                         raise ValueError('Resposta incompleta')
+
                     elif not endereco['localidade'] or len(endereco['uf']) != 2:
                         raise ValueError('Cidade ou UF inválida')
+
                     else:
-                        partes = [endereco['logradouro'], endereco['bairro'], f"{endereco['localidade']}/{endereco['uf']}"]
-                        endereco_completo = ', '.join(parte for parte in partes if parte)
+                        partes = [
+                            endereco['logradouro'],
+                            endereco['bairro'],
+                            f"{endereco['localidade']}/{endereco['uf']}"
+                        ]
+
+                        endereco_completo = ', '.join(
+                            parte for parte in partes if parte
+                        )
+
                         if len(endereco_completo) > Restaurante._meta.get_field('endereco').max_length:
-                            cep_form.add_error('cep', 'O endereço retornado é longo demais. Preencha o endereço manualmente, com até 100 caracteres.')
+                            cep_form.add_error(
+                                'cep',
+                                'O endereço retornado é longo demais. '
+                                'Preencha o endereço manualmente, com até 100 caracteres.'
+                            )
                         else:
                             dados_formulario['endereco'] = endereco_completo
-                            resultado_cep = 'Endereço encontrado. Confira os dados e acrescente o número e o complemento antes de salvar.'
+                            resultado_cep = (
+                                'Endereço encontrado. Confira os dados e '
+                                'acrescente o número e o complemento antes de salvar.'
+                            )
+
                 except (requests.RequestException, ValueError):
-                    cep_form.add_error('cep', 'Não foi possível consultar o CEP. Tente novamente ou preencha o endereço manualmente.')
-            # Consultar o CEP mantém os campos digitados e não salva o restaurante.
-            form = RestauranteForm(initial=dados_formulario, instance=restaurante)
+                    cep_form.add_error(
+                        'cep',
+                        'Não foi possível consultar o CEP. Tente novamente '
+                        'ou preencha o endereço manualmente.'
+                    )
+
+            form = RestauranteForm(
+                initial=dados_formulario,
+                instance=restaurante
+            )
+
         else:
-            form = RestauranteForm(request.POST, instance=restaurante)
+            form = RestauranteForm(
+                request.POST,
+                instance=restaurante
+            )
+
             if form.is_valid():
                 restaurante_salvo = form.save(commit=False)
-                restaurante_salvo.latitude, restaurante_salvo.longitude = buscar_coordenadas(restaurante_salvo.endereco)
+
+                restaurante_salvo.usuario = request.user
+
+                restaurante_salvo.latitude, restaurante_salvo.longitude = (
+                    buscar_coordenadas(restaurante_salvo.endereco)
+                )
+
                 restaurante_salvo.save()
+
+                messages.success(
+                    request,
+                    'Dados do restaurante salvos com sucesso!'
+                )
+
                 return redirect('meuRestaurante')
+
     else:
         form = RestauranteForm(instance=restaurante)
-    return render(request, 'meuRestaurante.html', {'form': form, 'cep_form': cep_form, 'resultado_cep': resultado_cep})
+
+    return render(request, 'meuRestaurante.html', {
+        'form': form,
+        'cep_form': cep_form,
+        'resultado_cep': resultado_cep,
+        'restaurante': restaurante
+    })
 
 
-def cardapioPublico(request):
+def cardapioPublico(request, restaurante_id):
+    restaurante = get_object_or_404(Restaurante, pk=restaurante_id)
     textos = {
-        'descricao': 'Massas artesanais e receitas de família.',
-        'detalhes': 'Ver detalhes',
-        'sem_produtos': 'Nenhum produto cadastrado ainda.',
+    'descricao': restaurante.descricao,
+    'detalhes': 'Ver detalhes',
+    'sem_produtos': 'Nenhum produto cadastrado ainda.',
     }
 
     idioma = request.GET.get('idioma', 'pt')
@@ -466,7 +656,7 @@ def cardapioPublico(request):
 
     # Produtos cadastrados pelo dono, agrupados por categoria
     categorias = {}
-    for produto in Produto.objects.order_by('categoria', 'nome'):
+    for produto in Produto.objects.filter(restaurante=restaurante).order_by('categoria', 'nome'):
         convertido = f'{float(produto.preco) / cotacao:.2f}'
         if moeda == 'BRL':
             convertido = convertido.replace('.', ',')
@@ -507,6 +697,10 @@ def cardapioPublico(request):
         textos['proximo_feriado'] = 'Próximo feriado'
         textos['aviso_feriado'] = 'o horário de funcionamento pode mudar.'
 
+    eh_dono = (
+            request.user.is_authenticated
+            and restaurante.usuario_id == request.user.id
+        )
     return render(request, 'cardapioPublico.html', {
         'feriado': feriado,
         'textos': textos,
@@ -514,6 +708,8 @@ def cardapioPublico(request):
         'categorias': categorias.values(),
         'moeda': moeda,
         'moedas': simbolos,
+        'restaurante': restaurante,
+        'eh_dono': eh_dono,
     })
 
 def detalhesProduto(request, id):
@@ -627,10 +823,21 @@ def enviar_email_resend(destinatario, assunto, texto):
 @never_cache
 @estabelecimento_required
 def qrcodeRestaurante(request):
-    link_cardapio = request.build_absolute_uri('/cardapioPublico/')
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
+        return redirect('meuRestaurante')
+
+    caminho_cardapio = reverse('cardapioPublico', args=[restaurante.pk])
+    link_cardapio = request.build_absolute_uri(caminho_cardapio)
+
     qr_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=B84E29&data=' + link_cardapio
-    return render(request, 'qrcodeRestaurante.html', {'qr_url': qr_url, 'link_cardapio': link_cardapio})
-  
+
+    return render(request, 'qrcodeRestaurante.html', {
+        'qr_url': qr_url,
+        'link_cardapio': link_cardapio
+    })  
 @never_cache
 @estabelecimento_required
 def consultarCNPJ(request):
