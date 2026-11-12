@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 
-from .models import Perfil
+from .models import Perfil, Restaurante
 from .views import cnpj_valido, nutrientes_principais
 
 
@@ -45,6 +45,9 @@ class TelasDeConsultaTests(TestCase):
     def setUp(self):
         usuario = User.objects.create_user('dono@example.com')
         Perfil.objects.create(usuario=usuario, tipo='estabelecimento')
+        # O cardápio do dono só abre depois que o restaurante está cadastrado.
+        Restaurante.objects.create(usuario=usuario, nome='Restaurante Teste', descricao='Comida caseira',
+                                   cozinha='Brasileira', horario='12h às 20h')
         self.client.force_login(usuario)
         consulta = patch('projetoapp.views.requests.get')
         self.api = consulta.start()
