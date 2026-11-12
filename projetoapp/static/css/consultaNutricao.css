@@ -125,3 +125,14 @@ input[type="text"]{
         font-size: 14px;
     }
 }
+/* Lista completa de nutrientes, escondida até a pessoa clicar. */
+.todos-nutrientes{
+    margin-top: 12px;
+}
+
+.todos-nutrientes summary{
+    color: chocolate;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 8px;
+}

@@ -32,6 +32,13 @@
         </form>
     </div>
 
+    <div class="consultas">
+        <p class="titulo-consultas">Consultas rápidas</p>
+        <a href="{% url 'consultarCNPJ' %}" class="botao-secundario">Consultar CNPJ</a>
+        <a href="{% url 'consultarNutricao' %}" class="botao-secundario">Informações nutricionais</a>
+        <a href="{% url 'consultarAlergenicos' %}" class="botao-secundario">Alergênicos</a>
+    </div>
+
     <form method="get" class="linha-busca">
         <input type="search" name="q" placeholder="Buscar produto" aria-label="Buscar produto" value="{{ q }}">
         <select name="categoria" aria-label="Filtrar por categoria">

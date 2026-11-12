@@ -837,16 +837,40 @@ def qrcodeRestaurante(request):
     return render(request, 'qrcodeRestaurante.html', {
         'qr_url': qr_url,
         'link_cardapio': link_cardapio
-    })  
+    })
+
+
+def cnpj_valido(cnpj):
+    # Um CNPJ tem 14 números. Os 2 últimos são "dígitos verificadores":
+    # saem de uma conta feita com os 12 primeiros, então dá para conferir sem usar a API.
+    if len(cnpj) != 14 or not cnpj.isdigit() or cnpj == cnpj[0] * 14:
+        return False
+
+    def calcular_digito(numeros, pesos):
+        soma = sum(int(numero) * peso for numero, peso in zip(numeros, pesos))
+        resto = soma % 11
+        return '0' if resto < 2 else str(11 - resto)
+
+    pesos_primeiro = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+    pesos_segundo = [6] + pesos_primeiro
+
+    primeiro = calcular_digito(cnpj[:12], pesos_primeiro)
+    segundo = calcular_digito(cnpj[:12] + primeiro, pesos_segundo)
+    return cnpj[12:] == primeiro + segundo
+
+
 @never_cache
 @estabelecimento_required
 def consultarCNPJ(request):
-    cnpj = request.GET.get('cnpj', '').replace('.', '').replace('/', '').replace('-', '')
+    texto = request.GET.get('cnpj', '')
+    cnpj = ''.join(caractere for caractere in texto if caractere.isdigit())
 
     dados = None
     erro = None
 
-    if cnpj:
+    if texto.strip() and not cnpj_valido(cnpj):
+        erro = 'CNPJ inválido. Confira os 14 números.'
+    elif cnpj:
         try:
             response = requests.get(
                 f'https://brasilapi.com.br/api/cnpj/v1/{cnpj}',
@@ -868,15 +892,42 @@ def consultarCNPJ(request):
             else:
                 erro = f'Erro ao consultar CNPJ. Código: {response.status_code}'
 
-        except requests.exceptions.RequestException as erro:
-            print("ERRO NA OPEN FOOD FACTS:", erro)
-            return [], f'Erro ao consultar a Open Food Facts: {erro}'      
+        except requests.exceptions.RequestException:
+            erro = 'Não foi possível conectar à API.'
 
     return render(request, 'consultaCNPJ.html', {
         'dados': dados,
         'erro': erro
     })
 
+
+
+# A API devolve dezenas de nutrientes em inglês. Aqui ficam só os principais, com nome em português.
+NUTRIENTES_PRINCIPAIS = {
+    'Energy': 'Calorias',
+    'Protein': 'Proteínas',
+    'Carbohydrate, by difference': 'Carboidratos',
+    'Total lipid (fat)': 'Gorduras',
+    'Fiber, total dietary': 'Fibras',
+    'Sodium, Na': 'Sódio',
+}
+
+
+def nutrientes_principais(alimento):
+    principais = []
+    for nutriente in alimento.get('foodNutrients', []):
+        nome = NUTRIENTES_PRINCIPAIS.get(nutriente.get('nutrientName'))
+        if nome is None:
+            continue
+        # A energia vem em kcal e em kJ; mostramos só as calorias (kcal).
+        if nutriente.get('nutrientName') == 'Energy' and nutriente.get('unitName') != 'KCAL':
+            continue
+        principais.append({
+            'nome': nome,
+            'valor': nutriente.get('value'),
+            'unidade': nutriente.get('unitName', '').lower(),
+        })
+    return principais
 
 
 @never_cache
@@ -902,6 +953,8 @@ def consultarNutricao(request):
             if response.status_code == 200:
                 resultado = response.json()
                 alimentos = resultado.get('foods', [])
+                for alimento_encontrado in alimentos:
+                    alimento_encontrado['principais'] = nutrientes_principais(alimento_encontrado)
 
             elif response.status_code == 429:
                 erro = 'Limite de consultas atingido. Tente novamente mais tarde.'
