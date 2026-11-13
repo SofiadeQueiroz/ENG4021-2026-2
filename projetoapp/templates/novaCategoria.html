@@ -21,6 +21,27 @@
     <h1>Nova categoria</h1>
     <p class="descricao">Crie uma categoria para organizar os produtos do cardápio.</p>
 
+
+    <div class="lista-categorias">
+        <h2>Suas categorias</h2>
+        {% for categoria in categorias %}
+            <div class="item-categoria">
+                <div>
+                    <strong>{{ categoria.nome }}</strong>
+                    <span class="qtd-produtos">{{ categoria.total_produtos }} produto{{ categoria.total_produtos|pluralize }}</span>
+                </div>
+                <div class="acoes-categoria">
+                    <a href="{% url 'editarCategoria' categoria.pk %}">Editar</a>
+                    <a href="{% url 'apagarCategoria' categoria.pk %}" class="apagar">Apagar</a>
+                </div>
+            </div>
+        {% empty %}
+            <p class="sem-categorias">Você ainda não criou nenhuma categoria.</p>
+        {% endfor %}
+    </div>
+
+    <h2>Nova categoria</h2>
+    
     <form method="post">
         {% csrf_token %}
         {{ form.errors }}
