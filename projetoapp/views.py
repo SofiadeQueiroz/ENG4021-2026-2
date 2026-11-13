@@ -242,14 +242,29 @@ def novaCategoria(request):
         form = CategoriaForm(request.POST)
 
         if form.is_valid():
-            categoria = form.save(commit=False)
-            categoria.restaurante = restaurante
-            categoria.save()
-            return redirect('adicionarProduto')
+            repetida = Categoria.objects.filter(
+                restaurante=restaurante,
+                nome__iexact=form.cleaned_data['nome']
+            ).exists()
+
+            if repetida:
+                form.add_error('nome', 'Você já tem uma categoria com esse nome.')
+            else:
+                categoria = form.save(commit=False)
+                categoria.restaurante = restaurante
+                categoria.save()
+                return redirect('adicionarProduto')
     else:
         form = CategoriaForm()
 
-    return render(request, 'novaCategoria.html', {'form': form})
+    categorias = list(Categoria.objects.filter(restaurante=restaurante).order_by('nome'))
+    for categoria in categorias:
+        categoria.total_produtos = Produto.objects.filter(
+            restaurante=restaurante,
+            categoria=categoria.nome
+        ).count()
+
+    return render(request, 'novaCategoria.html', {'form': form, 'categorias': categorias})
 
 @never_cache
 @estabelecimento_required
