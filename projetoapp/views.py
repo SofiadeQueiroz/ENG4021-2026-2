@@ -55,13 +55,7 @@ def cliente_required(view):
     return verificar
 
 def home(request):
-    response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
-    results_json = response.json()
-    movies = results_json['Search']
-    context = {
-        "movies": movies
-    }
-    return render(request,'boasVindas.html', context)
+    return render(request,'boasVindas.html')
 
 @never_cache
 def cadastro(request):
