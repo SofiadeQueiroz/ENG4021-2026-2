@@ -33,15 +33,28 @@
         <div class="card-alimento">
             <h2>{{ alimento.description }}</h2>
             <p><strong>Marca:</strong> {{ alimento.brandOwner|default:"Não informada" }}</p>
-            <h3>Informações nutricionais</h3>
+            <h3>Principais nutrientes</h3>
             <ul class="nutrientes">
-                {% for nutriente in alimento.foodNutrients %}
+                {% for nutriente in alimento.principais %}
                     <li>
-                        <span>{{ nutriente.nutrientName }}</span>
-                        <span>{{ nutriente.value }} {{ nutriente.unitName }}</span>
+                        <span>{{ nutriente.nome }}</span>
+                        <span>{{ nutriente.valor }} {{ nutriente.unidade }}</span>
                     </li>
+                {% empty %}
+                    <li>Nenhum nutriente principal informado.</li>
                 {% endfor %}
             </ul>
+            <details class="todos-nutrientes">
+                <summary>Ver todos os nutrientes (em inglês)</summary>
+                <ul class="nutrientes">
+                    {% for nutriente in alimento.foodNutrients %}
+                        <li>
+                            <span>{{ nutriente.nutrientName }}</span>
+                            <span>{{ nutriente.value }} {{ nutriente.unitName }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </details>
         </div>
     {% empty %}
         {% if busca and not erro %}

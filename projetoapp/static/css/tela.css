@@ -183,3 +183,19 @@ button { min-height: 44px; }
 @media (max-width: 600px) {
     .produto { flex-direction: column; align-items: flex-start; }
 }
+
+/* Atalhos para as telas de consulta (CNPJ, nutrição e alergênicos). */
+.consultas{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.titulo-consultas{
+    margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: gray;
+}
