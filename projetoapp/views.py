@@ -656,7 +656,8 @@ def cardapioPublico(request, restaurante_id):
 
     # Produtos cadastrados pelo dono, agrupados por categoria
     categorias = {}
-    for produto in Produto.objects.filter(restaurante=restaurante).order_by('categoria', 'nome'):
+    # Só entram no cardápio do cliente os produtos marcados como disponíveis
+    for produto in Produto.objects.filter(restaurante=restaurante, disponivel=True).order_by('categoria', 'nome'):
         convertido = f'{float(produto.preco) / cotacao:.2f}'
         if moeda == 'BRL':
             convertido = convertido.replace('.', ',')

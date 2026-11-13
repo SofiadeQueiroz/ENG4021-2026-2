@@ -57,6 +57,9 @@
         {% endif %}
         <div class="informacoes">
             <h2>{{ produto.nome }}</h2>
+            {% if not produto.disponivel %}
+            <span class="indisponivel">Indisponível</span>
+            {% endif %}
             <p class="descricao-produto">{{ produto.descricao }}</p>
             <p class="preco">R$ {{ produto.preco }}</p>
         </div>

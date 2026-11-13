@@ -39,6 +39,7 @@ class Produto(models.Model):
     imagem = models.URLField(blank=True)
     ingredientes = models.TextField(blank=True)
     alergenicos = models.TextField(blank=True)
+    disponivel = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome

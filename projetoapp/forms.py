@@ -9,7 +9,7 @@ class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
         fields = ['nome', 'descricao', 'preco', 'categoria', 'imagem','ingredientes',
-            'alergenicos']
+            'alergenicos', 'disponivel']
 
 
 class CadastroForm(forms.Form):

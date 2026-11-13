@@ -45,6 +45,11 @@
         <h2>Foto do prato</h2>
         {{ form.imagem }}
 
+        <div class="disponivel">
+            <input type="checkbox" id="disponivel" name="disponivel" {% if form.disponivel.value %}checked{% endif %}>
+            <label for="disponivel">Disponível no cardápio</label>
+        </div>
+
         <div class="botoes">
             <a href="{% url 'cardapioDono' %}" class="cancelar">Cancelar</a>
             <button type="submit">Salvar produto</button>

@@ -103,7 +103,7 @@
         {{ form.imagem }}
 
         <div class="opcao">
-            <input type="checkbox" id="disponivel" name="disponivel" checked>
+            <input type="checkbox" id="disponivel" name="disponivel" {% if form.disponivel.value %}checked{% endif %}>
             <label for="disponivel">Disponível no cardápio</label>
         </div>
 
