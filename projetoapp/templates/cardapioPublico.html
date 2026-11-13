@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cardápio da Casa di Pasta</title>
+    <title>Cardápio do {{ restaurante.nome }}</title>
     <link href="{% static 'css/cardapioPublico.css' %}?v=2" rel="stylesheet" type="text/css" />
     <style>
         /* Cor escolhida pelo dono na tela Aparência; o CSS usa essa variável em tudo que é destaque */
@@ -36,7 +36,7 @@
                 </div>
             {% endif %}
 
-        <h1>Casa di Pasta</h1>
+        <h1>{{ restaurante.nome }}</h1>
             <p>{{ textos.descricao }}</p>
             <p class="info">Italiana · Funcionamento: 12h às 23h</p>
 
