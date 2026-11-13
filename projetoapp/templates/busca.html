@@ -46,7 +46,8 @@
     </div>
  
     <div class="centralizacao">
-        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>        <button class="botao-secundario">Tela cheia</button>
+        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>
+        <button class="botao-secundario" id="botao-tela-cheia" type="button">Tela cheia</button>
     </div>
         <div class="resultados" id="lista-proximos"></div>
     <div class="centralizacao">
@@ -100,6 +101,28 @@
                 listaProximos.textContent = 'Não foi possível buscar os restaurantes. Tente novamente.';
             });
     });
+
+    var botaoTelaCheia = document.getElementById('botao-tela-cheia');
+    var elementoMapa = document.getElementById('mapa');
+
+    function atualizarBotaoTelaCheia() {
+        var ativo = document.fullscreenElement || elementoMapa.classList.contains('mapa-tela-cheia');
+        botaoTelaCheia.textContent = ativo ? 'Sair da tela cheia' : 'Tela cheia';
+        setTimeout(function () { mapa.invalidateSize(); }, 150);
+    }
+
+    botaoTelaCheia.addEventListener('click', function () {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else if (elementoMapa.requestFullscreen) {
+            elementoMapa.requestFullscreen();
+        } else {
+            elementoMapa.classList.toggle('mapa-tela-cheia');
+            atualizarBotaoTelaCheia();
+        }
+    });
+
+    document.addEventListener('fullscreenchange', atualizarBotaoTelaCheia);
 </script>
 </body>
 </html>
