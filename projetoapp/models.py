@@ -4,6 +4,11 @@ from django.contrib.auth.models import User
 
 
 class Restaurante(models.Model):
+    CORES = [
+        ('#b84e29', 'Terracota'),
+        ('#4f7a4e', 'Verde'),
+        ('#2b2b2b', 'Grafite'),
+    ]
     usuario = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -19,6 +24,7 @@ class Restaurante(models.Model):
     imagem = models.URLField(blank=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    cor_destaque = models.CharField(max_length=7, choices=CORES, default='#b84e29')
 
     def __str__(self):
         return self.nome

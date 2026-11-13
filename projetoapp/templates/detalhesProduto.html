@@ -5,7 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ produto.nome }} - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}?v=2">
+    {% if produto.restaurante %}
+    <style>
+        /* Mesma cor de destaque escolhida pelo dono na tela Aparência */
+        :root { --cor-destaque: {{ produto.restaurante.cor_destaque }}; }
+    </style>
+    {% endif %}
 </head>
 
 <body>

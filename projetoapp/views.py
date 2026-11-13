@@ -5,7 +5,7 @@ from functools import wraps
 from django.http import JsonResponse
 from datetime import date
 from .models import Produto, Restaurante, Categoria, Perfil, Favorito
-from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm, ItensImportadosFormSet
+from .forms import ProdutoForm, CadastroForm, LoginForm, CategoriaForm, RestauranteForm, EsqueciSenhaForm, NovaSenhaForm, ItensImportadosFormSet, AparenciaForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -482,8 +482,19 @@ def aparencia(request):
         messages.info(request, 'Cadastre os dados do seu restaurante primeiro.')
         return redirect('meuRestaurante')
 
+    if request.method == 'POST':
+        form = AparenciaForm(request.POST, instance=restaurante)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Aparência salva!')
+            return redirect('aparencia')
+    else:
+        form = AparenciaForm(instance=restaurante)
+
     return render(request, 'aparencia.html', {
-        'restaurante': restaurante
+        'restaurante': restaurante,
+        'form': form,
+        'cores': Restaurante.CORES,
     })
 
 @never_cache

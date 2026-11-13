@@ -78,6 +78,11 @@ class ItemImportadoForm(forms.Form):
 
 ItensImportadosFormSet = forms.formset_factory(ItemImportadoForm, extra=0)
 
+class AparenciaForm(forms.ModelForm):
+    class Meta:
+        model = Restaurante
+        fields = ['cor_destaque']
+
 class RestauranteForm(forms.ModelForm):
     class Meta:
         model = Restaurante

@@ -21,7 +21,7 @@ body {
 .logo span,
 a,
 .preco {
-    color: #b84e29;
+    color: var(--cor-destaque, #b84e29);
 }
 
 .foto {
@@ -70,7 +70,7 @@ h2 {
     padding: 12px;
     text-align: center;
     text-decoration: none;
-    background-color: #b84e29;
+    background-color: var(--cor-destaque, #b84e29);
     color: white;
     border-radius: 8px;
 }
