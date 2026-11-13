@@ -100,17 +100,20 @@ def busca(request):
     restaurante = restaurantes.first()
 
     endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
-    if restaurante and restaurante.endereco:
-        endereco = restaurante.endereco
-
-    resposta = requests.get('https://nominatim.openstreetmap.org/search', params={'q': endereco, 'format': 'json'}, headers={'User-Agent': 'FoodLink-PUC'})
-    resultados = resposta.json()
-
     lat = -22.979
     lon = -43.233
-    if resultados:
-        lat = float(resultados[0]['lat'])
-        lon = float(resultados[0]['lon'])
+
+    if restaurante:
+        if restaurante.endereco:
+            endereco = restaurante.endereco
+        if restaurante.latitude is not None and restaurante.longitude is not None:
+            lat = restaurante.latitude
+            lon = restaurante.longitude
+        elif restaurante.endereco:
+            lat_nova, lon_nova = buscar_coordenadas(restaurante.endereco)
+            if lat_nova is not None:
+                lat = lat_nova
+                lon = lon_nova
 
     return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
@@ -1115,10 +1118,14 @@ def proximos(request):
     try:
         lat = float(request.GET.get('lat', ''))
         lon = float(request.GET.get('lon', ''))
+        raio_texto = request.GET.get('raio', '')
+        raio = float(raio_texto) if raio_texto else None
     except ValueError:
-        return JsonResponse({'erro': 'Latitude e longitude inválidas.'}, status=400)
+        return JsonResponse({'erro': 'Parâmetros inválidos.'}, status=400)
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         return JsonResponse({'erro': 'Latitude e longitude fora do intervalo.'}, status=400)
+    if raio is not None and raio <= 0:
+        return JsonResponse({'erro': 'O raio precisa ser maior que zero.'}, status=400)
 
     restaurantes = Restaurante.objects.filter(latitude__isnull=False, longitude__isnull=False)
     lista = []
@@ -1132,9 +1139,11 @@ def proximos(request):
             'longitude': r.longitude,
             'distancia_km': round(distancia_km(lat, lon, r.latitude, r.longitude), 2),
         })
+    if raio is not None:
+        lista = [item for item in lista if item['distancia_km'] <= raio]
     lista.sort(key=lambda item: item['distancia_km'])
-    return JsonResponse({'restaurantes': lista[:3]})
-
+    limite = 20 if request.GET.get('todos') else 3
+    return JsonResponse({'restaurantes': lista[:limite]})
 
 def buscar_alergenicos_api(busca):
     try:

@@ -107,3 +107,23 @@ textarea { resize: vertical; }
     border: none;
     border-radius: 0;
 }
+
+#mapa:fullscreen{
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none;
+    border: none;
+    border-radius: 0;
+}
+
+#mapa.mapa-tela-cheia{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border: none;
+    border-radius: 0;
+    z-index: 1000;
+}

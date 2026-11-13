@@ -46,7 +46,18 @@
     </div>
  
     <div class="centralizacao">
-        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>        <button class="botao-secundario">Tela cheia</button>
+        <button class="botao-principal" id="botao-proximos" type="button">Três lugares próximos</button>
+        <button class="botao-secundario" id="botao-tela-cheia" type="button">Tela cheia</button>
+    </div>
+        <div class="centralizacao">
+        <button class="botao-principal" id="botao-perto" type="button">Perto de mim</button>
+        <select id="raio" aria-label="Raio de busca">
+            <option value="1">1 km</option>
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="25" selected>25 km</option>
+            <option value="">Sem limite</option>
+        </select>
     </div>
         <div class="resultados" id="lista-proximos"></div>
     <div class="centralizacao">
@@ -99,6 +110,97 @@
             .catch(function () {
                 listaProximos.textContent = 'Não foi possível buscar os restaurantes. Tente novamente.';
             });
+    });
+
+    var botaoTelaCheia = document.getElementById('botao-tela-cheia');
+    var elementoMapa = document.getElementById('mapa');
+
+    function atualizarBotaoTelaCheia() {
+        var ativo = document.fullscreenElement || elementoMapa.classList.contains('mapa-tela-cheia');
+        botaoTelaCheia.textContent = ativo ? 'Sair da tela cheia' : 'Tela cheia';
+        setTimeout(function () { mapa.invalidateSize(); }, 150);
+    }
+
+    botaoTelaCheia.addEventListener('click', function () {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else if (elementoMapa.requestFullscreen) {
+            elementoMapa.requestFullscreen();
+        } else {
+            elementoMapa.classList.toggle('mapa-tela-cheia');
+            atualizarBotaoTelaCheia();
+        }
+    });
+
+    document.addEventListener('fullscreenchange', atualizarBotaoTelaCheia);
+
+    var botaoPerto = document.getElementById('botao-perto');
+    var seletorRaio = document.getElementById('raio');
+
+    function mostrarPertoDeMim(minhaLat, minhaLon) {
+        var raio = seletorRaio.value;
+        var url = '{% url "proximos" %}?lat=' + minhaLat + '&lon=' + minhaLon;
+        if (raio) { url += '&raio=' + raio; }
+        url += '&todos=1';
+
+        camadaProximos.clearLayers();
+        L.circleMarker([minhaLat, minhaLon], { radius: 9, color: '#1a73e8', fillColor: '#1a73e8', fillOpacity: 0.8 })
+            .addTo(camadaProximos).bindPopup('Você está aqui').openPopup();
+
+        fetch(url)
+            .then(function (resposta) {
+                if (!resposta.ok) { throw new Error('Erro ' + resposta.status); }
+                return resposta.json();
+            })
+            .then(function (dados) {
+                listaProximos.textContent = '';
+                var pontos = [[minhaLat, minhaLon]];
+                if (dados.restaurantes.length === 0) {
+                    listaProximos.textContent = raio
+                        ? 'Nenhum restaurante a até ' + raio + ' km de você.'
+                        : 'Nenhum restaurante com localização cadastrada.';
+                    mapa.setView([minhaLat, minhaLon], 14);
+                    return;
+                }
+                dados.restaurantes.forEach(function (r) {
+                    var p = document.createElement('p');
+                    var nome = document.createElement('b');
+                    nome.textContent = r.nome;
+                    p.appendChild(nome);
+                    p.appendChild(document.createTextNode(
+                        ' · ' + r.cozinha + ' · ' + r.endereco + ' · ' + r.distancia_km.toFixed(2).replace('.', ',') + ' km de você'
+                    ));
+                    listaProximos.appendChild(p);
+
+                    L.marker([r.latitude, r.longitude]).addTo(camadaProximos).bindPopup(r.nome);
+                    pontos.push([r.latitude, r.longitude]);
+                });
+                mapa.fitBounds(pontos, { padding: [30, 30] });
+            })
+            .catch(function () {
+                listaProximos.textContent = 'Não foi possível buscar os restaurantes. Tente novamente.';
+            });
+    }
+
+    botaoPerto.addEventListener('click', function () {
+        if (!navigator.geolocation) {
+            listaProximos.textContent = 'Seu navegador não permite descobrir a localização.';
+            return;
+        }
+        listaProximos.textContent = 'Descobrindo sua localização...';
+        navigator.geolocation.getCurrentPosition(
+            function (posicao) {
+                mostrarPertoDeMim(posicao.coords.latitude, posicao.coords.longitude);
+            },
+            function (erro) {
+                if (erro.code === 1) {
+                    listaProximos.textContent = 'Permissão negada. Libere a localização no navegador ou use o botão "Três lugares próximos".';
+                } else {
+                    listaProximos.textContent = 'Não foi possível descobrir sua localização. Tente novamente.';
+                }
+            },
+            { timeout: 10000 }
+        );
     });
 </script>
 </body>
