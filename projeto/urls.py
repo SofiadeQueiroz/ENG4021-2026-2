@@ -28,6 +28,7 @@ urlpatterns = [
     path('adicionarProduto/', adicionarProduto, name='adicionarProduto'),
     path('inicioCliente/', inicioCliente, name='inicioCliente'),
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
+    path('editarCategoria/<int:pk>/', editarCategoria, name='editarCategoria'),
     path('importarCardapio/', importarCardapio, name='importarCardapio'),
     path('qrcode/', qrcode, name='qrcode'),
     path('qrcodeRestaurante/', qrcodeRestaurante, name='qrcodeRestaurante'),
