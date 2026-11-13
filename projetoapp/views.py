@@ -317,6 +317,34 @@ def editarCategoria(request, pk):
 
 @never_cache
 @estabelecimento_required
+def apagarCategoria(request, pk):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        return redirect('meuRestaurante')
+
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        restaurante=restaurante
+    )
+
+    produtos = Produto.objects.filter(
+        restaurante=restaurante,
+        categoria=categoria.nome
+    )
+
+    if request.method == "POST" and not produtos.exists():
+        categoria.delete()
+        return redirect('novaCategoria')
+
+    return render(request, 'apagarCategoria.html', {
+        'categoria': categoria,
+        'produtos': produtos
+    })
+
+@never_cache
+@estabelecimento_required
 def importarCardapio(request):
     restaurante = restaurante_do_usuario(request.user)
 
