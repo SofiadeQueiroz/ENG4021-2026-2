@@ -107,17 +107,20 @@ def busca(request):
     restaurante = restaurantes.first()
 
     endereco = 'Rua Marquês de São Vicente, 225, Rio de Janeiro'
-    if restaurante and restaurante.endereco:
-        endereco = restaurante.endereco
-
-    resposta = requests.get('https://nominatim.openstreetmap.org/search', params={'q': endereco, 'format': 'json'}, headers={'User-Agent': 'FoodLink-PUC'})
-    resultados = resposta.json()
-
     lat = -22.979
     lon = -43.233
-    if resultados:
-        lat = float(resultados[0]['lat'])
-        lon = float(resultados[0]['lon'])
+
+    if restaurante:
+        if restaurante.endereco:
+            endereco = restaurante.endereco
+        if restaurante.latitude is not None and restaurante.longitude is not None:
+            lat = restaurante.latitude
+            lon = restaurante.longitude
+        elif restaurante.endereco:
+            lat_nova, lon_nova = buscar_coordenadas(restaurante.endereco)
+            if lat_nova is not None:
+                lat = lat_nova
+                lon = lon_nova
 
     return render(request, 'busca.html', {'endereco': endereco, 'restaurantes': restaurantes, 'q': q, 'lat': lat, 'lon': lon})
 
