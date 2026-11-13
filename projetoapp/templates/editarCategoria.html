@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Editar categoria</title>
+    <link href="{% static 'css/novaCategoria.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="topo">
+        <a href="{% url 'novaCategoria' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <h4 class="chamada">ORGANIZE SEU CARDÁPIO</h4>
+    <h1>Editar categoria</h1>
+    <p class="descricao">
+        {% if total_produtos %}
+            {{ total_produtos }} produto{{ total_produtos|pluralize }} nesta categoria. O nome novo também muda neles.
+        {% else %}
+            Nenhum produto usa esta categoria ainda.
+        {% endif %}
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        <label for="id_nome">Nome da categoria</label>
+        {{ form.nome }}
+
+        <button class="botao-principal" type="submit">Salvar alterações</button>
+        <a href="{% url 'novaCategoria' %}" class="botao-secundario">Cancelar</a>
+    </form>
+
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}" class="ativo">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+    </nav>
+</body>
+</html>

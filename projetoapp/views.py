@@ -54,15 +54,8 @@ def cliente_required(view):
         return view(request, *args, **kwargs)
     return verificar
 
-
 def home(request):
-    response = requests.get('https://omdbapi.com/?apikey=38b4b85b&s=Batman&type=movie')
-    results_json = response.json()
-    movies = results_json['Search']
-    context = {
-        "movies": movies
-    }
-    return render(request,'boasVindas.html', context)
+    return render(request,'boasVindas.html')
 
 @never_cache
 def cadastro(request):
@@ -243,16 +236,106 @@ def novaCategoria(request):
         form = CategoriaForm(request.POST)
 
         if form.is_valid():
-            categoria = form.save(commit=False)
-            categoria.restaurante = restaurante
-            categoria.save()
-            return redirect('adicionarProduto')
+            repetida = Categoria.objects.filter(
+                restaurante=restaurante,
+                nome__iexact=form.cleaned_data['nome']
+            ).exists()
+
+            if repetida:
+                form.add_error('nome', 'Você já tem uma categoria com esse nome.')
+            else:
+                categoria = form.save(commit=False)
+                categoria.restaurante = restaurante
+                categoria.save()
+                return redirect('adicionarProduto')
     else:
         form = CategoriaForm()
 
-    return render(request, 'novaCategoria.html', {'form': form})
+    categorias = list(Categoria.objects.filter(restaurante=restaurante).order_by('nome'))
+    for categoria in categorias:
+        categoria.total_produtos = Produto.objects.filter(
+            restaurante=restaurante,
+            categoria=categoria.nome
+        ).count()
 
+    return render(request, 'novaCategoria.html', {'form': form, 'categorias': categorias})
 
+@never_cache
+@estabelecimento_required
+def editarCategoria(request, pk):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        return redirect('meuRestaurante')
+
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        restaurante=restaurante
+    )
+    nome_antigo = categoria.nome
+
+    if request.method == "POST":
+        form = CategoriaForm(request.POST, instance=categoria)
+
+        if form.is_valid():
+            nome_novo = form.cleaned_data['nome']
+
+            repetida = Categoria.objects.filter(
+                restaurante=restaurante,
+                nome__iexact=nome_novo
+            ).exclude(pk=categoria.pk).exists()
+
+            if repetida:
+                form.add_error('nome', 'Você já tem uma categoria com esse nome.')
+            else:
+                form.save()
+                Produto.objects.filter(
+                    restaurante=restaurante,
+                    categoria=nome_antigo
+                ).update(categoria=nome_novo)
+                return redirect('novaCategoria')
+    else:
+        form = CategoriaForm(instance=categoria)
+
+    total_produtos = Produto.objects.filter(
+        restaurante=restaurante,
+        categoria=nome_antigo
+    ).count()
+
+    return render(request, 'editarCategoria.html', {
+        'form': form,
+        'categoria': categoria,
+        'total_produtos': total_produtos
+    })
+
+@never_cache
+@estabelecimento_required
+def apagarCategoria(request, pk):
+    restaurante = restaurante_do_usuario(request.user)
+
+    if restaurante is None:
+        return redirect('meuRestaurante')
+
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        restaurante=restaurante
+    )
+
+    produtos = Produto.objects.filter(
+        restaurante=restaurante,
+        categoria=categoria.nome
+    )
+
+    if request.method == "POST" and not produtos.exists():
+        categoria.delete()
+        return redirect('novaCategoria')
+
+    return render(request, 'apagarCategoria.html', {
+        'categoria': categoria,
+        'produtos': produtos
+    })
 
 @never_cache
 @estabelecimento_required
