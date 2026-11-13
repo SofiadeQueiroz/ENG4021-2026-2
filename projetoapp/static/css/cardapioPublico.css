@@ -30,12 +30,12 @@ h1{
 }
 
 .destaque{
-    color: chocolate;
+    color: var(--cor-destaque);
 }
 
 .feriado{
     background-color: white;
-    border-left: 4px solid chocolate;
+    border-left: 4px solid var(--cor-destaque);
     border-radius: 8px;
     padding: 10px 14px;
     color: #5f5f5f;
@@ -49,8 +49,8 @@ h1{
 .categorias a{
     display: inline-block;
     background-color: white;
-    color: chocolate;
-    border: 2px solid chocolate;
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
     border-radius: 25px;
     padding: 8px 18px;
     margin-right: 8px;
@@ -61,8 +61,8 @@ h1{
 .voltar-gerenciamento {
     display: inline-block;
     background-color: white;
-    color: chocolate;
-    border: 2px solid chocolate;
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
     border-radius: 25px;
     padding: 8px 18px;
     margin-bottom: 15px;
@@ -104,11 +104,11 @@ h2{
 }
 
 .produto a{
-    color: chocolate;
+    color: var(--cor-destaque);
 }
 
 .preco{
-    color: chocolate;
+    color: var(--cor-destaque);
     font-weight: bold;
 }
 
@@ -134,15 +134,15 @@ h2{
     align-items: center;
     justify-content: center;
     background-color: white;
-    color: chocolate;
-    border: 2px solid chocolate;
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
     border-radius: 50%;
     font-weight: bold;
     text-decoration: none;
 }
 
 .moedas a.ativa{
-    background-color: chocolate;
+    background-color: var(--cor-destaque);
     color: white;
 }
 

@@ -239,3 +239,10 @@ h3{
         padding: 0 2px;
     }
 }
+.mensagem{
+    background-color: #e5f4e4;
+    color: #2f5e2e;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 0 0 15px;
+}
