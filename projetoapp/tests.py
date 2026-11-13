@@ -97,3 +97,55 @@ class AutenticacaoTests(TestCase):
             self.assertRedirects(self.client.get(reverse(nome)), reverse('cardapioDono'))
         resposta = self.client.get(reverse('cardapioDono'))
         self.assertIn('no-store', resposta.headers['Cache-Control'])
+
+
+class DisponibilidadeProdutoTests(TestCase):
+    def setUp(self):
+        from unittest.mock import patch
+        from .models import Perfil, Restaurante, Produto
+        self.dono = User.objects.create_user('dono@example.com', password='Mesa!Azul-73pasta')
+        Perfil.objects.create(usuario=self.dono, tipo='estabelecimento')
+        self.restaurante = Restaurante.objects.create(
+            usuario=self.dono, nome='Casa Teste', descricao='Teste', cozinha='Brasileira', horario='12h-22h'
+        )
+        self.produto = Produto.objects.create(
+            restaurante=self.restaurante, nome='Feijoada', descricao='Completa', preco='45.00', categoria='Pratos'
+        )
+        self.client.force_login(self.dono)
+        # O cardápio público consulta APIs externas (feriados); nos testes elas ficam desligadas
+        bloqueio = patch('projetoapp.views.requests.get', side_effect=__import__('requests').RequestException)
+        bloqueio.start()
+        self.addCleanup(bloqueio.stop)
+
+    def dados(self, **extra):
+        return {'nome': 'Feijoada', 'descricao': 'Completa', 'preco': '45.00', 'categoria': 'Pratos', **extra}
+
+    def test_produto_novo_comeca_disponivel(self):
+        self.assertTrue(self.produto.disponivel)
+
+    def test_editar_salva_produto_como_indisponivel(self):
+        # Checkbox desmarcado não é enviado no POST
+        resposta = self.client.post(reverse('editarProduto', args=[self.produto.pk]), self.dados())
+        self.assertRedirects(resposta, reverse('cardapioDono'))
+        self.produto.refresh_from_db()
+        self.assertFalse(self.produto.disponivel)
+
+        self.client.post(reverse('editarProduto', args=[self.produto.pk]), self.dados(disponivel='on'))
+        self.produto.refresh_from_db()
+        self.assertTrue(self.produto.disponivel)
+
+    def test_adicionar_salva_disponibilidade_escolhida(self):
+        from .models import Produto
+        self.client.post(reverse('adicionarProduto'), self.dados(nome='Pudim'))
+        self.assertFalse(Produto.objects.get(nome='Pudim').disponivel)
+
+    def test_indisponivel_some_do_cardapio_publico_mas_aparece_para_o_dono(self):
+        self.produto.disponivel = False
+        self.produto.save()
+
+        publico = self.client.get(reverse('cardapioPublico', args=[self.restaurante.pk]))
+        self.assertNotContains(publico, 'Feijoada')
+
+        dono = self.client.get(reverse('cardapioDono'))
+        self.assertContains(dono, 'Feijoada')
+        self.assertContains(dono, 'Indisponível')
