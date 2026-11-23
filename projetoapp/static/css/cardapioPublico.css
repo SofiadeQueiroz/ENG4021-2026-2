@@ -202,3 +202,45 @@ h2{
     }
 }
 
+.titulo-restaurante {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.titulo-restaurante h1 {
+    margin: 0;
+}
+
+.form-favorito {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.botao-favorito {
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.botao-favorito:hover {
+    background-color: #fff0e6;
+    transform: scale(1.1);
+}
+
+.botao-favorito.favoritado {
+    background-color: chocolate;
+    color: white;
+}

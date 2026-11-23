@@ -25,6 +25,7 @@ urlpatterns = [
     path('cadastro/', cadastro, name='cadastro'),
     path('busca/', busca, name='busca'),
     path('favoritos/', favoritos, name='favoritos'),
+    path('alternarFavorito/<int:restaurante_id>/', alternarFavorito, name='alternarFavorito'),
     path('adicionarProduto/', adicionarProduto, name='adicionarProduto'),
     path('inicioCliente/', inicioCliente, name='inicioCliente'),
     path('novaCategoria/', novaCategoria, name='novaCategoria'),
