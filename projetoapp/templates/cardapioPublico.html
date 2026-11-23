@@ -35,7 +35,13 @@
                     </a>
                 </div>
             {% endif %}
-
+            {% if user.is_authenticated and not eh_dono %}
+                <div class="categorias">
+                    <a href="{% url 'busca' %}">
+                        ← Voltar à busca de estabelecimentos
+                    </a>
+                </div>
+            {% endif %}
         <div class="titulo-restaurante">
     <h1>{{ restaurante.nome }}</h1>
 
