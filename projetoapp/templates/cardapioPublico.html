@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cardápio do {{ restaurante.nome }}</title>
-    <link href="{% static 'css/cardapioPublico.css' %}?v=2" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/cardapioPublico.css' %}?v=3" rel="stylesheet" type="text/css" />
     <style>
         /* Cor escolhida pelo dono na tela Aparência; o CSS usa essa variável em tudo que é destaque */
         :root { --cor-destaque: {{ restaurante.cor_destaque }}; }
@@ -36,7 +36,18 @@
                 </div>
             {% endif %}
 
-        <h1>{{ restaurante.nome }}</h1>
+        <div class="titulo-restaurante">
+    <h1>{{ restaurante.nome }}</h1>
+
+    {% if user.is_authenticated and not eh_dono %}
+        <form method="POST" action="{% url 'alternarFavorito' restaurante.id %}" class="form-favorito">
+            {% csrf_token %}
+            <button type="submit" class="botao-favorito {% if favoritado %}favoritado{% endif %}">
+                {% if favoritado %}♥{% else %}♡{% endif %}
+            </button>
+        </form>
+    {% endif %}
+</div>
             <p>{{ textos.descricao }}</p>
             <p class="info">Italiana · Funcionamento: 12h às 23h</p>
 

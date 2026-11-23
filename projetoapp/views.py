@@ -128,7 +128,25 @@ def favoritos(request):
         'favoritos': favoritos
     })
 
+@login_required
+def alternarFavorito(request, restaurante_id):
+    if request.method == 'POST':
+        restaurante = get_object_or_404(Restaurante, pk=restaurante_id)
 
+        favorito = Favorito.objects.filter(
+            cliente=request.user,
+            restaurante=restaurante
+        )
+
+        if favorito.exists():
+            favorito.delete()
+        else:
+            Favorito.objects.create(
+                cliente=request.user,
+                restaurante=restaurante
+            )
+
+    return redirect('cardapioPublico', restaurante_id=restaurante_id)
 @never_cache
 @estabelecimento_required
 def adicionarProduto(request):
@@ -796,9 +814,18 @@ def cardapioPublico(request, restaurante_id):
         textos['aviso_feriado'] = 'o horário de funcionamento pode mudar.'
 
     eh_dono = (
-            request.user.is_authenticated
-            and restaurante.usuario_id == request.user.id
-        )
+        request.user.is_authenticated
+        and restaurante.usuario_id == request.user.id
+    )
+
+    favoritado = False
+
+    if request.user.is_authenticated and not eh_dono:
+        favoritado = Favorito.objects.filter(
+            cliente=request.user,
+            restaurante=restaurante
+        ).exists()
+
     return render(request, 'cardapioPublico.html', {
         'feriado': feriado,
         'textos': textos,
@@ -808,6 +835,7 @@ def cardapioPublico(request, restaurante_id):
         'moedas': simbolos,
         'restaurante': restaurante,
         'eh_dono': eh_dono,
+        'favoritado': favoritado,
     })
 
 def detalhesProduto(request, id):
