@@ -24,7 +24,7 @@
     <form method="post">
         {% csrf_token %}
         <h2>{{ produto.nome }}</h2>
-        <p>{{ produto.categoria }} · R$ {{ produto.preco }}</p>
+        <p>{{ produto.categoria }} · {{ produto.preco_formatado }}</p>
         {% if produto.descricao %}<p class="descricao-produto">{{ produto.descricao }}</p>{% endif %}
 
         <div class="botoes">

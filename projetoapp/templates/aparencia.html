@@ -58,7 +58,7 @@
                 <span class="categoria-previa">{{ produto.categoria }}</span>
                 <div class="produto-previa">
                     <span>{{ produto.nome }}</span>
-                    <strong style="color: {{ restaurante.cor_destaque }}">R$ {{ produto.preco }}</strong>
+                    <strong style="color: {{ restaurante.cor_destaque }}">{{ produto.preco_formatado }}</strong>
                 </div>
                 {% else %}
                 <span class="categoria-previa">Entradas</span>

@@ -797,7 +797,7 @@ def cardapioPublico(request, restaurante_id):
         categorias[produto.categoria]['produtos'].append({
             'produto': produto,
             'descricao': traduzir(produto.descricao),
-            'preco': f'{simbolos[moeda]} {convertido}',
+            'preco': f'{simbolos[moeda]} {convertido}' if produto.preco > 0 else ('Free' if idioma == 'en' else 'Grátis'),
         })
 
     feriado = None

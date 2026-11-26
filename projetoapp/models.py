@@ -50,6 +50,11 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
 
+    def preco_formatado(self):
+        if self.preco == 0:
+            return 'Grátis'
+        return f'R$ {self.preco:.2f}'.replace('.', ',')
+
 
 class Categoria(models.Model):
     restaurante = models.ForeignKey(

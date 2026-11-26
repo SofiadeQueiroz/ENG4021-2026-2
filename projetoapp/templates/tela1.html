@@ -65,7 +65,7 @@
             <span class="indisponivel">Indisponível</span>
             {% endif %}
             <p class="descricao-produto">{{ produto.descricao }}</p>
-            <p class="preco">R$ {{ produto.preco }}</p>
+            <p class="preco">{{ produto.preco_formatado }}</p>
         </div>
         <div class="acoes-produto">
             <a href="{% url 'editarProduto' produto.pk %}" class="botao-secundario">Editar</a>
