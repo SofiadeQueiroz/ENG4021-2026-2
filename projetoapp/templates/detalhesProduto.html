@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ produto.nome }} - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}?v=3">
     {% if produto.restaurante %}
     <style>
         /* Mesma cor de destaque escolhida pelo dono na tela Aparência */
@@ -35,6 +35,25 @@
     <div class="descricao">
         <h2>Descrição</h2>
         <p>{{ produto.descricao }}</p>
+    </div>
+
+    <div class="descricao">
+        <h2>Ingredientes</h2>
+        <p>{{ produto.ingredientes|default:"Ingredientes não informados." }}</p>
+    </div>
+
+    <div class="descricao">
+        <h2>Alergênicos</h2>
+        {% if alergenicos %}
+            <ul class="alergenicos">
+                {% for nome in alergenicos %}
+                    <li>{{ nome }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhum alergênico informado.</p>
+        {% endif %}
+        <p class="aviso-alergia">Em caso de alergia, confirme com o restaurante antes de pedir.</p>
     </div>
 
     {% if produto.restaurante %}

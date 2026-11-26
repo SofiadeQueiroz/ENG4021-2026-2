@@ -240,6 +240,24 @@ def verificar_alergenicos_locais(ingredientes):
 
     return encontrados
 
+
+# Lista que aparece no filtro do cardápio. Os nomes são os mesmos da função acima.
+ALERGENICOS_COMUNS = [
+    'Leite', 'Ovo', 'Glúten', 'Soja', 'Amendoim', 'Castanhas e nozes',
+    'Peixe', 'Crustáceos', 'Gergelim', 'Mostarda', 'Aipo',
+]
+
+
+def alergenicos_do_produto(produto):
+    # Junta o que o dono escreveu em "alergênicos" e em "ingredientes" e descobre
+    # quais alergênicos da lista aparecem. Reaproveita a função verificar_alergenicos_locais.
+    texto = f'{produto.alergenicos} {produto.ingredientes}'.lower()
+    encontrados = set(verificar_alergenicos_locais(texto))
+    for nome in ALERGENICOS_COMUNS:
+        if nome.lower() in texto:
+            encontrados.add(nome)
+    return [nome for nome in ALERGENICOS_COMUNS if nome in encontrados]
+
 def inicioCliente(request):
     return render(request, 'inicioCliente.html')
 
@@ -751,9 +769,17 @@ def cardapioPublico(request, restaurante_id):
     traducoes.update({'Entradas': 'Starters', 'Pratos principais': 'Main courses', 'Bebidas': 'Drinks', 'Sobremesas': 'Desserts'})
 
     textos['descricao'] = traduzir(textos['descricao'])
+    textos['filtro_titulo'] = 'Evitar alergênicos'
+    textos['filtro_aplicar'] = 'Aplicar filtro'
+    textos['filtro_limpar'] = 'Limpar filtro'
+    textos['filtro_escondidos'] = 'prato(s) escondido(s)'
     if idioma == 'en':
         textos['detalhes'] = 'See details'
         textos['sem_produtos'] = 'No products yet.'
+        textos['filtro_titulo'] = 'Avoid allergens'
+        textos['filtro_aplicar'] = 'Apply filter'
+        textos['filtro_limpar'] = 'Clear filter'
+        textos['filtro_escondidos'] = 'dish(es) hidden'
 
     simbolos = {'BRL': 'R$', 'USD': 'US$', 'EUR': '€', 'GBP': '£'}
 
@@ -769,10 +795,20 @@ def cardapioPublico(request, restaurante_id):
         except (requests.RequestException, ValueError, KeyError):
             moeda = 'BRL'
 
+    # Alergênicos que o cliente quer evitar (vêm na URL: ?evitar=Leite&evitar=Glúten).
+    # Só valem os nomes que estão na nossa lista.
+    evitar = [nome for nome in request.GET.getlist('evitar') if nome in ALERGENICOS_COMUNS]
+    escondidos = 0
+
     # Produtos cadastrados pelo dono, agrupados por categoria
     categorias = {}
     # Só entram no cardápio do cliente os produtos marcados como disponíveis
     for produto in Produto.objects.filter(restaurante=restaurante, disponivel=True).order_by('categoria', 'nome'):
+        # Esconde o prato se ele tiver qualquer alergênico que o cliente quer evitar
+        if evitar and set(evitar) & set(alergenicos_do_produto(produto)):
+            escondidos += 1
+            continue
+
         convertido = f'{float(produto.preco) / cotacao:.2f}'
         if moeda == 'BRL':
             convertido = convertido.replace('.', ',')
@@ -836,13 +872,20 @@ def cardapioPublico(request, restaurante_id):
         'restaurante': restaurante,
         'eh_dono': eh_dono,
         'favoritado': favoritado,
+        'alergenicos_lista': ALERGENICOS_COMUNS,
+        'evitar': evitar,
+        'escondidos': escondidos,
     })
 
 def detalhesProduto(request, id):
     # Busca o produto pelo id que veio na URL; se não existir, mostra a página de erro 404
     produto = get_object_or_404(Produto, id=id)
     preco = f'R$ {produto.preco:.2f}'.replace('.', ',')
-    return render(request, 'detalhesProduto.html', {'produto': produto, 'preco': preco})
+    return render(request, 'detalhesProduto.html', {
+        'produto': produto,
+        'preco': preco,
+        'alergenicos': alergenicos_do_produto(produto),
+    })
 
 @never_cache
 def entrar(request):
