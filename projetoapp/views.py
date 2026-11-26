@@ -54,7 +54,10 @@ def cliente_required(view):
         return view(request, *args, **kwargs)
     return verificar
 
+@never_cache
 def home(request):
+    if request.user.is_authenticated:
+        return pagina_inicial(request.user)
     return render(request,'boasVindas.html')
 
 @never_cache
