@@ -288,3 +288,7 @@ h2{
     font-size: 14px;
     color: gray;
 }
+
+.filtro-alergenicos a{
+    color: var(--cor-destaque);
+}
