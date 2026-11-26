@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página não encontrada - FoodLink</title>
+    <link href="{% static 'css/erro404.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="superior-direito">
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
+
+    <div class="conteudo">
+        <p class="codigo">404</p>
+        <h1>Página não encontrada</h1>
+        <p class="descricao">O endereço que você abriu não existe ou foi removido. Que tal voltar para o começo?</p>
+        <a href="{% url 'home' %}" class="botao-principal">Voltar ao início</a>
+    </div>
+</body>
+</html>

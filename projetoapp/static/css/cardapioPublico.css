@@ -244,3 +244,51 @@ h2{
     background-color: chocolate;
     color: white;
 }
+/* Filtro para o cliente esconder pratos com os alergênicos que ele quer evitar. */
+.filtro-alergenicos{
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 16px 0;
+}
+
+.filtro-alergenicos summary{
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--cor-destaque);
+}
+
+.opcoes-alergenicos{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 12px 0;
+}
+
+.opcoes-alergenicos label{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.botao-filtro{
+    background-color: var(--cor-destaque);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-family: inherit;
+    cursor: pointer;
+    margin-right: 12px;
+}
+
+.aviso-filtro{
+    font-size: 14px;
+    color: gray;
+}
+
+.filtro-alergenicos a{
+    color: var(--cor-destaque);
+}

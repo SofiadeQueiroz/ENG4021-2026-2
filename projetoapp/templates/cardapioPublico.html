@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cardápio do {{ restaurante.nome }}</title>
-    <link href="{% static 'css/cardapioPublico.css' %}?v=3" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/cardapioPublico.css' %}?v=4" rel="stylesheet" type="text/css" />
     <style>
         /* Cor escolhida pelo dono na tela Aparência; o CSS usa essa variável em tudo que é destaque */
         :root { --cor-destaque: {{ restaurante.cor_destaque }}; }
@@ -77,6 +77,32 @@
                     <a href="?idioma=en&moeda={{ moeda }}">English</a>
                 {% endif %}
             </div>
+
+            <details class="filtro-alergenicos" {% if evitar %}open{% endif %}>
+                <summary>{{ textos.filtro_titulo }}</summary>
+                <form method="get">
+                    <input type="hidden" name="idioma" value="{{ idioma }}">
+                    <input type="hidden" name="moeda" value="{{ moeda }}">
+                    <div class="opcoes-alergenicos">
+                        {% for nome in alergenicos_lista %}
+                            <label>
+                                <input type="checkbox" name="evitar" value="{{ nome }}" {% if nome in evitar %}checked{% endif %}>
+                                {{ nome }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="botao-filtro">{{ textos.filtro_aplicar }}</button>
+                    {% if evitar %}
+                        <a href="?idioma={{ idioma }}&moeda={{ moeda }}">{{ textos.filtro_limpar }}</a>
+                    {% endif %}
+                </form>
+            </details>
+
+            {% if evitar %}
+                <p class="aviso-filtro">
+                    {{ textos.filtro_titulo }}: {{ evitar|join:", " }} · {{ escondidos }} {{ textos.filtro_escondidos }}
+                </p>
+            {% endif %}
 
             {% for categoria in categorias %}
                 <h2 id="{{ categoria.ancora }}">{{ categoria.nome }}</h2>

@@ -1,0 +1,48 @@
+
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: antiquewhite;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.superior-direito{
+    display: flex;
+    justify-content: end;
+}
+
+.conteudo{
+    text-align: center;
+    margin-top: 40px;
+}
+
+.codigo{
+    font-size: 80px;
+    font-weight: bold;
+    color: chocolate;
+    margin: 0;
+}
+
+.descricao{
+    color: gray;
+    margin-bottom: 30px;
+}
+
+.botao-principal{
+    display: inline-block;
+    background-color: chocolate;
+    color: white;
+    border-radius: 25px;
+    padding: 14px 30px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* Ajustes de largura para celular, tablet e computador. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0 auto; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; }
+@media (max-width: 600px) {
+    body { padding-left: 16px; padding-right: 16px; }
+    .codigo { font-size: 64px; }
+}
