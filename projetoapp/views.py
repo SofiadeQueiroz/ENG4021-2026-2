@@ -754,6 +754,8 @@ def cardapioPublico(request, restaurante_id):
     traducoes.update({'Entradas': 'Starters', 'Pratos principais': 'Main courses', 'Bebidas': 'Drinks', 'Sobremesas': 'Desserts'})
 
     textos['descricao'] = traduzir(textos['descricao'])
+    textos['cozinha'] = traduzir(restaurante.cozinha)
+    textos['funcionamento'] = 'Opening hours' if idioma == 'en' else 'Funcionamento'
     if idioma == 'en':
         textos['detalhes'] = 'See details'
         textos['sem_produtos'] = 'No products yet.'
@@ -874,7 +876,7 @@ def entrar(request):
                         return redirect(destino)
                     return pagina_inicial(usuario)
                 else:
-                    form.add_error(None, 'Senha incorretos.')
+                    form.add_error(None, 'Senha incorreta.')
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form, 'next': destino, 'email_nao_cadastrado': email_nao_cadastrado})
