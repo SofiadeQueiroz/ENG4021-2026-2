@@ -5,7 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ produto.nome }} - FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'css/detalhesProduto.css' %}?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     {% if produto.restaurante %}
     <style>
         /* Mesma cor de destaque escolhida pelo dono na tela Aparência */
@@ -15,53 +18,54 @@
 </head>
 
 <body>
-    <p class="logo">Food<span>Link</span></p>
-   {% if produto.restaurante %}
-        <a href="{% url 'cardapioPublico' produto.restaurante.pk %}#{{ produto.categoria|slugify }}">Voltar ao cardápio</a>
-    {% else %}
-        <a href="{% url 'busca' %}">Voltar à busca</a>
-    {% endif %}
+    <div class="topo">
+        {% if produto.restaurante %}
+        <a href="{% url 'cardapioPublico' produto.restaurante.pk %}#{{ produto.categoria|slugify }}" class="botao-secundario">Voltar</a>
+        {% else %}
+        <a href="{% url 'busca' %}" class="botao-secundario">Voltar</a>
+        {% endif %}
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
     {% if produto.imagem %}
-        <img class="foto" src="{{ produto.imagem }}" alt="{{ produto.nome }}">
+    <img class="foto" src="{{ produto.imagem }}" alt="{{ produto.nome }}">
     {% endif %}
 
-    <p class="categoria">
-        {{ produto.restaurante.nome|default:"FoodLink" }} · {{ produto.categoria }}
-    </p>
+    <h4 class="chamada">{{ produto.restaurante.nome|default:"FoodLink" }} · {{ produto.categoria }}</h4>
     <h1>{{ produto.nome }}</h1>
+    {% if not produto.disponivel %}
+    <span class="indisponivel">Indisponível no momento</span>
+    {% endif %}
     <p class="preco">{{ preco }}</p>
 
-    <div class="descricao">
+    {% if produto.descricao %}
+    <div class="cartao">
         <h2>Descrição</h2>
         <p>{{ produto.descricao }}</p>
     </div>
+    {% endif %}
 
-    <div class="descricao">
+    <div class="cartao">
         <h2>Ingredientes</h2>
         <p>{{ produto.ingredientes|default:"Ingredientes não informados." }}</p>
     </div>
 
-    <div class="descricao">
+    <div class="cartao">
         <h2>Alergênicos</h2>
         {% if alergenicos %}
-            <ul class="alergenicos">
-                {% for nome in alergenicos %}
-                    <li>{{ nome }}</li>
-                {% endfor %}
-            </ul>
+        <ul class="alergenicos">
+            {% for nome in alergenicos %}
+            <li>{{ nome }}</li>
+            {% endfor %}
+        </ul>
         {% else %}
-            <p>Nenhum alergênico informado.</p>
+        <p>Nenhum alergênico informado.</p>
         {% endif %}
         <p class="aviso-alergia">Em caso de alergia, confirme com o restaurante antes de pedir.</p>
     </div>
 
-    {% if produto.restaurante %}
-        <a class="botao" href="{% url 'cardapioPublico' produto.restaurante.pk %}">Ver outros pratos</a>
-    {% else %}
-        <a class="botao" href="{% url 'busca' %}">Voltar à busca</a>
-    {% endif %}
-
-    <p class="rodape">FoodLink · Cardápio digital</p>
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
 </body>
 </html>
