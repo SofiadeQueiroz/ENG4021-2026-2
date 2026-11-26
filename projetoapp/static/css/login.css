@@ -106,6 +106,25 @@ input[type="password"]{
     text-decoration: none;
 }
 
+.alternativa{
+    max-width: 420px;
+    margin: 16px auto 0;
+}
+
+.alternativa p{
+    margin: 0 0 12px;
+}
+
+.botao-google{
+    display: block;
+    padding: 12px 16px;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    color: chocolate;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 .rodape-fixo{
     position: fixed;
     bottom: 10px;

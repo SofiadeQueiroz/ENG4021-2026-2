@@ -5,9 +5,36 @@ body{
     padding-right: 30px;
 }
 
-.superior-direito{
+.topo{
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.botao-voltar{
+    background-color: white;
+    color: chocolate;
+    border: 2px solid chocolate;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-family: inherit;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.chamada{
+    color: chocolate;
+    margin-top: 20px;
+}
+
+.texto-aceite{
+    font-size: small;
+    font-weight: normal;
+}
+
+.destaque{
+    color: chocolate;
 }
 
 input[type="text"], input[type="password"]{

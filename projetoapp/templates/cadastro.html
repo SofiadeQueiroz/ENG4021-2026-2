@@ -12,11 +12,13 @@
 </head>
 
 <body>
-    <div><a href="{% url 'home' %}">Voltar</a><span class="superior-direito"><img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" width="80">
-</span></div>
+    <div class="topo">
+        <a href="{% url 'home' %}" class="botao-voltar">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
     {% if not tipo %}
-    <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
+    <h4 class="chamada">CRIE SUA CONTA</h4>
     <h1><b>Como você vai usar o FoodLink?</b></h1>
 
     <div class="escolha-tipo">
@@ -24,7 +26,7 @@
         <a href="{% url 'cadastro' %}?tipo=estabelecimento" class="botao-secundario">Sou estabelecimento</a>
     </div>
     {% else %}
-    <h4 style="color: chocolate;">CRIE SUA CONTA</h4>
+    <h4 class="chamada">CRIE SUA CONTA</h4>
     <h1><b>Preencha com seus dados</b></h1>
 
     <form method="post">
@@ -56,7 +58,7 @@
         {{ form.confirmar_senha }}<br><br>
 
         {{ form.aceite }}
-        <label for="id_aceite" style="font-size: small;">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</label>
+        <label for="id_aceite" class="texto-aceite">Declaro estar ciente de que estou fornecendo meus dados para uso do aplicativo.</label>
 
         <br><br>
         <button class="botao-seta" type="submit" aria-label="Criar conta">&#8594;</button>
@@ -65,7 +67,7 @@
     <p><a href="{% url 'cadastro' %}">Trocar tipo de conta</a></p>
     {% endif %}
 
-    <p class="rodape-fixo">Food<span style="color: chocolate;">Link</span></p>
+    <p class="rodape-fixo">Food<span class="destaque">Link</span></p>
 </body>
 
 </html>
