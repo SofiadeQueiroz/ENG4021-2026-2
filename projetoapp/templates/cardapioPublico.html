@@ -55,7 +55,7 @@
     {% endif %}
 </div>
             <p>{{ textos.descricao }}</p>
-            <p class="info">Italiana · Funcionamento: 12h às 23h</p>
+            <p class="info">{{ textos.cozinha }} · {{ textos.funcionamento }}: {{ restaurante.horario }}</p>
 
             {% if feriado %}
                 <p class="feriado">
