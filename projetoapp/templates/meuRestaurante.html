@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <title>Meu restaurante</title>
     <link href="{% static 'css/meuRestaurante.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/mensagens.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -22,6 +23,9 @@
     <h4 class="chamada">SUA IDENTIDADE</h4>
     <h1>Meu restaurante</h1>
     <p class="descricao">Estas informações aparecem no seu cardápio.</p>
+    {% for message in messages %}
+        <p class="mensagem {{ message.tags }}" role="status">{{ message }}</p>
+    {% endfor %}
 
     <form method="post">
         {% csrf_token %}

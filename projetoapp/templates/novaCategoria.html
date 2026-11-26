@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <title>Nova categoria</title>
     <link href="{% static 'css/novaCategoria.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/mensagens.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -20,7 +21,9 @@
     <h4 class="chamada">ORGANIZE SEU CARDÁPIO</h4>
     <h1>Nova categoria</h1>
     <p class="descricao">Crie uma categoria para organizar os produtos do cardápio.</p>
-
+    {% for message in messages %}
+        <p class="mensagem {{ message.tags }}" role="status">{{ message }}</p>
+    {% endfor %}
 
     <div class="lista-categorias">
         <h2>Suas categorias</h2>

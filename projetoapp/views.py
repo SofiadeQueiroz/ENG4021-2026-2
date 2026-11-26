@@ -199,6 +199,7 @@ def adicionarProduto(request):
                 produto = form.save(commit=False)
                 produto.restaurante = restaurante
                 produto.save()
+                messages.success(request, 'Produto adicionado ao cardápio.')
                 return redirect('cardapioDono')
 
     else:
@@ -271,7 +272,8 @@ def novaCategoria(request):
                 categoria = form.save(commit=False)
                 categoria.restaurante = restaurante
                 categoria.save()
-                return redirect('adicionarProduto')
+                messages.success(request, 'Categoria adicionada com sucesso.')
+                return redirect('novaCategoria')
     else:
         form = CategoriaForm()
 
@@ -318,6 +320,7 @@ def editarCategoria(request, pk):
                     restaurante=restaurante,
                     categoria=nome_antigo
                 ).update(categoria=nome_novo)
+                messages.success(request, 'Categoria atualizada com sucesso.')
                 return redirect('novaCategoria')
     else:
         form = CategoriaForm(instance=categoria)
@@ -354,6 +357,7 @@ def apagarCategoria(request, pk):
 
     if request.method == "POST" and not produtos.exists():
         categoria.delete()
+        messages.success(request, 'Categoria apagada com sucesso.')
         return redirect('novaCategoria')
 
     return render(request, 'apagarCategoria.html', {
@@ -405,7 +409,7 @@ def importarCardapio(request):
                             categoria=categoria.nome,
                             restaurante=restaurante
                         )
-
+                messages.success(request, f'{len(itens)} produto(s) importado(s)!')
                 return redirect('cardapioDono')
 
     elif request.method == "POST":
@@ -546,6 +550,7 @@ def editarProduto(request, pk):
             produto_salvo = form.save(commit=False)
             produto_salvo.restaurante = restaurante
             produto_salvo.save()
+            messages.success(request, 'Alterações salvas.')
             return redirect('cardapioDono')
     else:
         form = ProdutoForm(instance=produto)
@@ -574,6 +579,7 @@ def apagarProduto(request, pk):
 
     if request.method == "POST":
         produto.delete()
+        messages.success(request, 'Produto apagado do cardápio.')
         return redirect('cardapioDono')
 
     return render(request, 'apagarProduto.html', {
