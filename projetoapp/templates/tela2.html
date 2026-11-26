@@ -3,57 +3,79 @@
 <html lang="pt-BR">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>FoodLink</title>
-    <link rel="stylesheet" href="{% static 'css/tela2.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Editar produto</title>
+    <link href="{% static 'css/tela2.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
+    <div class="topo">
+        <a href="{% url 'cardapioDono' %}" class="botao-secundario">Voltar</a>
+        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+    </div>
 
-<div class="header"> 
+    <h4 class="chamada">SEU CARDÁPIO</h4>
+    <h1>Editar produto</h1>
+    <p class="descricao">Altere as informações de {{ produto.nome }}.</p>
 
-    
-    <p><span style="color:brown">SEU CARDAPIO</span></p>
-    <h1> <b>Editar produto</b></h1>
-
-        <form method="post">
+    <form method="post">
         {% csrf_token %}
         {{ form.errors }}
-
-        <h2>Nome do produto</h2>
+        <label for="id_nome">Nome do produto</label>
         {{ form.nome }}
 
-        <h2>Descricao</h2>
+        <label for="id_descricao">Descrição</label>
         {{ form.descricao }}
 
-        <div class="precoCategoria">
-            <div>
-                <h2>Preco</h2>
+        <label for="id_ingredientes">Ingredientes</label>
+        {{ form.ingredientes }}
+
+        <label for="id_alergenicos">Alergênicos</label>
+        {{ form.alergenicos }}
+        <p class="ajuda">Essas informações poderão ser verificadas e confirmadas pelo restaurante.</p>
+
+        <div class="linha-campos">
+            <div class="campo">
+                <label for="id_preco">Preço (R$)</label>
                 {{ form.preco }}
             </div>
-            <div>
-                <h2>Categorias</h2>
-                <select name="categoria">
+            <div class="campo">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
                     {% for c in categorias %}
-                        <option {% if c == produto.categoria %}selected{% endif %}>{{ c }}</option>
+                    <option value="{{ c }}" {% if c == form.categoria.value %}selected{% endif %}>{{ c }}</option>
                     {% endfor %}
                 </select>
             </div>
         </div>
 
-        <h2>Foto do prato</h2>
+        <label for="id_imagem">Link da foto</label>
         {{ form.imagem }}
 
-        <div class="disponivel">
+        <div class="opcao">
             <input type="checkbox" id="disponivel" name="disponivel" {% if form.disponivel.value %}checked{% endif %}>
             <label for="disponivel">Disponível no cardápio</label>
         </div>
 
         <div class="botoes">
-            <a href="{% url 'cardapioDono' %}" class="cancelar">Cancelar</a>
-            <button type="submit">Salvar produto</button>
+            <button class="botao-principal" type="submit">Salvar alterações</button>
+            <a href="{% url 'cardapioDono' %}" class="botao-secundario">Cancelar</a>
         </div>
     </form>
+
+    <div class="centralizacao">
+        <p>Food<span class="destaque">Link</span></p>
+    </div>
+
+    <nav class="menu-inferior">
+        <a href="{% url 'cardapioDono' %}" class="ativo">Cardápio</a>
+        <a href="{% url 'novaCategoria' %}">Categorias</a>
+        <a href="{% url 'aparencia' %}">Aparência</a>
+        <a href="{% url 'meuRestaurante' %}">Meu restaurante</a>
+        <a href="{% url 'qrcodeRestaurante' %}">QR Code</a>
+    </nav>
 </body>
 </html>

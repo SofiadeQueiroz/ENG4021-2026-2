@@ -47,18 +47,27 @@
         <p class="ajuda">Use uma foto que combine com o seu restaurante.</p>
 
         <h2>Prévia do cardápio</h2>
-        <!-- Prévia fixa para mostrar o layout, sem JavaScript. -->
         <div class="previa">
-            <div class="capa-previa">Casa di Pasta</div>
+            <div class="capa-previa">{{ restaurante.nome }}</div>
             <div class="conteudo-previa">
-                <p class="tipo-cozinha">ITALIANA</p>
-                <h3>Casa di Pasta</h3>
-                <p class="texto-previa">Massas artesanais e receitas de família.</p>
+                <p class="tipo-cozinha">{{ restaurante.cozinha|upper }}</p>
+                <h3>{{ restaurante.nome }}</h3>
+                <p class="texto-previa">{{ restaurante.descricao|truncatewords:12 }}</p>
+                {% with produto=restaurante.produtos.first %}
+                {% if produto %}
+                <span class="categoria-previa">{{ produto.categoria }}</span>
+                <div class="produto-previa">
+                    <span>{{ produto.nome }}</span>
+                    <strong style="color: {{ restaurante.cor_destaque }}">R$ {{ produto.preco }}</strong>
+                </div>
+                {% else %}
                 <span class="categoria-previa">Entradas</span>
                 <div class="produto-previa">
                     <span>Bruschetta da casa</span>
                     <strong style="color: {{ restaurante.cor_destaque }}">R$ 24,00</strong>
                 </div>
+                {% endif %}
+                {% endwith %}
             </div>
         </div>
         <p class="ajuda">Exemplo com a cor salva: {{ restaurante.get_cor_destaque_display|lower }}.</p>
