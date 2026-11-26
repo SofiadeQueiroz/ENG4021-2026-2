@@ -1,0 +1,44 @@
+
+body {
+    padding-bottom: 90px;
+}
+
+body nav.menu-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: stretch;
+    gap: 0;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 8px 4px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e0d8;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+    font-size: 13px;
+}
+
+body nav.menu-inferior a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 2px;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 13px;
+    color: #6b6b6b;
+    text-decoration: none;
+}
+
+body nav.menu-inferior a.ativo {
+    color: #d9643a;
+    font-weight: bold;
+}
