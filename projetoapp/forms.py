@@ -10,6 +10,11 @@ class ProdutoForm(forms.ModelForm):
         model = Produto
         fields = ['nome', 'descricao', 'preco', 'categoria', 'imagem','ingredientes',
             'alergenicos', 'disponivel']
+    def clean_preco(self):
+        preco = self.cleaned_data['preco']
+        if preco < 0:
+            raise forms.ValidationError('O preço não pode ser negativo. Para um item grátis, use 0.')
+        return preco
 
 
 class CadastroForm(forms.Form):

@@ -210,3 +210,58 @@ button { min-height: 44px; }
     font-size: 14px;
     color: gray;
 }
+
+
+.topo-botoes{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.topo-botoes form{
+    margin: 0;
+}
+
+.botao-sair{
+    background: none;
+    border: none;
+    color: #6b6b6b;
+    font-family: inherit;
+    font-size: 15px;
+    text-decoration: underline;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Os dois botões principais dividem a largura da tela */
+.acoes a{
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+    white-space: nowrap;
+}
+
+/* Consultas rápidas: título em cima e botões menores numa linha só */
+.consultas{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.lista-consultas{
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.botao-consulta{
+    flex: 1;
+    text-align: center;
+    background-color: white;
+    color: chocolate;
+    border: 1px solid chocolate;
+    border-radius: 20px;
+    padding: 8px 6px;
+    font-size: 14px;
+    text-decoration: none;
+}

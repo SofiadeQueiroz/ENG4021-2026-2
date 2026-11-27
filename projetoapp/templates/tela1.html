@@ -6,6 +6,8 @@
     <meta charset="utf-8">
     <title>Seu cardápio</title>
     <link href="{% static 'css/tela.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/mensagens.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/menuInferior.css' %}" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -13,30 +15,38 @@
 
 <body>
     <div class="topo">
-        {% if restaurante %}
-            <a href="{% url 'cardapioPublico' restaurante.pk %}" class="botao-secundario">Ver cardápio</a>
-        {% endif %}
-        <img src="{% static 'css/JulianaBassan/novalogo.jpg' %}" alt="Logo do FoodLink" width="80">
+        <div class="topo-botoes">
+            {% if restaurante %}
+                <a href="{% url 'cardapioPublico' restaurante.pk %}" class="botao-secundario">Ver cardápio</a>
+            {% endif %}
+            <form method="post" action="{% url 'sair' %}">
+                {% csrf_token %}
+                <button class="botao-sair" type="submit">Sair</button>
+            </form>
+        </div>
+        <img src="{% static 'css/JulianaBassan/logosemfundo.png' %}" alt="Logo do FoodLink" width="80">
     </div>
 
     <h4 class="chamada">SEU CARDÁPIO</h4>
     <h1>Cardápio</h1>
     <p class="descricao">Uma mudança aqui, um cardápio atualizado para o cliente.</p>
+    {% for message in messages %}
+        <p class="mensagem {{ message.tags }}" role="status">{{ message }}</p>
+    {% endfor %}
 
     <div class="acoes">
         <a href="{% url 'adicionarProduto' %}" class="botao-principal">+ Adicionar produto</a>
         <a href="{% url 'importarCardapio' %}" class="botao-secundario">Importar PDF</a>
-        <form method="post" action="{% url 'sair' %}">
-            {% csrf_token %}
-            <button class="botao-secundario" type="submit">Sair</button>
-        </form>
+
     </div>
 
     <div class="consultas">
         <p class="titulo-consultas">Consultas rápidas</p>
-        <a href="{% url 'consultarCNPJ' %}" class="botao-secundario">Consultar CNPJ</a>
-        <a href="{% url 'consultarNutricao' %}" class="botao-secundario">Informações nutricionais</a>
-        <a href="{% url 'consultarAlergenicos' %}" class="botao-secundario">Alergênicos</a>
+        <div class="lista-consultas">
+            <a href="{% url 'consultarCNPJ' %}" class="botao-consulta">CNPJ</a>
+            <a href="{% url 'consultarNutricao' %}" class="botao-consulta">Nutrição</a>
+            <a href="{% url 'consultarAlergenicos' %}" class="botao-consulta">Alergênicos</a>
+        </div>
     </div>
 
     <form method="get" class="linha-busca">
@@ -61,7 +71,7 @@
             <span class="indisponivel">Indisponível</span>
             {% endif %}
             <p class="descricao-produto">{{ produto.descricao }}</p>
-            <p class="preco">R$ {{ produto.preco }}</p>
+            <p class="preco">{{ produto.preco_formatado }}</p>
         </div>
         <div class="acoes-produto">
             <a href="{% url 'editarProduto' produto.pk %}" class="botao-secundario">Editar</a>
